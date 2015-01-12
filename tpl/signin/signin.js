@@ -1,7 +1,9 @@
-angular.module('main.signin', [
-])
+console.log("included!"); //debug
 
-.config(function signinConfig($stateProvider) {
+angular.module('main')
+
+/*
+.config(function SigninConfig($stateProvider) {
 	$stateProvider.state( 'signin', {
 		url: '/',
 		views: {
@@ -12,17 +14,17 @@ angular.module('main.signin', [
 		},
 		data: {pageTitle: "Sign In"}
 	});
-})
+}) */
 
 .controller ( 'signinController', function signinController ($scope) {
-	alert("hi");
+	console.log("controller works!"); //debug
 })
 
 
 .directive('signinViewer',function(){
     return {
-    replace : true,
-    restrict : 'E',
-    templateUrl: 'signin/signin.html'
+	    replace : true,
+	    restrict : 'A',
+	    templateUrl: '../tpl/signin/signin.html'
     }; 
 });
