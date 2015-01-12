@@ -1,5 +1,7 @@
 (function() {
-	var app = angular.module( "main", [ ]);
+	var app = angular.module( "main", [
+	]);
+
 
 	app.controller("MainController", function($scope, $window) {
 		
@@ -24,6 +26,12 @@
 		});
 	});
 
-	//var helloGreeting = "hi";
-
+	//move this to signin.js
+	app.directive('signinViewer',function(){
+	    return {
+		    replace : true,
+		    restrict : 'A',
+		    templateUrl: 'tpl/signin/signin.html'
+	    }; 
+	});
 })();
