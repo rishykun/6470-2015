@@ -22,9 +22,14 @@
 		$("#loginDialog").css("margin-top", (height-loginModalHeight)/2);
 		$("#loginDialog").css("margin-left", "auto");
 
-		//resize function: on resize, always keep Create and Receive buttons vertically aligned in the center
+		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
-			$('#buttonGroup').css("padding-top", $(window).height() / 2);
+			var newHeight = $(window).height();
+			$('#buttonGroup').css("padding-top", newHeight / 2);
+			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
+			$("#createDialog").css("margin-left", "auto");
+			$("#loginDialog").css("margin-top", (newHeight-loginModalHeight)/2);
+			$("#loginDialog").css("margin-left", "auto");
 		});
 	});
 })();
