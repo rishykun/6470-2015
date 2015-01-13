@@ -66,6 +66,14 @@
 	outline: none;
 }
 
+.custom-modal-compress {
+	width: 400px;
+}
+
+.custom-modal-rounded {
+	border-radius: 20px;
+}
+
 .custom-text-space-med {
 	letter-spacing: 3px;
 }

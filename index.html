@@ -25,8 +25,36 @@
 
 <body class="background-dark-slate">
 	<div ng-controller="MainController as mainCtrl">
-		<a class="no-text-sel" href="#"><img src="img/icon.png" style="width:64px;height:64px; float: left;"></a>
+		<a class="no-text-sel" href="#"><img src="img/ico/logo.png" style="width:64px;height:64px; float: left;"></a>
 		<b class="no-text-sel default-cursor" style="margin-left: 5px; margin-top:25px; color:black; float: left">Shrödinger's Black Box</b>
+
+		<!-- hacky php way to detect desktop, mobile, or tablet usage
+		since mobile and tablets don't support hover, we use this information to provide
+		a click-based login button instead
+		-->
+		<?php
+		/*
+			require_once "Mobile-Detect-2.8.11/Mobile_Detect.php";
+			$detect = new Mobile_Detect;
+
+			if ($detect->isMobile() || $detect->isTablet()) {
+				echo "
+				<div class=\"btn-group pull-right\" style=\"margin-top:5px; margin-right:5px\">
+					<button class=\"btn btn-success dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\" aria-expanded=\"false\" style=\"border-radius:0\">Login <span id=\"caretSign\" class=\"caret\"></span>
+					</button>
+					<ul class=\"dropdown-menu\" role=\"menu\">
+						<li role=\"presentation\">
+							<fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState();\">
+							</fb:login-button>
+						</li>
+						<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#\">Create an Account</a></li>
+						<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#\" data-toggle=\"modal\" data-target=\"#loginModal\">Login Locally</a></li>
+					</ul>
+				</div>
+				";
+			}
+			*/
+		?>
 
 		<nav class="btn-group pull-right" style="margin-top:5px; margin-right:5px">
 		    <ul class="cf">
@@ -45,21 +73,21 @@
 		</nav>
 
 		<div id="loginModal" class="modal fade">
-			<div id="loginDialog" class="modal-dialog" style="width:450px">
-				<div class="modal-content">
+			<div id="loginDialog" class="modal-dialog custom-modal-compress">
+				<div class="modal-content custom-modal-rounded">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       					<h4 class="modal-title">Login</h4>
+       					<h4 class="modal-title no-text-sel default-cursor">Login</h4>
 					</div>
 					<div class="modal-body">
 				      	<form class="form-signin">
-				        	<h2 class="form-signin-heading">Please sign in</h2>
+				        	<h2 class="form-signin-heading no-text-sel default-cursor" style="margin-top: 0px">Please sign in</h2>
 				        	<label for="inputEmail" class="sr-only">Email address</label>
 				        	<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
 				        	<label for="inputPassword" class="sr-only">Password</label>
 				        	<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
 				        	<div class="checkbox">
-				          	<label>
+				          	<label class="no-text-sel default-cursor">
 				            	<input type="checkbox" value="remember-me"> Remember me
 				          	</label>
 				        	</div>
@@ -76,8 +104,8 @@
 			<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" data-toggle="modal" data-target="#receiveBoxModal">RECEIVE</button>
 		</div>
 		<div id="createBoxModal" class="modal fade">
-			<div id="createDialog" class="modal-dialog" style="width:450px">
-				<div class="modal-content">
+			<div id="createDialog" class="modal-dialog custom-modal-compress">
+				<div class="modal-content custom-modal-rounded">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        					<h4 class="modal-title no-text-sel default-cursor">Create a box</h4>
