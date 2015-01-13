@@ -1,8 +1,41 @@
 (function() {
 	var app = angular.module( "main", [
+		'main.signin',
+		'ui.router'
 	]);
 
+	/* //test //debug
+	app.config (function ($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise("state1");
+		$stateProvider
+			.state ("state1", {
+				url: "/state1",
+				templateUrl: "../partials/state1.html"
+			})
+			.state('state1.list', {
+		      url: "/list",
+		      templateUrl: "../partials/state1.list.html",
+		      controller: function($scope) {
+		        $scope.items = ["A", "List", "Of", "Items"];
+		      }
+		    })
+		    .state('state2', {
+		      url: "/state2",
+		      templateUrl: "../partials/state2.html"
+		    })
+		    .state('state2.list', {
+		      url: "/list",
+		      templateUrl: "../partials/state2.list.html",
+		      controller: function($scope) {
+		        $scope.things = ["A", "Set", "Of", "Things"];
+		      }
+		    });
+	});*/
+
 	app.controller("MainController", function($scope, $window) {
+
+		$scope.greeting = "hi";
+
 		//captures the height from $window using jquery
 		var height = $(window).height();
 		var buttonHeight = $('#createBtn').height();
@@ -18,9 +51,6 @@
 		//same for create modal
 		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
 		$("#createDialog").css("margin-left", "auto");
-		//same for login modal
-		$("#loginDialog").css("margin-top", (height-loginModalHeight)/2);
-		$("#loginDialog").css("margin-left", "auto");
 
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
@@ -28,8 +58,6 @@
 			$('#buttonGroup').css("padding-top", newHeight / 2);
 			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
 			$("#createDialog").css("margin-left", "auto");
-			$("#loginDialog").css("margin-top", (newHeight-loginModalHeight)/2);
-			$("#loginDialog").css("margin-left", "auto");
 		});
 	});
 })();
