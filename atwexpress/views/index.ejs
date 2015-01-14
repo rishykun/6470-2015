@@ -47,7 +47,7 @@
 							</fb:login-button>
 		                </li>
 		                <li><a class="no-text-dec" href="#">Create Account</a></li>
-		                <li><a class="no-text-dec" href="#" data-toggle="modal" data-target="#loginModal">Login Locally</a></li>
+		                <li><a class="no-text-dec" id="loginLocallyButton" href="#" data-toggle="modal" data-target="#loginModal">Login Locally</a></li>
 		            </ul>
 		        </li>
 		    </ul>
@@ -60,7 +60,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        					<h4 class="modal-title no-text-sel default-cursor">Login</h4>
 					</div>
-					<div class="modal-body" ng-controller="signinController">
+					<div id="signInBody" class="modal-body" ng-controller="signinController">
 				      	<signin-viewer></signin-viewer>
 					</div>
 				</div>
@@ -80,7 +80,7 @@
        					<h4 class="modal-title no-text-sel default-cursor">Create a box</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-signin">
+						<form class="form-create">
 				        	<label for="inputEmail" class="sr-only">Box Name</label>
 				        	<input type="text" id="inputEmail" class="form-control" ng-model="createBoxName" placeholder="Enter the name of the box" required="" autofocus="">
 				        	<label></label>

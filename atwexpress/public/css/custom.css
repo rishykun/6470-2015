@@ -94,7 +94,7 @@
   transition-property: border-color, background-color;
 }
 
-.custom-fade:hover, .custom-fade:focus, .custom-fade:active {
+.custom-fade:hover {
   background-color: #449d44;
   border-color: #398439;
   /*above colors used for Login button only*/
@@ -116,7 +116,7 @@
   box-shadow: inset 0 0 0 2px #e1e1e1, 0 0 1px rgba(0, 0, 0, 0);
   /* Hack to improve aliasing on mobile/tablet devices */
 }
-.custom-border-fade:hover, .custom-border-fade:focus, .custom-border-fade:active {
+.custom-border-fade:hover {
   box-shadow: inset 0 0 0 2px #2098d1, 0 0 1px rgba(0, 0, 0, 0);
   color: #2098d1;
   /*above colors used for Create/Receive buttons only*/
