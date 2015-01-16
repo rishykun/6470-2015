@@ -13,6 +13,7 @@ s3.createBucket( {Bucket: 'myBucket2'}, function (err, data) {
     }
 });*/
 
+/*
 bucketFolder = "6.470/folder4/";
 s3.headBucket({Bucket:bucketFolder},function(err,data){
     if(err){
@@ -27,7 +28,7 @@ s3.headBucket({Bucket:bucketFolder},function(err,data){
      } else {
          console.log("Bucket (folder) already exists!");
      }
- });
+ });*/
 /*
 var params = {
     Bucket: '6.470',
@@ -35,6 +36,7 @@ var params = {
     ContentType: "image/png",
     ACL: 'public-read'
 };*/
+/*
 var fileStream = fs.createReadStream('./public/troll.png');
 fileStream.on('error', function (err) {
     if (err) { throw err; }
@@ -48,7 +50,7 @@ fileStream.on('open', function () {
     }, function (err) {
         if (err) { throw err; }
     });
-});
+});*/
 /*
 s3.upload(params, function(err, data) {
     if (err) {       
@@ -59,12 +61,13 @@ s3.upload(params, function(err, data) {
     }
 });*/
 
+/*
 s3.listBuckets (function (err, data) {
     for (var index in data.Buckets) {
         var bucket = data.Buckets[index];
         console.log("Bucket: ", bucket.Name, ' : ', bucket.CreationData);
     }
-});
+});*/
 
 // app/routes.js
 module.exports = function(app, passport) {
