@@ -23,6 +23,8 @@
 	<script type='text/javascript' src="/js/main.js"></script>
 	<script type='text/javascript' src="/js/signin.js"></script>
 	<script type='text/javascript' src="/js/signup.js"></script>
+	<script type='text/javascript' src="/js/create.js"></script>
+	<script type='text/javascript' src="/js/profile.js"></script>
 
 	<!-- custom tooltip -->
 	<link rel="stylesheet" href="/jquery/jquery-ui.css">
@@ -34,10 +36,6 @@
 	<div ng-controller="MainController as mainCtrl">
 		<a class="no-text-sel" href="/"><img class="icon-med" src="img/ico/logo.png" style="float: left;"></a>
 		<b class="no-text-sel default-cursor" style="margin-left: 5px; margin-top:25px; color:black; float: left">Shrödinger's Black Box</b>
-		<!-- hacky php way to detect desktop, mobile, or tablet usage
-		since mobile and tablets don't support hover, we use this information to provide
-		a click-based login button instead
-		-->
 
 		<!-- only show login options if we are not currently logged in-->
 		<div ng-show="!loggedIn">
@@ -75,9 +73,14 @@
 		<!-- show navigation bar if we are logged in -->
 		<div ng-show="loggedIn">
 			<nav class="pull-right" style="margin-top:5px; margin-right:5px;">
-		    	<div> Welcome, {{userObject.local.email}}! </div>
-		    	<a href="#" style="background: transparent; display: inline; padding:0px 0px"> <i class="fa fa-cog fa-2x" href="#"></i> </a>
-		        <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
+		    	<div style="float: left; padding-top:5px; padding-right:10px"> Welcome, {{userObject.local.email}}! </div>
+		    	<div style="float: right">
+		    		<div style="float:left; padding-right: 10px; padding-top: 3px">
+				    	<a ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px"> <i class="fa fa-user fa-2x"></i></a>
+				    	<a i-sref="settings" style="background: transparent; display: inline; padding: 0px 0px"> <i class="fa fa-cog fa-2x"></i></a>
+			    	</div>
+			        <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
+		        </div>
 			</nav>
 		</div>
 
@@ -86,7 +89,8 @@
 			<div class="space-divider"/>
 			<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" data-toggle="modal" data-target="#receiveBoxModal">RECEIVE</button>
 		</div>
-		<div id="createBoxModal" class="modal fade font-gray">
+
+		<div id="createBoxModal" class="modal fade font-gray" ng-controller="createController">
 			<div id="createDialog" class="modal-dialog custom-modal-compress">
 				<div class="modal-content custom-modal-rounded">
 					<div class="modal-header">
@@ -96,9 +100,9 @@
 					<div class="modal-body">
 						<form class="form-create">
 				        	<label for="inputEmail" class="sr-only">Box Name</label>
-				        	<input type="text" id="inputEmail" class="form-control" ng-model="createBoxName" placeholder="Enter the name of the box" required="" autofocus="">
+				        	<input type="text" id="inputEmail" class="form-control" ng-model="formData.boxname" placeholder="Enter the name of the box" required="" autofocus="">
 				        	<label></label>
-				        	<button class="btn btn-lg btn-primary btn-block" type="submit">Create box</button>
+				        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!isLoggedIn()" ng-click="createBox()">Create box</button>
 				      	</form>
 					</div>
 				</div>

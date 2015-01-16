@@ -2,6 +2,8 @@
 	var app = angular.module( "main", [
 		'main.signin',
 		'main.signup',
+		'main.create',
+		'main.profile',
 		'ui.router'
 	]);
 
@@ -16,6 +18,11 @@
 				url: '/',
 				templateUrl: "../tpl/signup/signup.tpl.html",
 				controller: "signupController"		
+			})
+			.state( 'profileview', {
+				url: '/',
+				templateUrl: "../tpl/profile/profileviewer.tpl.html",
+				controller: "profileController"
 			});
 	});
 
@@ -28,11 +35,17 @@
 		$scope.isLoggedIn = function () {
 			return $scope.loggedIn;
 		}
+		//hides all modal windows
+		$scope.hideModals = function () {
+			//close the login & signup modal
+			$('#signModal').modal('hide');
+			//close the create modal
+			$('#createBoxModal').modal('hide');
+		}
 		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
 			$scope.loggedIn = loginStatus;
-			//close the login & signup modal
-			$('#signModal').modal('hide');
+			$scope.hideModals();
 		}
 		//gets the user profile from the server if properly authenticated already
 		$scope.getProfile = function () {
@@ -54,6 +67,23 @@
 			.error (function() {
 				console.log("Error getting profile!");
 			});
+		}
+		//gets the contents of the specified box uri from the server
+		$scope.getBoxContents = function (boxuri) {
+			$http.post('/getbox', "{ 'uri' : '" +  boxuri + "' }")
+				.success (function(data) {
+					return data;
+				})
+				.error (function() {
+					console.log("Error getting box contents for " + boxuri + "!");
+				});
+		}
+		//sets the current box
+		$scope.setCurrentBox = function (box) {
+			$scope.currentBox = box;
+			//gets the content of that box for the box-viewer
+			var boxContents = $scope.getBoxContents(box.uri);
+			//TODO update the box viewer with the contents of the box in 'boxContents'
 		}
 		//logs the user out from the server
 		$scope.logout = function () {

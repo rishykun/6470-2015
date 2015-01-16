@@ -1,6 +1,7 @@
 var AWS = require('aws-sdk');
-var fs = require('fs'); //debug
 AWS.config.loadFromPath('./config/aws/config.json');
+var uuid = require('node-uuid'); //used for generating unique UUID numbers
+var fs = require('fs'); //debug
 
 var s3 = new AWS.S3();
 /*
@@ -13,22 +14,6 @@ s3.createBucket( {Bucket: 'myBucket2'}, function (err, data) {
     }
 });*/
 
-/*
-bucketFolder = "6.470/folder4/";
-s3.headBucket({Bucket:bucketFolder},function(err,data){
-    if(err){
-        s3.createBucket({Bucket:bucketFolder},function(err,data){
-            if (err) {       
-                console.log(err);
-            }
-            else {
-                console.log("Successfully created folder!");   
-            }
-        });
-     } else {
-         console.log("Bucket (folder) already exists!");
-     }
- });*/
 /*
 var params = {
     Bucket: '6.470',
@@ -72,56 +57,16 @@ s3.listBuckets (function (err, data) {
 // app/routes.js
 module.exports = function(app, passport) {
 
-    // =====================================
-    // LOGIN ===============================
-    // =====================================
-    // show the login form
-    /*
-    app.get('/login', function(req, res) {
-
-        // render the page and pass in any flash data if it exists
-        res.render('login.ejs', { message: req.flash('loginMessage') }); 
-    });*/
-
-    // process the login form
-    // app.post('/login', do all our passport stuff here);
-
-    // =====================================
-    // SIGNUP ==============================
-    // =====================================
-    // show the signup form
-    /*
-    app.get('/signup', function(req, res) {
-
-        // render the page and pass in any flash data if it exists
-        res.render('signup.ejs', { message: req.flash('signupMessage') });
-    });*/
-
-    // process the signup form
-    // app.post('/signup', do all our passport stuff here);
-
-    // =====================================
-    // PROFILE SECTION =====================
-    // =====================================
-    // we will want this protected so you have to be logged in to visit
-    // we will use route middleware to verify this (the isLoggedIn function)
-    
-    //used to get user object
-    //debug might need to add IsLoggedIn
+    //used to get user object, check if logged in first
     app.get('/profile',isLoggedIn, function(req, res) {
         res.json(req.user);
     });
-
-    // =====================================
-    // LOGOUT ==============================
-    // =====================================
     
     app.get('/logout', function(req, res) {
         console.log("Logged out of the server.");
         req.logout();
         res.redirect('/');
     });
-
 
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
@@ -137,9 +82,43 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // =====================================
-    // HOME PAGE (with login links) ========
-    // =====================================
+    // process the create form
+    app.post('/create', function(req, res) {
+        var boxId = uuid.v4(); //generate a unique uuid for the box
+        bucketBox = "6.470/Boxes/" + boxId + "/";
+        s3.headBucket({Bucket:bucketBox}, function(err,data){
+            if(err){
+                s3.createBucket({Bucket:bucketBox},function(err,data){
+                    if (err) {       
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Successfully created box.");
+
+                        //create a config file for each newly-created box
+                        var params = {
+                            Bucket: bucketBox.substring(0,bucketBox.length-1),
+                            Key: 'box.config',
+                            Body: '{ "boxname" : "' + req.body.boxname + '", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : "{}" }'
+                        };
+                        //debug todo: change body: req.user.local.email to req.user.local.user when available
+                        s3.upload(params, function(err, data) {
+                            if (err) {       
+                                console.log(err);
+                            }
+                            else {
+                                console.log("Successfully generated box configuration.");
+                                res.json('{ "name" : "' + req.body.boxname + '", "id" : "' + boxId + '", "uri" : "' + bucketBox + '" }');
+                            }
+                        });
+                    }
+                });
+             } else {
+                 console.log("Box (bucket) already exists!");
+             }
+         });
+    });
+
     app.get('*', function(req, res) {
         res.sendFile("./public/index.html");
     });

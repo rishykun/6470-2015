@@ -4,9 +4,8 @@
 	]);
 
 	app.controller ( 'signupController', function signupController ($scope, $http, $window) {
-		console.log("signupController used."); //debug
-
 		$scope.formData = {}; //default empty form object to be populated
+		$scope.emptyData = {}; //empty object definition
 		$scope.$parent.signModalTitle = "Sign Up"; //sets the title of the signin/signup modal window
 
 		//attempts authentication on the server with the credentials from the form
@@ -20,6 +19,9 @@
 				.error (function() {
 					console.log("Error registering account to server!");
 				});
+			}
+			else {
+				console.log("Form is empty!"); //debug
 			}
 		};
 
