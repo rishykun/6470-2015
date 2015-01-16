@@ -81,7 +81,7 @@
 		author: "",
 		thumbnail:"",
 		title:"",
-		description:"",
+		description:"green",
 		thumbs:"",
 		comments:[]
 	}/*,{
@@ -97,6 +97,40 @@
 	];
 
 	app.controller('GalleryController', function(){
+		var adjustDisplay = function(ratio) {
+			if (ratio >= 1){
+				$('#singleImageWrapper').removeClass("landscape-wrapper");
+				$('.image-text').removeClass("landscape-text");
+				$('.image-body').removeClass("landscape-body");
+				$('.profile-wrapper').removeClass("landscape-profile-wrapper");
+				$('.profile').removeClass("landscape-profile");
+				$('.image-author').removeClass("landscape-author");
+				$('.image-comments').removeClass("landscape-comments");
+				$('#singleImageWrapper').addClass("portrait-wrapper");
+				$('.image-text').addClass("portrait-text");
+				$('.image-body').addClass("portrait-body");
+				$('.profile-wrapper').addClass("portrait-profile-wrapper");
+				$('.profile').addClass("portrait-profile");
+				$('.image-author').addClass("portrait-author");
+				$('.image-comments').addClass("portrait-comments");
+			}
+			else{
+				$('#singleImageWrapper').removeClass("portrait-wrapper");
+				$('.image-text').removeClass("portrait-text");
+				$('.image-body').removeClass("portrait-body");
+				$('.profile-wrapper').removeClass("portrait-profile-wrapper");
+				$('.profile').removeClass("portrait-profile");
+				$('.image-author').removeClass("portrait-author");
+				$('.image-comments').removeClass("portrait-comments");
+				$('#singleImageWrapper').addClass("landscape-wrapper");
+				$('.image-text').addClass("landscape-text");
+				$('.image-body').addClass("landscape-body");
+				$('.profile-wrapper').addClass("landscape-profile-wrapper");
+				$('.profile').addClass("landscape-profile");
+				$('.image-author').addClass("landscape-author");
+				$('.image-comments').addClass("landscape-comments");
+			}
+		};
 		this.gallery = gallery;
 		this.num = 0;
 		this.curImg = "";
@@ -113,33 +147,22 @@
 			var realWidth = this.width;
 			var realHeight = this.height;
 			var ratio = realHeight/realWidth;
-			if (ratio >= 1){
-				//var modalWidth = $('.modalContent').width;
-				$('#singleImageWrapper').css({'display': 'inline-block', 'margin-left': 'initial','margin-right':'initial', 'left':'0px',
-					'max-width': '60%', 'width': '60%', 'max-height': 'initial', 'background': 'black'});
-				$('.image-text').css({
-					"display": "inline-block",
-					"vertical-align": "top",
-					"width": "auto",
-					"height": "auto"});
-				$('.image-body').css({
-					'margin-top': '100px',
-					'margin-left': '20px'});
-			}
-			else{
-				$('#singleImageWrapper').css({'display': 'block', 'max-height': '800px', 'margin-left':'auto', 'margin-right':'auto',
-					'width': 'initial', 'max-width': 'initial','left':'initial', 'background': 'black' });
-				$('.image-text').css({
-					"display": "initial",
-					"vertical-align": "initial",
-					"width": "initial",
-					"height": "initial"});
-				$('.image-body').css({
-					'margin-top': 'initial',
-					'margin-left': 'initial'});
-			}
+			adjustDisplay(ratio);
 		});
-});
+		app.directive('imageonload', function() {
+			return {
+				restrict: 'A',
+				link: function(scope, element, attrs) {
+					element.bind('load', function() {
+						var realWidth = $('#singleImage').get(0).width;
+						var realHeight = $('#singleImage').get(0).height;
+						var ratio = realHeight/realWidth;
+						adjustDisplay(ratio);
+					});
+				}
+			};
+		});	
+	});
 
 app.controller("MainController", function($scope, $window) {
 		//captures the height from $window using jquery
