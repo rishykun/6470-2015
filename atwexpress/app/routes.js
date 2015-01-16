@@ -1,9 +1,10 @@
 var AWS = require('aws-sdk');
 AWS.config.loadFromPath('./config/aws/config.json');
 var uuid = require('node-uuid'); //used for generating unique UUID numbers
-var fs = require('fs'); //debug
+var fs = require('fs'); //used for file streaming
 
 var s3 = new AWS.S3();
+
 /*
 s3.createBucket( {Bucket: 'myBucket2'}, function (err, data) {
     if (err) {       
@@ -117,6 +118,46 @@ module.exports = function(app, passport) {
                  console.log("Box (bucket) already exists!");
              }
          });
+    });
+
+    // get contents of the form
+    app.post('/getbox', function(req, res) {
+
+        var boxParams = {
+            Bucket: '6.470/',
+            Prefix: 'Boxes/6071e388-544d-4861-a877-e5107bed050b'
+        }
+        s3.listObjects(boxParams, function (err, data) {
+            if (err) {
+                console.log(err, err.stack);
+            }
+            else {
+                res.json(data.Contents);
+            }
+        });
+    });
+
+    app.post('/getitem', function (req, res) {
+        console.log(req.body.uri); //debug
+        console.log(req.body.key); //debug
+
+        var itemParams = {
+            Bucket: req.body.uri,
+            Key: req.body.key
+        };
+                
+        //downloads the file directly onto the server
+        /*
+        var file = fs.createWriteStream('./public/temp.pdf');
+        item = s3.getObject(itemParams);
+        item.createReadStream().pipe(file);
+        */
+
+        //creates a signed url to be accessible by the front-end
+        s3.getSignedUrl('getObject', itemParams, function (err, url) {
+            console.log("The URL is", url); //debug
+            res.json("{ 'name': " + "'batman'" + ", 'uri': " + url + "}");
+        });
     });
 
     app.get('*', function(req, res) {
