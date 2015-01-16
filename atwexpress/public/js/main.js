@@ -5,66 +5,73 @@
 		'ui.router'
 	]);
 
-	/* //test //debug
 	app.config (function ($stateProvider, $urlRouterProvider) {
-		$urlRouterProvider.otherwise("state1");
 		$stateProvider
-			.state ("state1", {
-				url: "/state1",
-				templateUrl: "../partials/state1.html"
+			.state( 'signin', {
+				url: '/',
+				templateUrl: "../tpl/signin/signin.tpl.html",
+				controller: "signinController"
 			})
-			.state('state1.list', {
-		      url: "/list",
-		      templateUrl: "../partials/state1.list.html",
-		      controller: function($scope) {
-		        $scope.items = ["A", "List", "Of", "Items"];
-		      }
-		    })
-		    .state('state2', {
-		      url: "/state2",
-		      templateUrl: "../partials/state2.html"
-		    })
-		    .state('state2.list', {
-		      url: "/list",
-		      templateUrl: "../partials/state2.list.html",
-		      controller: function($scope) {
-		        $scope.things = ["A", "Set", "Of", "Things"];
-		      }
-		    });
-	});*/
+			.state( 'signup', {
+				url: '/',
+				templateUrl: "../tpl/signup/signup.tpl.html",
+				controller: "signupController"		
+			});
+	});
 
-	app.controller("MainController", function($scope, $window, $http) {
-		$scope.loggedIn = false;
+	app.controller("MainController", function($scope, $window, $http, $state) {
+		//------------ variable initialization
+		$scope.loggedIn = false; //default
 
+		//------------ controller functions
+		//returns the login status
 		$scope.isLoggedIn = function () {
 			return $scope.loggedIn;
 		}
-
+		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
 			$scope.loggedIn = loginStatus;
-			//if we just logged in, close the login & signup modal
-			if (loginStatus) {
-				$('#loginModal').modal('hide');
-				$('#signupModal').modal('hide');
-			}
+			//close the login & signup modal
+			$('#signModal').modal('hide');
 		}
-
-		//logs out the user from the server
+		//gets the user profile from the server if properly authenticated already
+		$scope.getProfile = function () {
+			$http.get('/profile')
+			.success (function(data) {
+				if (data !== "") {
+					//if the user is logged in
+					$scope.setLogin(true);
+					$scope.userObject = data;
+					console.log("Found profile.");
+					console.log(data);
+					//user object
+					//debug note: user/email is data.local.email
+				}
+				else {
+					console.log("Profile data was empty.");
+				}
+			})
+			.error (function() {
+				console.log("Error getting profile!");
+			});
+		}
+		//logs the user out from the server
 		$scope.logout = function () {
 			$http.get('/logout')
 			.success (function(data) {
-				$scope.isLoggedIn(); //debug
-				console.log($scope.userObject); //debug
-				console.log("successfully logged out"); //debug
-				//clears the userObject
+				console.log("Successfully logged out!");
+
+				//clears the logged-in user profile in userObject
 				$scope.userObject = {};
-				$scope.loggedIn = false;
-				console.log($scope.userObject); //debug
-				$scope.isLoggedIn(); //debug
+				$scope.setLogin(false);
 			})
 			.error (function() {
+				console.log("Error logging out!");
 			});
 		};
+
+		$scope.getProfile(); //we check if we are already logged in on the server
+		//if we are, then load the user data into our profile, which is the userObject object
 
 		//captures the height from $window using jquery
 		var height = $(window).height();
@@ -82,12 +89,35 @@
 		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
 		$("#createDialog").css("margin-left", "auto");
 
+		//resize signup/login modal upon click
+		$scope.signModalInitResize = function () {
+			//quick hacky way to find dynamic position
+			var cheight = $(window).height();
+			$('.modal').css("display","block");
+			var signModalHeight = $('#signDialog').height();
+			$('.modal').css("display","none");
+
+			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
+			$("#signDialog").css("margin-left", "auto");
+		};
+		$('#loginButton').click(function() {
+			$scope.signModalInitResize();
+		});
+		$('#signupButton').click(function() {
+			$scope.signModalInitResize();
+		});
+
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
 			var newHeight = $(window).height();
 			$('#buttonGroup').css("padding-top", newHeight / 2);
 			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
 			$("#createDialog").css("margin-left", "auto");
+
+			//resize the login/signup modal
+			var signModalHeight = $('#signDialog').height();
+			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
+			$("#signDialog").css("margin-left", "auto");
 		});
 	});
 })();
