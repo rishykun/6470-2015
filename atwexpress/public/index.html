@@ -72,12 +72,12 @@
 
 		<!-- show navigation bar if we are logged in -->
 		<div ng-show="loggedIn">
-			<nav class="pull-right" style="margin-top:5px; margin-right:5px;">
+			<nav class="pull-right font-white" style="margin-top:5px; margin-right:5px;">
 		    	<div style="float: left; padding-top:5px; padding-right:10px"> Welcome, {{userObject.local.email}}! </div>
 		    	<div style="float: right">
-		    		<div style="float:left; padding-right: 10px; padding-top: 3px">
-				    	<a ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px"> <i class="fa fa-user fa-2x"></i></a>
-				    	<a i-sref="settings" style="background: transparent; display: inline; padding: 0px 0px"> <i class="fa fa-cog fa-2x"></i></a>
+		    		<div style="float:left; padding-right: 10px; padding-top: 5px">
+				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Profile</a>
+				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="settings" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
 			    	</div>
 			        <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
 		        </div>
