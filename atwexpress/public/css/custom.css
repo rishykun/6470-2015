@@ -1,6 +1,10 @@
 .background-dark-slate {
 	background-color: rgb(20,20,27);
-	color: rgb(192,192,192);
+  color: rgb(192,192,192);
+}
+
+.font-gray {
+  color: rgb(128,128,128);
 }
 
 .space-divider {

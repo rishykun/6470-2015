@@ -108,7 +108,7 @@ module.exports = function(app, passport) {
     
     //used to get user object
     //debug might need to add IsLoggedIn
-    app.get('/profile', function(req, res) {
+    app.get('/profile',isLoggedIn, function(req, res) {
         res.json(req.user);
     });
 
@@ -117,7 +117,7 @@ module.exports = function(app, passport) {
     // =====================================
     
     app.get('/logout', function(req, res) {
-        console.log("logged out"); //debug
+        console.log("Logged out of the server.");
         req.logout();
         res.redirect('/');
     });
@@ -141,20 +141,18 @@ module.exports = function(app, passport) {
     // HOME PAGE (with login links) ========
     // =====================================
     app.get('*', function(req, res) {
-        res.sendFile("./public/index.html"); //debug
-        //res.render('index.ejs'); // load the index.ejs file
+        res.sendFile("./public/index.html");
     });
 };
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
-    console.log("isLoggedIn reached"); //debug
-
     // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
+    if (req.isAuthenticated()) {
+        console.log("User authenticated.");
         return next();
+    }
 
-    // if they aren't redirect them to the home page
-    res.redirect('/');
+    console.log("User not authenticated.");
+    return false;
 }

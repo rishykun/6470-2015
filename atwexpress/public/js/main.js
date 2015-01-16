@@ -93,9 +93,10 @@
 		$scope.signModalInitResize = function () {
 			//quick hacky way to find dynamic position
 			var cheight = $(window).height();
+			var cdisplay = $('.modal').css("display");
 			$('.modal').css("display","block");
 			var signModalHeight = $('#signDialog').height();
-			$('.modal').css("display","none");
+			$('.modal').css("display",cdisplay);
 
 			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");

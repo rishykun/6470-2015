@@ -3,25 +3,10 @@
 		'ui.router'
 	]);
 
-	/*
-	app.config(function signupConfig($stateProvider, $urlRouterProvider) {
-		$stateProvider.state( 'signup', {
-			url: '/',
-			views: {
-				'main': {
-					controller: "signupController",
-					templateUrl: ""
-				}
-			},
-			data: {pageTitle: "Sign Up"}
-		});
-	});*/
-
 	app.controller ( 'signupController', function signupController ($scope, $http, $window) {
 		console.log("signupController used."); //debug
 
 		$scope.formData = {}; //default empty form object to be populated
-
 		$scope.$parent.signModalTitle = "Sign Up"; //sets the title of the signin/signup modal window
 
 		//attempts authentication on the server with the credentials from the form
@@ -29,14 +14,16 @@
 			if ($scope.formData !== $scope.emptyData) {
 				$http.post('/signup', $scope.formData)
 				.success (function(data) {
-					//upon signup success, log in and load the profile
-					$scope.getProfile();
+					$('.form-signup').trigger("reset"); //clears the signup form
+					$scope.getProfile(); //log in and load the profile
 				})
 				.error (function() {
 					console.log("Error registering account to server!");
 				});
 			}
 		};
+
+		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
 
 	//deprecated
