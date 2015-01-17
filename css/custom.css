@@ -10,8 +10,10 @@
 #boxModalCont {
   background-color: rgba(40,40,40, 0.9);
   max-height: 600px;
-  overflow-y:scroll;
+  /*overflow-y:scroll;*/
   overflow-y:auto;
+  /*overflow-x:scroll;*/
+  overflow-x:auto;
 }
 
 #boxModalCont::-webkit-scrollbar {
@@ -145,52 +147,55 @@
   width: 39%;
 }
 
-.portrait-body{
-  margin-top: 10%;
+.landscape-text{
+  margin-top: 2%;
+}
+
+.portrait-description{
+  margin-top: 20%;
   margin-left: 5%;
 }
 
 .portrait-profile-wrapper{
-  margin-top: 2%;
-  margin-left: 5%;
+  position:relative;
+  left:5%;
+  width:15%;
+  float:left;
 }
 
 .landscape-profile-wrapper{
   position:relative;
-  margin-top:2%;
-}
-
-.portrait-profile{
-  width:15%;
-}
-
-.landscape-profile{
+  float:left;
   width:5%;
 }
 
+.portrait-profile{
+  width:100%;
+}
+
+.landscape-profile{
+  width:100%;
+}
+
 .portrait-comments{
-  margin-top:6%;
   margin-left:5%;
 }
 
 .landscape-comments{
-  margin-left:60%;
-  margin-top:-8.7%;
+  margin-left:40%;
+  display:inline-block;
 }
 
 .portrait-author{
-  position:relative;
-  width:40%;
-  margin-top:-13%;
-  margin-left:23%;
+  position:absolute;
+  left:23%;
 }
 
 .landscape-author{
-  margin-left:6%;
-  margin-top:-4%;
+  float: left;
+  display:inline-block;
+  margin-left:1%;
 }
-
-
 
 .landscape-wrapper{
   display: block; 
@@ -200,15 +205,10 @@
   background: black;
 }
 
-.landscape-text{
-  display: initial;
-  vertical-align: initial;
-  width: initial;
-  height: initial;
-}
 
-.landscape-body{
-  margin-top:3%;
+.landscape-description{
+  position:absolute;
+  margin-top:6%;
 }
 
 .shadow {

@@ -101,14 +101,14 @@
 			if (ratio >= 1){
 				$('#singleImageWrapper').removeClass("landscape-wrapper");
 				$('.image-text').removeClass("landscape-text");
-				$('.image-body').removeClass("landscape-body");
+				$('.image-description').removeClass("landscape-description");
 				$('.profile-wrapper').removeClass("landscape-profile-wrapper");
 				$('.profile').removeClass("landscape-profile");
 				$('.image-author').removeClass("landscape-author");
 				$('.image-comments').removeClass("landscape-comments");
 				$('#singleImageWrapper').addClass("portrait-wrapper");
 				$('.image-text').addClass("portrait-text");
-				$('.image-body').addClass("portrait-body");
+				$('.image-description').addClass("portrait-description");
 				$('.profile-wrapper').addClass("portrait-profile-wrapper");
 				$('.profile').addClass("portrait-profile");
 				$('.image-author').addClass("portrait-author");
@@ -117,14 +117,14 @@
 			else{
 				$('#singleImageWrapper').removeClass("portrait-wrapper");
 				$('.image-text').removeClass("portrait-text");
-				$('.image-body').removeClass("portrait-body");
+				$('.image-description').removeClass("portrait-description");
 				$('.profile-wrapper').removeClass("portrait-profile-wrapper");
 				$('.profile').removeClass("portrait-profile");
 				$('.image-author').removeClass("portrait-author");
 				$('.image-comments').removeClass("portrait-comments");
 				$('#singleImageWrapper').addClass("landscape-wrapper");
 				$('.image-text').addClass("landscape-text");
-				$('.image-body').addClass("landscape-body");
+				$('.image-description').addClass("landscape-description");
 				$('.profile-wrapper').addClass("landscape-profile-wrapper");
 				$('.profile').addClass("landscape-profile");
 				$('.image-author').addClass("landscape-author");
