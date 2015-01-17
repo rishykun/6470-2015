@@ -97,7 +97,8 @@ module.exports = function(app, passport) {
         onFileUploadComplete: function (file) {
             console.log(file.fieldname + ' uploaded to  ' + file.path)
             done=true;
-        }
+        },
+        inMemory: true
     }));
 
     app.post('/api/photo',function(req,res){
@@ -111,7 +112,19 @@ module.exports = function(app, passport) {
 
     // processes the upload
     app.post('/upload', function(req, res) {
-        console.log(req); //debug
+        console.log(req.files.userPhoto); //debug
+        params = {Bucket: '6.470/Boxes',
+        Key: req.files.userPhoto.originalname,
+        Body: req.files.userPhoto.buffer}
+        s3.upload(params,function(err,data){
+            if(!err){
+                console.log('success');
+            }
+            else{
+                console.log(err);
+            }
+        });
+        res.end("File uploaded.");
     });
 
     // process the create form
