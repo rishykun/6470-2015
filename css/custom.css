@@ -132,12 +132,26 @@
 .image-text{
   position:relative;
 }
+
 .portrait-wrapper{
   display: inline-block;
   left:0px;
   max-width: 60%; 
   width: 60%;
   background: black;
+}
+
+.portrait-prev-img{
+  margin-left:4%;
+}
+
+.portrait-return{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.portrait-next-img{
+  float:right;
 }
 
 .portrait-text{

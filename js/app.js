@@ -113,8 +113,14 @@
 				$('.profile').addClass("portrait-profile");
 				$('.image-author').addClass("portrait-author");
 				$('.image-comments').addClass("portrait-comments");
+				$('.prev-img').addClass("portrait-prev-img");
+				$('.return').addClass("portrait-return");
+				$('.next-img').addClass("portrait-next-img");
 			}
 			else{
+				$('prev-img').removeClass("portrait-prev-img");
+				$('return').removeClass("portrait-return");
+				$('next-img').removeClass("portrait-next-img");
 				$('#singleImageWrapper').removeClass("portrait-wrapper");
 				$('.image-text').removeClass("portrait-text");
 				$('.image-description').removeClass("portrait-description");
@@ -132,14 +138,17 @@
 			}
 		};
 		this.gallery = gallery;
-		this.num = 0;
+		this.num = -1;
 		this.curImg = "";
 		this.setNum = function(num){
 			this.num = num;
-			if (this.num === 0){
-				this.curImg = "";
+			if (num === -1){
+				this.curImg = '';
 			}
 			else{
+				if (num === 0){
+					this.num = this.gallery.length;
+				}
 				this.curImg = this.gallery[this.num-1].url;
 			}
 		}
@@ -171,6 +180,12 @@ app.controller("MainController", function($scope, $window) {
 
 		//quick hacky way to find dynamic position
 		$('.modal').css("display","block");
+		var boxModalHeight=$('#boxModalDialog').height();
+		$('.portrait-prev-img, .portrait-return,.portrait-next-img').css("height", .15*boxModalHeight+"px");
+		$('.portrait-prev-img, .portrait-return,.portrait-next-img').css("padding-bottom", .03*boxModalHeight+"px");
+		$('.prev-img').removeClass('portrait-prev-img');
+		$('.return').removeClass('portrait-return');
+		$('.next-img').removeClass('portrait-next-img');
 		var createModalHeight = $('#createDialog').height();
 		var loginModalHeight = $('#loginDialog').height();
 		$('.modal').css("display","none");
