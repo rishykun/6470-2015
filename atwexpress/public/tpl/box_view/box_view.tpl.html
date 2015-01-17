@@ -1,0 +1,53 @@
+<div ng-controller="GalleryController as galleryCtrl">
+	<div id="buttonGroup" class="text-center">
+		<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" data-toggle="modal" data-target="#boxModal" ng-click="galleryCtrl.num=-1">OPEN</button>
+	</div>
+	<div id="boxModal" class = "modal fade">
+		<div class="modal-dialog"id="boxModalDialog" >
+			<div class="modal-content" id="boxModalCont">
+				<div class="modal-body" id = "boxModalBod">
+					<div class="title" align="center" ng-show="galleryCtrl.num===-1">
+						<h4> NAME OF BOX </h4>
+					</div>
+					<div class="gallery" ng-show="galleryCtrl.num === -1">
+						<div class="image-wrapper hvr-glow-blue" ng-repeat="image in galleryCtrl.gallery track by $index" style="margin:5px">
+							<div class="shadow">
+								<img class="images" ng-src="{{image.url}}" ng-click="galleryCtrl.setNum(image.num)" style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
+								<span id="gallery-text">{{image.title}}</span>
+								<span id="gallery-author">{{image.author}}</span>
+								<span id="gallery-likes">{{image.thumbs}}</span>
+								<span id="gallery-comments">{{image.comments.length}}</span>
+								<hr class="lineClass"/>
+								<!-- testing -->
+							</div>
+						</div>
+					</div>
+					<div class = "single-image-view" ng-show="galleryCtrl.num !== -1">
+						<div class="single-image-wrapper" id="singleImageWrapper" style="position: relative;">
+							<img id="singleImage" class="image" ng-src="{{galleryCtrl.curImg}}" imageonload/>
+						</div>
+						<div class ="image-text">
+							<div class="buttons">
+								<img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="galleryCtrl.setNum((galleryCtrl.num-1)%(galleryCtrl.gallery.length))"/>
+								<img class = "return hvr-grow" ng-src="./icons/return.png" ng-click="galleryCtrl.setNum(-1)"/>
+								<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="galleryCtrl.setNum((galleryCtrl.num+1)%(galleryCtrl.gallery.length))"/>
+							</div>
+							<div class="profile-wrapper">
+								<img class="profile" src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p160x160/10353637_1047631608585894_7807827911058557415_n.jpg?oh=df17ffe6942fdb5dbe14412bf894a5ea&oe=552EA325&__gda__=1428938202_8b4c55c17cbd53b4a35a45a5138bcd77"/>
+							</div>
+							<div class="image-author">
+								Cheng Wang
+							</div>					
+							<div class="image-description">
+								<p> {{galleryCtrl.gallery[galleryCtrl.num-1].description}} </p>
+							</div>
+							<div class="image-comments">
+								I fap to her every night.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
