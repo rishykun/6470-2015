@@ -113,14 +113,8 @@
 				$('.profile').addClass("portrait-profile");
 				$('.image-author').addClass("portrait-author");
 				$('.image-comments').addClass("portrait-comments");
-				$('.prev-img').addClass("portrait-prev-img");
-				$('.return').addClass("portrait-return");
-				$('.next-img').addClass("portrait-next-img");
 			}
 			else{
-				$('prev-img').removeClass("portrait-prev-img");
-				$('return').removeClass("portrait-return");
-				$('next-img').removeClass("portrait-next-img");
 				$('#singleImageWrapper').removeClass("portrait-wrapper");
 				$('.image-text').removeClass("portrait-text");
 				$('.image-description').removeClass("portrait-description");
@@ -180,12 +174,11 @@ app.controller("MainController", function($scope, $window) {
 
 		//quick hacky way to find dynamic position
 		$('.modal').css("display","block");
-		var boxModalHeight=$('#boxModalDialog').height();
-		$('.portrait-prev-img, .portrait-return,.portrait-next-img').css("height", .15*boxModalHeight+"px");
-		$('.portrait-prev-img, .portrait-return,.portrait-next-img').css("padding-bottom", .03*boxModalHeight+"px");
-		$('.prev-img').removeClass('portrait-prev-img');
-		$('.return').removeClass('portrait-return');
-		$('.next-img').removeClass('portrait-next-img');
+		var windowHeight=$(window).height();
+		var windowWidth=$(window).width();
+		$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
+		$('.buttons').css("padding-bottom", windowHeight*0.03+"px");
+		//$('.prev-img').css("margin-left", windowWidth*0.01+"px");
 		var createModalHeight = $('#createDialog').height();
 		var loginModalHeight = $('#loginDialog').height();
 		$('.modal').css("display","none");

@@ -141,20 +141,25 @@
   background: black;
 }
 
-.portrait-prev-img{
-  margin-left:4%;
+.prev-img{
+  float:left;
 }
 
-.portrait-return{
-  margin-left:auto;
-  margin-right:auto;
+.return{
+  /*margin-left:auto;
+  margin-right:auto;*/
 }
 
-.portrait-next-img{
+.next-img{
   float:right;
 }
 
+.prev-img,.return,.next-img:hover {
+  cursor:hand;cursor:pointer;
+}
+
 .portrait-text{
+  padding-left: 2%;
   display: inline-block;
   vertical-align: top;
   position: relative;
@@ -167,12 +172,11 @@
 
 .portrait-description{
   margin-top: 20%;
-  margin-left: 5%;
+
 }
 
 .portrait-profile-wrapper{
   position:relative;
-  left:5%;
   width:15%;
   float:left;
 }
@@ -192,7 +196,6 @@
 }
 
 .portrait-comments{
-  margin-left:5%;
 }
 
 .landscape-comments{
@@ -202,7 +205,7 @@
 
 .portrait-author{
   position:absolute;
-  left:23%;
+  padding-left:18%;
 }
 
 .landscape-author{
@@ -249,8 +252,6 @@
   content: "";
   pointer-events: none;
 }
-
-
 
 .hvr-glow-blue {
   display: inline-block;
