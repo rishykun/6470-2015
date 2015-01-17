@@ -1,8 +1,9 @@
 var AWS = require('aws-sdk');
-AWS.config.loadFromPath('./config/aws/config.json');
 var uuid = require('node-uuid'); //used for generating unique UUID numbers
 var fs = require('fs'); //used for file streaming
+var multer = require("multer");
 
+AWS.config.loadFromPath('./config/aws/config.json');
 var s3 = new AWS.S3();
 
 /*
@@ -82,6 +83,36 @@ module.exports = function(app, passport) {
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
+
+    //--start multer
+    var done = false;
+
+    app.use(multer({ dest: './uploads/',
+        rename: function (fieldname, filename) {
+            return filename+Date.now();
+        },
+        onFileUploadStart: function (file) {
+            console.log(file.originalname + ' is starting ...')
+        },
+        onFileUploadComplete: function (file) {
+            console.log(file.fieldname + ' uploaded to  ' + file.path)
+            done=true;
+        }
+    }));
+
+    app.post('/api/photo',function(req,res){
+        if(done==true){
+            console.log(req.files);
+            res.end("File uploaded.");
+        }
+    });
+    //--end multer
+
+
+    // processes the upload
+    app.post('/upload', function(req, res) {
+        console.log(req); //debug
+    });
 
     // process the create form
     app.post('/create', function(req, res) {

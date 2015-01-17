@@ -17,12 +17,16 @@
 			.state( 'signup', {
 				url: '/',
 				templateUrl: "../tpl/signup/signup.tpl.html",
-				controller: "signupController"		
+				controller: "signupController"
 			})
 			.state( 'profileview', {
 				url: '/',
 				templateUrl: "../tpl/profile/profileviewer.tpl.html",
 				controller: "profileController"
+			})
+			.state( 'upload', {
+				url: '/',
+				templateUrl: "../tpl/upload/upload.html",
 			});
 	});
 
