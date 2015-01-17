@@ -156,7 +156,7 @@ module.exports = function(app, passport) {
 
         var boxParams = {
             Bucket: '6.470/',
-            Prefix: 'Boxes/6071e388-544d-4861-a877-e5107bed050b'
+            Prefix: 'Boxes/' + req.body.boxname
         }
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
@@ -186,7 +186,6 @@ module.exports = function(app, passport) {
 
         //creates a signed url to be accessible by the front-end
         s3.getSignedUrl('getObject', itemParams, function (err, url) {
-            console.log("The URL is", url); //debug
             res.json("{ 'name': " + "'batman'" + ", 'uri': " + url + "}");
         });
     });

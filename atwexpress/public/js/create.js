@@ -50,8 +50,6 @@
 					$scope.setCurrentBox(data);
 					$('.form-create').trigger("reset"); //clears the signin form
 					$scope.hideModals();
-
-					
 				})
 				.error (function() {
 					console.log("Error creating a box!");
