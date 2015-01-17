@@ -128,9 +128,9 @@
 			//quick hacky way to find dynamic position
 			var cheight = $(window).height();
 			var cdisplay = $('.modal').css("display");
-			$('.modal').css("display","block");
+			$('#signModal').css("display","block");
 			var signModalHeight = $('#signDialog').height();
-			$('.modal').css("display",cdisplay);
+			$('#signModal').css("display",cdisplay);
 
 			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");
