@@ -84,33 +84,11 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    //--start multer
-    var done = false;
-
-    app.use(multer({ dest: './uploads/',
-        rename: function (fieldname, filename) {
-            return filename+Date.now();
-        },
-        onFileUploadStart: function (file) {
-            console.log(file.originalname + ' is starting ...')
-        },
-        onFileUploadComplete: function (file) {
-            console.log(file.fieldname + ' uploaded to  ' + file.path)
-            done=true;
-        },
-        inMemory: true
-    }));
-
-    app.post('/api/photo',function(req,res){
-        if(done==true){
-            console.log(req.files);
-            res.end("File uploaded.");
-        }
-    });
-    //--end multer
-
+    //middleware that handles the format of the post data in uploads
+    app.use(multer({ inMemory: true }));
 
     // processes the upload
+    //debug TODO: it currently uploads to Boxes folder, we need to upload it to the current folder that we are viewing
     app.post('/upload', function(req, res) {
         console.log(req.files.userPhoto); //debug
         params = {Bucket: '6.470/Boxes',
@@ -118,13 +96,16 @@ module.exports = function(app, passport) {
         Body: req.files.userPhoto.buffer}
         s3.upload(params,function(err,data){
             if(!err){
-                console.log('success');
+                console.log('Successfully uploaded item.');
+                //res.status(200);
+                res.redirect('/');
             }
             else{
                 console.log(err);
+                //res.status(500);
+                res.redirect('/upload');
             }
         });
-        res.end("File uploaded.");
     });
 
     // process the create form
@@ -144,7 +125,7 @@ module.exports = function(app, passport) {
                         var params = {
                             Bucket: bucketBox.substring(0,bucketBox.length-1),
                             Key: 'box.config',
-                            Body: '{ "boxname" : "' + req.body.boxname + '", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : "{}" }'
+                            Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : "{}" }'
                         };
                         //debug todo: change body: req.user.local.email to req.user.local.user when available
                         s3.upload(params, function(err, data) {

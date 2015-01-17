@@ -73,9 +73,31 @@
 				console.log("Error getting profile!");
 			});
 		}
+
+		//gets the signed url that gives the item
+		$scope.getItem = function (boxuri, itemname) {
+			boxuri = "6.470/Boxes/6071e388-544d-4861-a877-e5107bed050b"; //debug
+			itemname = "batman.mp4"; //debug
+			reqData = {
+				'uri':  boxuri,
+				'key': itemname
+			}
+			$http.post('/getitem', reqData)
+			.success (function(data) {
+				console.log("Success getting item:"); //debug
+				console.log(data); //debug
+			})
+			.error (function() {
+				console.log("Error getting item!");
+			});
+		};
+
 		//gets the contents of the specified box uri from the server
 		$scope.getBoxContents = function (boxuri) {
-			$http.post('/getbox', "{ 'uri' : '" +  boxuri + "' }")
+			reqData = {
+				'boxname':  boxuri,
+			}
+			$http.post('/getbox', reqData)
 				.success (function(data) {
 					return data;
 				})
