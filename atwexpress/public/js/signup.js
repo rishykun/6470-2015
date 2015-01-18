@@ -59,13 +59,4 @@
 
 		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
-
-	//deprecated
-	app.directive('signupViewer',function(){
-	    return {
-		    replace : true,
-		    restrict : 'E',
-		    templateUrl: '../tpl/signup/signup.tpl.html'
-	    }; 
-	});
 })();
