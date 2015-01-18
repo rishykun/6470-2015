@@ -14,14 +14,33 @@
 				$http.post('/login', $scope.formData)
 				.success (function(data) {
 					$('.form-signin').trigger("reset"); //clears the signin form
-					$scope.getProfile(); //log in and load the profile
+					$.growl("Login successful", {
+						type: "success",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+					$scope.getProfile(false); //try to load the userprofile
 				})
 				.error (function() {
-					console.log("Error authenticating to server!");
+					$.growl("Error authenticating to server", {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 				});
 			}
 			else {
-				console.log("Form is empty!"); //debug
+				$.growl("Form was empty", {
+						type: "info",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 			}
 		};
 

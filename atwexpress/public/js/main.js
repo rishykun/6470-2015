@@ -27,7 +27,8 @@
 			})
 			.state( 'upload', {
 				url: '/',
-				templateUrl: "../tpl/upload/upload.html",
+				templateUrl: "../tpl/upload/upload.tpl.html",
+				//controller: "uploadController"
 			});
 	});
 
@@ -39,39 +40,48 @@
 		//returns the login status
 		$scope.isLoggedIn = function () {
 			return $scope.loggedIn;
-		}
+		};
 		//hides all modal windows
 		$scope.hideModals = function () {
 			//close the login & signup modal
 			$('#signModal').modal('hide');
 			//close the create modal
 			$('#createBoxModal').modal('hide');
-		}
+		};
 		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
 			$scope.loggedIn = loginStatus;
 			$scope.hideModals();
-		}
+		};
 		//gets the user profile from the server if properly authenticated already
-		$scope.getProfile = function () {
+		$scope.getProfile = function (alert) {
+			alertObject = {};
 			$http.get('/profile')
 			.success (function(data) {
 				if (data !== "") {
 					//if the user is logged in
 					$scope.setLogin(true);
-					$scope.userObject = data;
-					console.log("Found profile.");
-					console.log(data);
-					//user object
+					$scope.userObject = data; //user object
+					alertObject = { status: "success", message: "Found profile" };
 					//debug note: user/email is data.local.email
+
 				}
 				else {
-					console.log("Profile data was empty.");
+					alertObject = {status: "info", message: "Profile data was empty" }; //fail message
 				}
 			})
 			.error (function() {
-				console.log("Error getting profile!");
+				alertObject = { status: "danger", message: "Error getting profile" }; //fail message
 			});
+			if (alert) {
+				$.growl(alertObject.message, {
+					type: alertObject.status,
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
+			}
 		}
 
 		//gets the signed url that gives the item
@@ -127,7 +137,7 @@
 			});
 		};
 
-		$scope.getProfile(); //we check if we are already logged in on the server
+		$scope.getProfile(false); //we check if we are already logged in on the server
 		//if we are, then load the user data into our profile, which is the userObject object
 
 		//captures the height from $window using jquery

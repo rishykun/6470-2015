@@ -15,6 +15,9 @@
 					$scope.setCurrentBox(data);
 					$('.form-create').trigger("reset"); //clears the signin form
 					$scope.hideModals();
+					$("#uploadBoxModal").modal('show');
+					//hacky
+					$("<a href='/uploading'></a>").click();
 				})
 				.error (function() {
 					console.log("Error creating a box!");

@@ -14,14 +14,40 @@
 				$http.post('/signup', $scope.formData)
 				.success (function(data) {
 					$('.form-signup').trigger("reset"); //clears the signup form
-					$scope.getProfile(); //log in and load the profile
+					$.growl("Signup successful", {
+						type: "success",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+					$.growl("Logging in", {
+						type: "info",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+					$scope.getProfile(true); //try to load the userprofile
 				})
 				.error (function() {
-					console.log("Error registering account to server!");
+					$.growl("Error registering account to server", {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 				});
 			}
 			else {
-				console.log("Form is empty!"); //debug
+				$.growl("Form was empty", {
+					type: "info",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			}
 		};
 
