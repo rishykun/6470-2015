@@ -72,6 +72,8 @@
 			</div>
 		</div>
 
+
+
 		<!-- show navigation bar if we are logged in -->
 		<div ng-show="loggedIn">
 			<nav class="pull-right font-white" style="margin-top:5px; margin-right:5px;">
@@ -89,7 +91,7 @@
 		<div id="buttonGroup" class="text-center">
 			<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-border-fade custom-text-space-med" type="button" title="Start a new box!" data-toggle="modal" data-target="#createBoxModal">CREATE</button>
 			<div class="space-divider"/>
-			<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" data-toggle="modal" ui-sref="upload" data-target="#uploadBoxModal">RECEIVE</button>
+			<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" data-toggle="modal" ui-sref="profileview" data-target="#receiveBoxModal">RECEIVE</button>
 		</div>
 
 		<div id="createBoxModal" class="modal fade font-gray" ng-controller="createController">
@@ -139,7 +141,7 @@
 				        	<label for="inputEmail" class="sr-only">Box Name</label>
 				        	<input type="text" id="inputEmail" class="form-control" ng-model="formData.boxname" placeholder="Enter the name of the box" required="" autofocus="">
 				        	<label></label>
-				        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="getBox()">Get box</button>
+				        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="getUserConfig()">Get box</button>
 				      	</form>
 					</div>
 				</div>

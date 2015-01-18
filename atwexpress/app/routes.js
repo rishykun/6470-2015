@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var uuid = require('node-uuid'); //used for generating unique UUID numbers
 var fs = require('fs'); //used for file streaming
 var multer = require("multer");
-
+var s2json = require("string-to-json");
 AWS.config.loadFromPath('./config/aws/config.json');
 var s3 = new AWS.S3();
 
@@ -152,14 +152,48 @@ module.exports = function(app, passport) {
             Bucket: '6.470/',
             Prefix: 'Boxes/' + req.body.boxname
         }
+        console.log("post for getbox");
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
                 console.log(err, err.stack);
             }
             else {
+                console.log(data.Contents);
                 res.json(data.Contents);
             }
         });
+    });
+    
+    //Get user box list
+    app.post('/getuserconfig', function(req, res) {
+        //TODO: handle not logged in user -> redirect to somewhere else?
+        var userParams = {
+            Bucket:'6.470',
+            Key: 'Users/test/user.config'//,
+            //ResponseContentEncoding: 'text/plain'
+            //ResponseContentType: 'text/plain'
+        }
+  
+
+          s3.getSignedUrl('getObject', userParams, function (err, url) {
+                var http = require('http');
+                var options = {
+                    host: url.slice(8,24),
+                    port: 80,
+                    path: url.slice(24,url.length)
+                };
+                
+                http.get(options,function(rep){
+                    rep.setEncoding('utf8');
+                    rep.on('data',function(info){
+                        console.log(info);
+                        res.json(info);
+                    });
+                }).on('error',function(err){
+                    console.log(err);
+                });
+        
+            });
     });
 
     app.post('/getitem', function (req, res) {

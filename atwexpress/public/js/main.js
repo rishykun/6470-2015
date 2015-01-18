@@ -94,12 +94,35 @@
 
 		//gets the contents of the specified box uri from the server
 		$scope.getBoxContents = function (boxuri) {
+			boxuri = "6071e388-544d-4861-a877-e5107bed050b"; //debug
 			reqData = {
 				'boxname':  boxuri,
 			}
 			$http.post('/getbox', reqData)
 				.success (function(data) {
+					console.log('return data');
+					console.log(data);
 					return data;
+				})
+				.error (function() {
+					console.log("Error getting box contents for " + boxuri + "!");
+				});
+		}
+
+		//gets the names of boxes given the current user
+		$scope.getUserConfig = function (user) {
+			user = $scope.userObject.local.email; //debug
+			reqData = {
+				'username':  user,
+			}
+			$http.post('/getuserconfig', reqData)
+				.success (function(data) {
+
+					console.log(data);
+					console.log('Boxes Created');
+					userinfo = JSON.parse(data);
+					console.log(userinfo.boxes_created);
+					return userinfo;
 				})
 				.error (function() {
 					console.log("Error getting box contents for " + boxuri + "!");
