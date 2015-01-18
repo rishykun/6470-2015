@@ -1,5 +1,5 @@
 (function() {
-var app = angular.module( "main.gallery", ['ui.router']);
+	var app = angular.module( "main.gallery", ['ui.router']);
 	/*var gallery = [
 	{
 		num: 1,
@@ -84,11 +84,58 @@ var app = angular.module( "main.gallery", ['ui.router']);
 		comments:[]
 	}
 	];*/
-	app.controller('GalleryController', function($window){
+	app.controller('GalleryController', function($scope, $window){
+		$scope.gallery = [];
+
+		$scope.genGallery = function () {
+			boxNameObj = {
+				boxname: "4daf956f-3a03-481a-ad55-818b1662daf4"
+			};
+			boxConfig = {boxname: boxNameObj.boxname+"/config"};
+			boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+			$http.post('/getbox', boxNameObj)
+			.success (function(data) {
+				$http.post('/getbox', boxConfig)
+				.success (function(data) {
+					for (i=1; i < data.length; i++){
+						$http.post('/getitem', {'uri': boxConfig, 'key': data[i].Key})
+						.success (function(data) {
+
+						})
+						.error (function() {
+							console.log("Error getting config file");
+						});
+					}
+				})
+				.error (function() {
+					console.log("Error getting configuration!");
+				});
+				$http.post('/getbox', boxThumb)
+				.success (function(data) {
+					for (i=1; i < data.length; i++){
+						$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
+						.success (function(data) {
+							gallery[i-1].thumbnail = data.uri;
+						})
+						.error (function() {
+							console.log("Error getting thumbnail");
+						});
+					}
+				})
+				.error (function() {
+					console.log("Error getting thumnails!");
+				});
+			})
+			.error (function() {
+				console.log("Error getting box!");
+			});
+		};
+
 		var windowHeight=$(window).height();
 		var windowWidth=$(window).width();
 		$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
 		$('.buttons').css("padding-bottom", windowHeight*0.03+"px");
+
 		var adjustDisplay = function(ratio) {
 			if (ratio >= 1){
 				$('#singleImageWrapper').removeClass("landscape-wrapper");

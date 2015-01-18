@@ -154,7 +154,7 @@ module.exports = function(app, passport) {
         }
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
-                console.log(err, err.stack);
+                console.error(err, err.stack);
             }
             else {
                 res.json(data.Contents);

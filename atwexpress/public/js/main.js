@@ -6,34 +6,35 @@
 		'main.profile',
 		'main.gallery',
 		'ui.router'
-	]);
+		]);
 
 	app.config (function ($stateProvider, $urlRouterProvider) {
 		$stateProvider
-			.state( 'signin', {
-				url: '/',
-				templateUrl: "../tpl/signin/signin.tpl.html",
-				controller: "signinController"
-			})
-			.state( 'signup', {
-				url: '/',
-				templateUrl: "../tpl/signup/signup.tpl.html",
-				controller: "signupController"
-			})
-			.state( 'profileview', {
-				url: '/',
-				templateUrl: "../tpl/profile/profileviewer.tpl.html",
-				controller: "profileController"
-			})
-			.state( 'upload', {
-				url: '/',
-				templateUrl: "../tpl/upload/upload.tpl.html",
+		.state( 'signin', {
+			url: '/',
+			templateUrl: "../tpl/signin/signin.tpl.html",
+			controller: "signinController"
+		})
+		.state( 'signup', {
+			url: '/',
+			templateUrl: "../tpl/signup/signup.tpl.html",
+			controller: "signupController"
+		})
+		.state( 'profileview', {
+			url: '/',
+			templateUrl: "../tpl/profile/profileviewer.tpl.html",
+			controller: "profileController"
+		})
+		.state( 'upload', {
+			url: '/',
+			templateUrl: "../tpl/upload/upload.tpl.html",
 				//controller: "uploadController"
 			});
 	});
 
 	app.controller("MainController", function($scope, $window, $http, $state) {
 		//------------ variable initialization
+		
 		$scope.loggedIn = false; //default
 
 		//------------ controller functions
@@ -108,12 +109,12 @@
 				'boxname':  boxuri,
 			}
 			$http.post('/getbox', reqData)
-				.success (function(data) {
-					return data;
-				})
-				.error (function() {
-					console.log("Error getting box contents for " + boxuri + "!");
-				});
+			.success (function(data) {
+				return data;
+			})
+			.error (function() {
+				console.log("Error getting box contents for " + boxuri + "!");
+			});
 		}
 		//sets the current box
 		$scope.setCurrentBox = function (box) {
