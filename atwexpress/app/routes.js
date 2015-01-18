@@ -169,9 +169,7 @@ module.exports = function(app, passport) {
         //TODO: handle not logged in user -> redirect to somewhere else?
         var userParams = {
             Bucket:'6.470',
-            Key: 'Users/test/user.config'//,
-            //ResponseContentEncoding: 'text/plain'
-            //ResponseContentType: 'text/plain'
+            Key: 'Users/'+req.body.username+'/user.config'
         }
   
 
