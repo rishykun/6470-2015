@@ -164,12 +164,42 @@ module.exports = function(app, passport) {
         });
     });
     
-    //Get user box list
+    //Get user config
     app.post('/getuserconfig', function(req, res) {
         //TODO: handle not logged in user -> redirect to somewhere else?
         var userParams = {
             Bucket:'6.470',
             Key: 'Users/'+req.body.username+'/user.config'
+        }
+  
+
+          s3.getSignedUrl('getObject', userParams, function (err, url) {
+                var http = require('http');
+                var options = {
+                    host: url.slice(8,24),
+                    port: 80,
+                    path: url.slice(24,url.length)
+                };
+                
+                http.get(options,function(rep){
+                    rep.setEncoding('utf8');
+                    rep.on('data',function(info){
+                        console.log(info);
+                        res.json(info);
+                    });
+                }).on('error',function(err){
+                    console.log(err);
+                });
+        
+            });
+    });
+
+//Get box config file
+    app.post('/getboxconfig', function(req, res) {
+        //TODO: handle not logged in user -> redirect to somewhere else?
+        var userParams = {
+            Bucket:'6.470',
+            Key: 'Boxes/'+req.body.boxid+'/box.config'
         }
   
 
