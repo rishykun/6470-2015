@@ -2,14 +2,14 @@ var AWS = require('aws-sdk');
 var uuid = require('node-uuid'); //used for generating unique UUID numbers
 var fs = require('fs'); //used for file streaming
 var multer = require("multer");
-
+var s2json = require("string-to-json");
 AWS.config.loadFromPath('./config/aws/config.json');
 var s3 = new AWS.S3();
 
 /*
 s3.createBucket( {Bucket: 'myBucket2'}, function (err, data) {
     if (err) {       
-        console.log(err);
+        console.error(err);
     }
     else {
         console.log("SUCCESSFULLY CREATED bucket"); //debug
@@ -41,7 +41,7 @@ fileStream.on('open', function () {
 /*
 s3.upload(params, function(err, data) {
     if (err) {       
-        console.log(err);
+        console.error(err);
     }
     else {
         console.log("Successfully uploaded data!");   
@@ -101,7 +101,7 @@ module.exports = function(app, passport) {
                 res.redirect('/');
             }
             else{
-                console.log(err);
+                console.error(err);
                 //res.status(500);
                 res.redirect('/upload');
             }
@@ -116,7 +116,7 @@ module.exports = function(app, passport) {
             if(err){
                 s3.createBucket({Bucket:bucketBox},function(err,data){
                     if (err) {       
-                        console.log(err);
+                        console.error(err);
                     }
                     else {
                         console.log("Successfully created box.");
@@ -130,7 +130,7 @@ module.exports = function(app, passport) {
                         //debug todo: change body: req.user.local.email to req.user.local.user when available
                         s3.upload(params, function(err, data) {
                             if (err) {       
-                                console.log(err);
+                                console.error(err);
                             }
                             else {
                                 console.log("Successfully generated box configuration.");
@@ -140,7 +140,7 @@ module.exports = function(app, passport) {
                     }
                 });
              } else {
-                 console.log("Box (bucket) already exists!");
+                 console.error("Box (bucket) already exists!");
              }
          });
     });
@@ -152,14 +152,46 @@ module.exports = function(app, passport) {
             Bucket: '6.470/',
             Prefix: 'Boxes/' + req.body.boxname
         }
+        console.log("post for getbox");
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
                 console.error(err, err.stack);
             }
             else {
+                console.log(data.Contents);
                 res.json(data.Contents);
             }
         });
+    });
+    
+    //Get user box list
+    app.post('/getuserconfig', function(req, res) {
+        //TODO: handle not logged in user -> redirect to somewhere else?
+        var userParams = {
+            Bucket:'6.470',
+            Key: 'Users/'+req.body.username+'/user.config'
+        }
+  
+
+          s3.getSignedUrl('getObject', userParams, function (err, url) {
+                var http = require('http');
+                var options = {
+                    host: url.slice(8,24),
+                    port: 80,
+                    path: url.slice(24,url.length)
+                };
+                
+                http.get(options,function(rep){
+                    rep.setEncoding('utf8');
+                    rep.on('data',function(info){
+                        console.log(info);
+                        res.json(info);
+                    });
+                }).on('error',function(err){
+                    console.log(err);
+                });
+        
+            });
     });
 
     app.post('/getitem', function (req, res) {
