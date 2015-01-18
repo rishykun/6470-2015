@@ -9,6 +9,7 @@
 	]);
 
 	app.config (function ($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise("empty");
 		$stateProvider
 			.state( 'signin', {
 				url: '/',
@@ -37,6 +38,21 @@
 		$scope.loggedIn = false; //default
 
 		//------------ controller functions
+		//get the current state
+		$scope.getCurrentState = function() {
+			console.log("state:" + $state.current.name.trim() + "."); //debug
+			return "" + $state.current.name.trim() + "";
+		};
+		$scope.compareState = function (state) {
+			console.log(state);
+			console.log($state.current.name);
+			if (state === $state.current.name) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 		//returns the login status
 		$scope.isLoggedIn = function () {
 			return $scope.loggedIn;
@@ -161,7 +177,7 @@
 		}
 
 		//gets a box config file given the name
-		$scope.getUserConfig = function (boxid) {
+		$scope.getBoxConfig = function (boxid) {
 			reqData = {
 				'boxid':  boxid,
 			}
