@@ -10,30 +10,54 @@
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.login = function () {
-			if ($scope.formData !== $scope.emptyData) {
-				$http.post('/login', $scope.formData)
-				.success (function(data) {
-					$('.form-signin').trigger("reset"); //clears the signin form
-					$scope.getProfile(); //log in and load the profile
-				})
-				.error (function() {
-					console.log("Error authenticating to server!");
-				});
+			if ($scope.formData.hasOwnProperty("email") && $scope.formData.hasOwnProperty("password")) {
+				if ($scope.formData.email !== undefined && $scope.formData.email !== null
+					&& $scope.formData.email !==""
+					&& $scope.formData.password !== undefined && $scope.formData.password !== null
+					&& $scope.formData.password !== "") {
+					$http.post('/login', $scope.formData)
+					.success (function(data) {
+						$('.form-signin').trigger("reset"); //clears the signin form
+						$.growl("Login successful", {
+							type: "success",
+							animate: {
+								enter: 'animated fadeInRight',
+								exit: 'animated fadeOutRight'
+							}
+						});
+						$scope.getProfile(false); //try to load the userprofile
+					})
+					.error (function() {
+						$.growl("Error authenticating to server", {
+							type: "danger",
+							animate: {
+								enter: 'animated fadeInRight',
+								exit: 'animated fadeOutRight'
+							}
+						});
+					});
+				}
+				else {
+					$.growl("Form is empty", {
+						type: "info",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+				}
 			}
 			else {
-				console.log("Form is empty!"); //debug
+				$.growl("Form is empty", {
+					type: "info",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			}
 		};
 
 		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
-	});
-
-	//deprecated
-	app.directive('signinViewer',function(){
-	    return {
-		    replace : true,
-		    restrict : 'E',
-		    templateUrl: '../tpl/signin/signin.tpl.html'
-	    }; 
 	});
 })();

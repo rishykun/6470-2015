@@ -9,7 +9,7 @@ var s3 = new AWS.S3();
 /*
 s3.createBucket( {Bucket: 'myBucket2'}, function (err, data) {
     if (err) {       
-        console.log(err);
+        console.error(err);
     }
     else {
         console.log("SUCCESSFULLY CREATED bucket"); //debug
@@ -41,7 +41,7 @@ fileStream.on('open', function () {
 /*
 s3.upload(params, function(err, data) {
     if (err) {       
-        console.log(err);
+        console.error(err);
     }
     else {
         console.log("Successfully uploaded data!");   
@@ -101,7 +101,7 @@ module.exports = function(app, passport) {
                 res.redirect('/');
             }
             else{
-                console.log(err);
+                console.error(err);
                 //res.status(500);
                 res.redirect('/upload');
             }
@@ -116,7 +116,7 @@ module.exports = function(app, passport) {
             if(err){
                 s3.createBucket({Bucket:bucketBox},function(err,data){
                     if (err) {       
-                        console.log(err);
+                        console.error(err);
                     }
                     else {
                         console.log("Successfully created box.");
@@ -130,7 +130,7 @@ module.exports = function(app, passport) {
                         //debug todo: change body: req.user.local.email to req.user.local.user when available
                         s3.upload(params, function(err, data) {
                             if (err) {       
-                                console.log(err);
+                                console.error(err);
                             }
                             else {
                                 console.log("Successfully generated box configuration.");
@@ -140,7 +140,7 @@ module.exports = function(app, passport) {
                     }
                 });
              } else {
-                 console.log("Box (bucket) already exists!");
+                 console.error("Box (bucket) already exists!");
              }
          });
     });
@@ -155,7 +155,7 @@ module.exports = function(app, passport) {
         console.log("post for getbox");
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
-                console.log(err, err.stack);
+                console.error(err, err.stack);
             }
             else {
                 console.log(data.Contents);

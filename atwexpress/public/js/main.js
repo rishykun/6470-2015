@@ -27,7 +27,8 @@
 			})
 			.state( 'upload', {
 				url: '/',
-				templateUrl: "../tpl/upload/upload.html",
+				templateUrl: "../tpl/upload/upload.tpl.html",
+				//controller: "uploadController"
 			});
 	});
 
@@ -39,38 +40,57 @@
 		//returns the login status
 		$scope.isLoggedIn = function () {
 			return $scope.loggedIn;
-		}
+		};
 		//hides all modal windows
 		$scope.hideModals = function () {
 			//close the login & signup modal
 			$('#signModal').modal('hide');
 			//close the create modal
 			$('#createBoxModal').modal('hide');
-		}
+		};
 		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
 			$scope.loggedIn = loginStatus;
 			$scope.hideModals();
-		}
+		};
 		//gets the user profile from the server if properly authenticated already
-		$scope.getProfile = function () {
+		$scope.getProfile = function (alert) {
 			$http.get('/profile')
 			.success (function(data) {
 				if (data !== "") {
 					//if the user is logged in
 					$scope.setLogin(true);
-					$scope.userObject = data;
-					console.log("Found profile.");
-					console.log(data);
-					//user object
+					$scope.userObject = data; //user object
 					//debug note: user/email is data.local.email
+					if (alert) {
+						$.growl("Found profile", {
+							type: "info",
+							animate: {
+								enter: 'animated fadeInRight',
+								exit: 'animated fadeOutRight'
+							}
+						});
+					}
+
 				}
 				else {
-					console.log("Profile data was empty.");
+					$.growl("Profile data is empty", {
+						type: "info",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 				}
 			})
 			.error (function() {
-				console.log("Error getting profile!");
+				$.growl("Error retrieving profile", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			});
 		}
 
@@ -88,7 +108,13 @@
 				console.log(data); //debug
 			})
 			.error (function() {
-				console.log("Error getting item!");
+				$.growl("Error retrieving item from the server", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			});
 		};
 
@@ -105,7 +131,13 @@
 					return data;
 				})
 				.error (function() {
-					console.log("Error getting box contents for " + boxuri + "!");
+					$.growl("Error retrieving box contents from the server for url: " + boxuri, {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 				});
 		}
 
@@ -139,18 +171,33 @@
 		$scope.logout = function () {
 			$http.get('/logout')
 			.success (function(data) {
-				console.log("Successfully logged out!");
+				$.growl("Successfully logged out", {
+					type: "info",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 
 				//clears the logged-in user profile in userObject
 				$scope.userObject = {};
+				//clears all forms from previous user
+				$('.form-create').trigger("reset");
+				//set the login to be false
 				$scope.setLogin(false);
 			})
 			.error (function() {
-				console.log("Error logging out!");
+				$.growl("Error logging out", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			});
 		};
 
-		$scope.getProfile(); //we check if we are already logged in on the server
+		$scope.getProfile(false); //we check if we are already logged in on the server
 		//if we are, then load the user data into our profile, which is the userObject object
 
 		//captures the height from $window using jquery
