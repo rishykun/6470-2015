@@ -142,26 +142,44 @@
 			});
 		}
 
-		//gets the names of boxes given the current user
+		//gets the user config file as a json for the current user
 		$scope.getUserConfig = function (user) {
 			user = $scope.userObject.local.email; //debug
 			reqData = {
 				'username':  user,
 			}
 			$http.post('/getuserconfig', reqData)
+
 			.success (function(data) {
 
 				console.log(data);
-				console.log('Boxes Created');
 				userinfo = JSON.parse(data);
 				console.log(userinfo.boxes_created);
 				return userinfo;
 			})
 			.error (function() {
-				console.log("Error getting box contents for " + boxuri + "!");
+				console.log("Error getting user config file for " + user + "!");
 			});
-			>>>>>>> master
 		}
+
+		//gets a box config file given the name
+		$scope.getBoxConfig = function (boxid) {
+			reqData = {
+				'boxid':  boxid,
+			}
+			$http.post('/getboxconfig', reqData)
+			.success (function(data) {
+
+				console.log(data);
+				boxinfo = JSON.parse(data);
+				console.log(boxinfo);
+				return boxinfo;
+			})
+			.error (function() {
+				console.log("Error getting box contents for " + boxid + "!");
+			});
+		}
+
 		//sets the current box
 		$scope.setCurrentBox = function (box) {
 			$scope.currentBox = box;
