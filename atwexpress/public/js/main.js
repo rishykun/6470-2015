@@ -55,33 +55,43 @@
 		};
 		//gets the user profile from the server if properly authenticated already
 		$scope.getProfile = function (alert) {
-			alertObject = {};
 			$http.get('/profile')
 			.success (function(data) {
 				if (data !== "") {
 					//if the user is logged in
 					$scope.setLogin(true);
 					$scope.userObject = data; //user object
-					alertObject = { status: "success", message: "Found profile" };
 					//debug note: user/email is data.local.email
+					if (alert) {
+						$.growl("Found profile", {
+							type: "info",
+							animate: {
+								enter: 'animated fadeInRight',
+								exit: 'animated fadeOutRight'
+							}
+						});
+					}
 
 				}
 				else {
-					alertObject = {status: "info", message: "Profile data was empty" }; //fail message
+					$.growl("Profile data is empty", {
+						type: "info",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 				}
 			})
 			.error (function() {
-				alertObject = { status: "danger", message: "Error getting profile" }; //fail message
-			});
-			if (alert) {
-				$.growl(alertObject.message, {
-					type: alertObject.status,
+				$.growl("Error retrieving profile", {
+					type: "danger",
 					animate: {
 						enter: 'animated fadeInRight',
 						exit: 'animated fadeOutRight'
 					}
 				});
-			}
+			});
 		}
 
 		//gets the signed url that gives the item
@@ -98,7 +108,13 @@
 				console.log(data); //debug
 			})
 			.error (function() {
-				console.log("Error getting item!");
+				$.growl("Error retrieving item from the server", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			});
 		};
 
@@ -112,7 +128,13 @@
 					return data;
 				})
 				.error (function() {
-					console.log("Error getting box contents for " + boxuri + "!");
+					$.growl("Error retrieving box contents from the server for url: " + boxuri, {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
 				});
 		}
 		//sets the current box
@@ -126,14 +148,29 @@
 		$scope.logout = function () {
 			$http.get('/logout')
 			.success (function(data) {
-				console.log("Successfully logged out!");
+				$.growl("Successfully logged out", {
+					type: "info",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 
 				//clears the logged-in user profile in userObject
 				$scope.userObject = {};
+				//clears all forms from previous user
+				$('.form-create').trigger("reset");
+				//set the login to be false
 				$scope.setLogin(false);
 			})
 			.error (function() {
-				console.log("Error logging out!");
+				$.growl("Error logging out", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
 			});
 		};
 
