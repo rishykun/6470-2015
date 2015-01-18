@@ -40,12 +40,9 @@
 		//------------ controller functions
 		//get the current state
 		$scope.getCurrentState = function() {
-			console.log("state:" + $state.current.name.trim() + "."); //debug
-			return "" + $state.current.name.trim() + "";
+			return $state.current.name.trim();
 		};
 		$scope.compareState = function (state) {
-			console.log(state);
-			console.log($state.current.name);
 			if (state === $state.current.name) {
 				return true;
 			}
@@ -165,10 +162,7 @@
 			}
 			$http.post('/getuserconfig', reqData)
 				.success (function(data) {
-
-					console.log(data);
 					userinfo = JSON.parse(data);
-					console.log(userinfo.boxes_created);
 					return userinfo;
 				})
 				.error (function() {
