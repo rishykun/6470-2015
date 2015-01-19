@@ -18,6 +18,7 @@
 					$scope.$parent.numboxes = $scope.userinfo.boxes_created.length + $scope.userinfo.boxes_collaborated.length;
 					$scope.$parent.Created = [];
 					$scope.$parent.Collaborated = [];
+					//ALL VARIABLES MUST BE CLEARED WHEN STATE IS CHANGED? 
 //------------------------   retrieve box config ------------------
 				for(i=0;i< $scope.boxes_created.length;i++)
 					{
