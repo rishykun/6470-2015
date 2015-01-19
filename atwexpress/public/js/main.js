@@ -1,5 +1,6 @@
 (function() {
 	var app = angular.module( "main", [
+		'main.state',
 		'main.signin',
 		'main.signup',
 		'main.create',
@@ -299,18 +300,6 @@
 		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
 		$scope.box = Box;
-		/*
-		$("#signModal").on('hidden.bs.modal', function () {
-			console.log("reached"); //debug
-		    $location.path("/");
-		    $scope.$apply();
-		});
-
-		$("#signDialog").on('hidden.bs.modal', function () {
-			console.log("reached"); //debug
-		    $location.path("/");
-		    $scope.$apply();
-		});*/
 
 		//------------ controller functions
 		//get the current state
