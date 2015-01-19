@@ -4,8 +4,13 @@
 	]);
 
 	app.controller ( 'profileController', function profileController ($scope, $http, $window) {
-		console.log("IN PROFILE CONTROLLER");
-		$scope.userConfig = $scope.getUserConfig();
-		console.log($scope.userConfig);
+		$scope.$parent.userFound = false;
+		$scope.$watch("userFound",function(newval,oldval){
+			console.log("got user config");
+			console.log(oldval);
+			console.log(newval);
+			console.log($scope.userinfo);},true);
+		$scope.getUserConfig();
+		
 	});
 })();

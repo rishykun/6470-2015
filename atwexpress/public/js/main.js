@@ -162,8 +162,9 @@
 			}
 			$http.post('/getuserconfig', reqData)
 				.success (function(data) {
-					userinfo = JSON.parse(data);
-					return userinfo;
+					$scope.userinfo = JSON.parse(data);
+					$scope.userFound = true;
+					//console.log(userinfo);
 				})
 				.error (function() {
 					console.log("Error getting user config file for " + user + "!");
@@ -178,8 +179,10 @@
 			$http.post('/getboxconfig', reqData)
 				.success (function(data) {
 
+					console.log("------- Data --------");
 					console.log(data);
 					boxinfo = JSON.parse(data);
+					console.log("------- Box Info -------");
 					console.log(boxinfo);
 					return boxinfo;
 				})
