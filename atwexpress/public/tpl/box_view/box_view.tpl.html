@@ -1,6 +1,6 @@
 <div ng-controller="GalleryController as galleryCtrl">
 	<div id="buttonGroup" class="text-center">
-		<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" data-toggle="modal" data-target="#boxModal" ng-click="num=-1;genGallery()">OPEN</button>
+		<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" data-toggle="modal" data-target="#boxModal" ng-click="num=-1">OPEN</button>
 	</div>
 	<div id="boxModal" class = "modal fade">
 		<div class="modal-dialog"id="boxModalDialog" >
@@ -10,21 +10,20 @@
 						<h4> NAME OF BOX </h4>
 					</div>
 					<div class="gallery" ng-show="num === -1">
-						<div class="image-wrapper hvr-glow-blue" ng-repeat="thumb_url in thumbnails track by $index" style="margin:5px">
+						<div class="image-wrapper hvr-glow-blue" ng-repeat="thumb in gallery track by $index" style="margin:5px">
 							<div class="shadow">
-								<img class="images" ng-src="thumb_url" ng-click="setNum($index)" style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
-								<span id="gallery-text">{{gallery[$index].title}}</span>
-								<span id="gallery-author">{{gallery[$index].author}}</span>
-								<span id="gallery-likes">{{gallery[$index].thumbs}}</span>
-								<span id="gallery-comments">{{gallery[$index].comments.length}}</span>
+								<img class="images" ng-src="thumb.url" ng-click="setNum(1)" style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
+								<span id="gallery-text">{{gallery[0].title}}</span>
+								<span id="gallery-author">{{gallery[0].author}}</span>
+								<span id="gallery-likes">{{gallery[0].thumbs}}</span>
+								<span id="gallery-comments">{{gallery[0].comments.length}}</span>
 								<hr class="lineClass"/>
-								<!-- testing -->
 							</div>
 						</div>
 					</div>
 					<div class = "single-image-view" ng-show="num !== -1">
 						<div class="single-image-wrapper" id="singleImageWrapper" style="position: relative;">
-							<img id="singleImage" class="image" ng-src="{{curImg}}" imageonload/>
+							<img id="singleImage" class="image" ng-src="curImg" imageonload/>
 						</div>
 						<div class ="image-text">
 							<div class="buttons">

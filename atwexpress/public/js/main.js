@@ -29,7 +29,7 @@
 		.state( 'boxview', {
 			url: '/',
 			templateUrl: "../tpl/box_view/box_view.tpl.html",
-			controller: "galleryController"
+			controller: "GalleryController"
 		})
 		.state( 'upload', {
 			url: '/',

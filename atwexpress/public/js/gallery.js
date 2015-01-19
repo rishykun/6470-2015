@@ -85,15 +85,25 @@
 	}
 	];*/
 	app.controller('GalleryController', function($scope, $window){
-		$scope.gallery = [];
-		$scope.thumbnails = [];
+		$scope.gallery = [{
+			num: 1,
+			url: "http://i.imgur.com/2GaqmYa.jpg",
+			author: "niggermaster",
+			thumbnail:"",
+			title:"Hot chick",
+			description:"Scarlett",
+			thumbs:0,
+			comments:[]}
+			];
+		$scope.thumbnails = ["http://i.imgur.com/2GaqmYa.jpg"];
 
-		$scope.genGallery = function () {
+		$scope.genGallery = function () {/*
 			boxNameObj = {
 				boxname: "4daf956f-3a03-481a-ad55-818b1662daf4"
 			};
 			boxConfig = {boxname: boxNameObj.boxname+"/config"};
 			boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+			
 			$http.post('/getbox', boxNameObj)
 			.success (function(data) {
 				$http.post('/getbox', boxConfig)
@@ -134,8 +144,8 @@
 			.error (function(){
 				console.log("Error getting thumbnails!");
 			});
+			*/
 		}
-
 		var windowHeight=$(window).height();
 		var windowWidth=$(window).width();
 		$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
