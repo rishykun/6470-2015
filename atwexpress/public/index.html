@@ -43,7 +43,7 @@
 		<b class="no-text-sel default-cursor" style="margin-left: 5px; margin-top:25px; color:black; float: left">Shrödinger's Black Box</b>
 
 		<!-- only show login options if we are not currently logged in-->
-		<div ng-show="!loggedIn">
+		<div ng-show="!isLoggedIn()">
 			<nav class="btn-group pull-right" style="margin-top:5px; margin-right:5px">
 			    <ul class="cf">
 			        <li id="loginContainer"><a id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med dropdown" href="#">Login
@@ -76,7 +76,7 @@
 		</div>
 
 		<!-- show navigation bar if we are logged in -->
-		<div ng-show="loggedIn">
+		<div ng-show="isLoggedIn()">
 			<nav class="pull-right font-white" style="margin-top:5px; margin-right:5px;">
 		    	<div style="float: left; padding-top:5px; padding-right:10px"> Welcome, {{userObject.local.email}}! </div>
 		    	<div style="float: right">
@@ -90,7 +90,9 @@
 		</div>
 
 
-		<div ng-show="compareState('profileview') || compareState('boxview')">
+		<div ng-show="compareState('profileview') || compareState('boxview') || compareState('signin')"> <!-- debug -->
+		<!-- <div ng-show="compareState('profileview') || compareState('boxview')"> -->
+			whyisthishere? because state is {{getCurrentState()}}<!-- debug -->
 			<div ui-view></div>
 		</div>
 

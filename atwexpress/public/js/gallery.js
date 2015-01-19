@@ -84,7 +84,7 @@ var app = angular.module( "main.gallery", ['ui.router']);
 		comments:[]
 	}
 	];*/
-	app.controller('GalleryController', function($window){
+	app.controller('galleryController', function($window){
 		var windowHeight=$(window).height();
 		var windowWidth=$(window).width();
 		$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
@@ -123,6 +123,7 @@ var app = angular.module( "main.gallery", ['ui.router']);
 				$('.image-comments').addClass("landscape-comments");
 			}
 		};
+		/*
 		this.gallery = gallery;
 		this.num = -1;
 		this.curImg = "";
@@ -137,7 +138,7 @@ var app = angular.module( "main.gallery", ['ui.router']);
 				}
 				this.curImg = this.gallery[this.num-1].url;
 			}
-		}
+		}*/
 		$('#singleImage').load(function() {
 			var realWidth = this.width;
 			var realHeight = this.height;

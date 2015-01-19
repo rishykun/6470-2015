@@ -9,38 +9,63 @@
 	]);
 
 	app.config (function ($stateProvider, $urlRouterProvider) {
-		$urlRouterProvider.otherwise("empty");
+		$urlRouterProvider.otherwise("/");
 		$stateProvider
 			.state( 'signin', {
-				url: '/',
+				url: '/signin',
 				templateUrl: "../tpl/signin/signin.tpl.html",
-				controller: "signinController"
+				controller: "signinController",
+				data: {
+					requireLogin: false
+				}
 			})
 			.state( 'signup', {
-				url: '/',
+				url: '/signup',
 				templateUrl: "../tpl/signup/signup.tpl.html",
-				controller: "signupController"
+				controller: "signupController",
+				data: {
+					requireLogin: false
+				}
+			})
+			.state( 'redirectfromloginorlogout', {
+				url: '/',
+				data: {
+					requireLogin: false
+				}
 			})
 			.state( 'profileview', {
-				url: '/',
+				url: '/profile',
 				templateUrl: "../tpl/profile/profileviewer.tpl.html",
-				controller: "profileController"
+				controller: "profileController",
+				data: {
+					requireLogin: true
+				}
 			})
 			.state( 'boxview', {
-				url: '/',
+				url: '/boxview',
 				templateUrl: "../tpl/box_view/box_view.tpl.html",
-				controller: "galleryController"
+				controller: "galleryController",
+				data: {
+					requireLogin: true
+				}
 			})
 			.state( 'upload', {
-				url: '/',
+				url: '/upload',
 				templateUrl: "../tpl/upload/upload.tpl.html",
+				data: {
+					requireLogin: true
+				}
 				//controller: "uploadController"
 			});
 	});
 
-	app.controller("MainController", function($scope, $window, $http, $state) {
+	app.factory('Auth', function() {
+		return { loggedIn: false };
+	});
+
+	app.controller("MainController", function($scope, $window, $http, $state, Auth) {
 		//------------ variable initialization
-		$scope.loggedIn = false; //default
+		$scope.auth = Auth; //default
 
 		//------------ controller functions
 		//get the current state
@@ -49,16 +74,12 @@
 		};
 		//compares the parameter state with the current state
 		$scope.compareState = function (state) {
-			if (state === $state.current.name) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			return state === $state.current.name;
 		}
 		//returns the login status
 		$scope.isLoggedIn = function () {
-			return $scope.loggedIn;
+			console.log("calling isLoggedIn. result: " + $scope.auth.loggedIn);
+			return $scope.auth.loggedIn;
 		};
 		//hides all modal windows
 		$scope.hideModals = function () {
@@ -69,8 +90,11 @@
 		};
 		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
-			$scope.loggedIn = loginStatus;
+			console.log("current State"); //debug
+			console.log($scope.getCurrentState()); //debug
+			$scope.auth.loggedIn = loginStatus;
 			$scope.hideModals();
+			$state.go('redirectfromloginorlogout'); //go this state, which redirects to the home page whenever we sign in or sign out
 		};
 		//gets the user profile from the server if properly authenticated already
 		$scope.getProfile = function (alert) {
@@ -298,6 +322,26 @@
 			var signModalHeight = $('#signDialog').height();
 			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");
+		});
+	});
+
+	app.run(function($rootScope, $state, $location, Auth) {
+	    $rootScope.$on( '$stateChangeStart', function(e, toState, toParams, fromState) {
+
+	    	console.log("toState url: " + toState.url); //debug
+	    	console.log("fromState url: " + fromState.url); //debug
+
+		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.loggedIn;
+		    console.log("!Auth.loggedin: " + !Auth.loggedin); //debug
+		    console.log(" should we login: " + shouldLogin); //debug
+		    //NOT authenticated
+		    if (shouldLogin) {
+		    	console.log("we should"); //debug
+		    	$state.go('signin');
+		    	e.preventDefault();
+		    	return;
+		    }
+		    console.log("we don't need to "); //debug
 		});
 	});
 })();
