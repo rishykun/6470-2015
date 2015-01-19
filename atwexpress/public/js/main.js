@@ -138,15 +138,14 @@
 		};
 
 		//gets the contents of the specified box uri from the server
-		$scope.getBoxContents = function (boxuri) {
-			boxuri = "6071e388-544d-4861-a877-e5107bed050b"; //debug
+		$scope.getBoxContents = function (boxid) {
 			reqData = {
-				'boxname':  boxuri,
+				'boxname':  boxid,
 			}
 			$http.post('/getbox', reqData)
 				.success (function(data) {
-					console.log('return data');
-					console.log(data);
+					console.log('return data'); //debug
+					console.log(data); //debug
 					return data;
 				})
 				.error (function() {
@@ -217,7 +216,7 @@
 		$scope.setCurrentBox = function (box) {
 			$scope.currentBox = box;
 			//gets the content of that box for the box-viewer
-			var boxContents = $scope.getBoxContents(box.uri);
+			$scope.currentBoxContents = $scope.getBoxContents(box.id);
 			//TODO update the box viewer with the contents of the box in 'boxContents'
 		}
 		//logs the user out from the server

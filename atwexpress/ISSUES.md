@@ -6,10 +6,10 @@ issues:
 - what happens if u log in at the same time from multiple locations
 - why is login slow for windows
 
-todo:
+- why profile gets called 6 times
+why is Created and Collaborated populateed 6 times (appended) instead of resetting and adding
 
--automatically generate structure of box folder upon creation of box
--automatically generate structure of user folder upon login
+todo:
 -automatically generate item.config for each upload
 -prevent access to functions to stuff like get profile and shit if we're not logged in (use the isLoggedIn)
 -add user field for signup/signin
