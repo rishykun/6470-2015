@@ -1,18 +1,17 @@
 issues:
-- attempt login with wrong credentials,
-	then login properly
-	gives "error authenticating to server"
-
 - what happens if u log in at the same time from multiple locations
 - why is login slow for windows
 
-todo:
+- why profile gets called 6 times
+why is Created and Collaborated populateed 6 times (appended) instead of resetting and adding
 
--automatically generate structure of box folder upon creation of box
--automatically generate structure of user folder upon login
--automatically generate item.config for each upload
--prevent access to functions to stuff like get profile and shit if we're not logged in (use the isLoggedIn)
--add user field for signup/signin
+todo:
+- initial resize of sign modal doesn't work
+- remember me
+- add user field for signup/signin
+- receive
+- automatically generate item.config for each upload
+- prevent access to functions to stuff like get profile and shit if we're not logged in (use the isLoggedIn)
 - overwriting users & folders and in general in aws s3 server
 	prevent overwrite
 reserver certain words (to prevent overwrite of necessary initial items)

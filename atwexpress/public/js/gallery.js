@@ -189,16 +189,6 @@
 		$scope.curImg = "";
 		$scope.setNum = function(num){
 			$scope.num = num;
-			if (num === -1){
-				$scope.curImg = '';
-			}
-			else{
-				if (num === 0){
-					$scope.num = $scope.gallery.length;
-				}
-				$scope.curImg = $scope.thumbnails[num-1].url;
-			}
-		}
 		$('#singleImage').load(function() {
 			var realWidth = this.width;
 			var realHeight = this.height;

@@ -1,11 +1,26 @@
 (function() {
 	var app = angular.module('main.signin', [
-		'ui.router'
+		'ui.router',
 	]);
 
-	app.controller ( 'signinController', function signinController ($scope, $http, $window) {
+	app.controller ( 'signinController', function signinController ($scope, $http, $window, $state, Auth, UserProfile) {
 		$scope.formData = {}; //default empty form object to be populated
-		$scope.$parent.signModalTitle = "Login"; //sets the title of the signin/signup modal window
+		$scope.signModalTitle = "Login"; //sets the title of the signin/signup modal window
+
+		//sets factory services to be accessible from $scope
+		$scope.auth = Auth;
+		$scope.userProfile = UserProfile;
+
+		//redirects to the home page
+		$scope.resetState = function (s) {
+			console.log(s);
+			console.log(s.target.className);
+			//hacky way to prevent redirect unless we clicked outside the modal content window
+			if (s.target.className === "modal fade font-gray ng-isolate-scope"
+				|| s.target.className === "modal fade font-gray ng-isolate-scope in") {
+				$state.go('redirectfromloginorlogout');
+			}
+		};
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.login = function () {
@@ -24,7 +39,7 @@
 								exit: 'animated fadeOutRight'
 							}
 						});
-						$scope.getProfile(false); //try to load the userprofile
+						UserProfile.loadProfile(true); //try to load the userprofile
 					})
 					.error (function() {
 						$.growl("Error authenticating to server", {
@@ -57,6 +72,6 @@
 			}
 		};
 
-		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
+		//$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
 })();

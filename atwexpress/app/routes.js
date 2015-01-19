@@ -72,7 +72,7 @@ module.exports = function(app, passport) {
 
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/', // redirect to the secure profile section
+        successRedirect : '/setupuser', // redirect to the secure profile section
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -87,18 +87,76 @@ module.exports = function(app, passport) {
     //middleware that handles the format of the post data in uploads
     app.use(multer({ inMemory: true }));
 
+    //only gets called when a user signs up successfully
+    //creates the user's folder in the server and adds a user configuration file
+    app.get('/setupuser', function(req, res) {
+        bucketUser = "6.470/Users/" + req.user.local.email + "/";
+        s3.headBucket({Bucket:bucketUser}, function(err,data){
+            if(err){
+                s3.createBucket({Bucket:bucketUser},function(err,data){
+                    if (err) {       
+                        console.error(err);
+                    }
+                    else {
+                        console.log("Successfully created user folder.");
+
+                        //create a config file for each newly-created box
+                        var params = {
+                            Bucket: bucketUser.substring(0,bucketUser.length-1),
+                            Key: 'user.config',
+                            Body: '{ "username" : "' + req.user.local.email + '", "boxes_created": [], "boxes_collaborated" : [] }'
+                        };
+                        //debug todo: change body: req.user.local.email to req.user.local.user when available
+                        s3.upload(params, function(err, data) {
+                            if (err) {       
+                                console.error(err);
+                            }
+                            else {
+                                console.log("Successfully generated user configuration.");
+                                res.redirect('/');
+                            }
+                        });
+                    }
+                });
+             } else {
+                 console.error("User folder (bucket) already exists!");
+             }
+        });
+    })
+
     // processes the upload
     //debug TODO: it currently uploads to Boxes folder, we need to upload it to the current folder that we are viewing
     app.post('/upload', function(req, res) {
         console.log(req.files.userPhoto); //debug
-        params = {Bucket: '6.470/Boxes',
-        Key: req.files.userPhoto.originalname,
-        Body: req.files.userPhoto.buffer}
+        params = {
+            Bucket: '6.470/Boxes',
+            Key: req.files.userPhoto.originalname,
+            Body: req.files.userPhoto.buffer
+        }
         s3.upload(params,function(err,data){
             if(!err){
                 console.log('Successfully uploaded item.');
-                //res.status(200);
-                res.redirect('/');
+
+                //generate the item config file
+                var params = {
+                    Bucket: bucketBox.substring(0,bucketBox.length-1),
+                    Key: req.files.userPhoto.originalname + '.config',
+                    Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : [] }'
+                };
+
+                s3.upload(params,function(err,data){
+                    if(!err){
+                        console.log('Successfully uploaded item.');
+
+                        //res.status(200);
+                        res.redirect('/');
+                    }
+                    else{
+                        console.error(err);
+                        //res.status(500);
+                        res.redirect('/upload');
+                    }
+                });
             }
             else{
                 console.error(err);
@@ -125,7 +183,7 @@ module.exports = function(app, passport) {
                         var params = {
                             Bucket: bucketBox.substring(0,bucketBox.length-1),
                             Key: 'box.config',
-                            Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : {} }'
+                            Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : [] }'
                         };
                         //debug todo: change body: req.user.local.email to req.user.local.user when available
                         s3.upload(params, function(err, data) {
@@ -134,7 +192,39 @@ module.exports = function(app, passport) {
                             }
                             else {
                                 console.log("Successfully generated box configuration.");
-                                res.json('{ "name" : "' + req.body.boxname + '", "id" : "' + boxId + '", "uri" : "' + bucketBox + '" }');
+
+                                //create the config folder
+                                s3.headBucket({Bucket:bucketBox + "Config/"}, function(err,data){
+                                    if(err){
+                                        s3.createBucket({Bucket:bucketBox + "Config/"},function(err,data){
+                                            if (err) {       
+                                                console.error(err);
+                                            }
+                                            else {
+                                                console.log("Successfully created config folder.");
+
+                                                //create the thumbnails folder
+                                                s3.headBucket({Bucket:bucketBox + "Thumbnails/"}, function(err,data){
+                                                    if(err){
+                                                        s3.createBucket({Bucket:bucketBox + "Thumbnails/"},function(err,data){
+                                                            if (err) {       
+                                                                console.error(err);
+                                                            }
+                                                            else {
+                                                                console.log("Successfully created thumbnails folder.");
+                                                                res.json('{ "name" : "' + req.body.boxname + '", "id" : "' + boxId + '", "uri" : "' + bucketBox + '" }');
+                                                            }
+                                                        });
+                                                     } else {
+                                                         console.error("Thumbnails folder already exists!");
+                                                     }
+                                                });
+                                            }
+                                        });
+                                     } else {
+                                         console.error("Config already exists!");
+                                     }
+                                });
                             }
                         });
                     }
@@ -142,7 +232,7 @@ module.exports = function(app, passport) {
              } else {
                  console.error("Box (bucket) already exists!");
              }
-         });
+        });
     });
 
     // get contents of the form
@@ -152,13 +242,12 @@ module.exports = function(app, passport) {
             Bucket: '6.470/',
             Prefix: 'Boxes/' + req.body.boxname
         }
-        console.log("post for getbox");
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
                 console.error(err, err.stack);
             }
             else {
-                console.log(data.Contents);
+                console.log(data.Contents); //debug
                 res.json(data.Contents);
             }
         });
@@ -193,7 +282,7 @@ module.exports = function(app, passport) {
             });
     });
 
-//Get box config file
+    //Get box config file
     app.post('/getboxconfig', function(req, res) {
         //TODO: handle not logged in user -> redirect to somewhere else?
         var userParams = {
@@ -203,24 +292,24 @@ module.exports = function(app, passport) {
   
 
           s3.getSignedUrl('getObject', userParams, function (err, url) {
-                var http = require('http');
-                var options = {
-                    host: url.slice(8,24),
-                    port: 80,
-                    path: url.slice(24,url.length)
-                };
-                
-                http.get(options,function(rep){
-                    rep.setEncoding('utf8');
-                    rep.on('data',function(info){
-                        console.log(info);
-                        res.json(info);
-                    });
-                }).on('error',function(err){
-                    console.log(err);
+            var http = require('http');
+            var options = {
+                host: url.slice(8,24),
+                port: 80,
+                path: url.slice(24,url.length)
+            };
+            
+            http.get(options,function(rep){
+                rep.setEncoding('utf8');
+                rep.on('data',function(info){
+                    console.log(info);
+                    res.json(info);
                 });
-        
+            }).on('error',function(err){
+                console.log(err);
             });
+    
+        });
     });
 
     app.post('/getitemconfig', function(req, res) {
