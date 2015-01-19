@@ -15,101 +15,119 @@
 			.state( 'signin', {
 				url: '/signin',
 				onEnter: function($modal, Modal) {
-					console.log("on enter"); //debug
-					//$scope.activateSignin();
-					Modal.setModal($modal);
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+						//this can happen if the state switches directly from signup to signin or vice-versa
+					}
+					Modal.setModal("#signDialog", $modal);
 					Modal.openModal({
 						windowTemplateUrl: "custom_modal_window_template.html",
 						templateUrl: "../tpl/signin/signin.tpl.html",
-						backdropClass: "fullsize",
+						backdropClass: "fullsize", //workaround for backdrop display glitch
 						controller: "signinController"
-						//windowClass: "custom-signModal"
 					});
-					/*
-					$modal.open({
-						windowTemplateUrl: "custom_modal_window_template.html",
-						templateUrl: "../tpl/signin/signin.tpl.html",
-						backdropClass: "fullsize",
-						controller: "signinController"
-						//windowClass: "custom-signModal"
-					});*/
 				},
 				data: {
-					requireLogin: false
+					requireLogin: false,
+					requireLogout: true
 				}
 			})
 			.state( 'signup', {
 				url: '/signup',
-				onEnter: function($modal) {
-					console.log("on enter"); //debug
-					$modal.open({
-						template: [
-				        '<div class="modal-content">',
-				          '<div class="modal-header">',
-				            '<h3 class="modal-title">Regulamin</h3>',
-				          '</div>',
-				          '<div class="modal-body">',
-				          '$1. Give us all your money!',
-				          '</div>',
-				          '<div class="modal-footer">',
-				            '<button class="btn btn-primary" ng-click="$dismiss()">OK</button>',
-				          '</div>',
-				        '</div>'
-				        ].join(''),
-						//templateUrl: "../tpl/signup/signup.tpl.html",
+				onEnter: function($modal, Modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+						//this can happen if the state switches directly from signup to signin or vice-versa
+					}
+					Modal.setModal("#signDialog", $modal);
+					Modal.openModal({
+						windowTemplateUrl: "custom_modal_window_template.html",
+						templateUrl: "../tpl/signup/signup.tpl.html",
+						backdropClass: "fullsize", //workaround for backdrop display glitch
 						controller: "signupController"
 					});
 				},
 				data: {
-					requireLogin: false
+					requireLogin: false,
+					requireLogout: true
 				}
 			})
+			//capture state from login or logout
 			.state( 'redirectfromloginorlogout', {
 				url: '/',
+				onEnter: function(Modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+					}
+				},
 				data: {
-					requireLogin: false
+					requireLogin: false,
+					requireLogout: false
 				}
 			})
 			.state( 'profileview', {
 				url: '/profile',
+				onEnter: function(Modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+					}
+				},
 				templateUrl: "../tpl/profile/profileviewer.tpl.html",
 				controller: "profileController",
 				data: {
-					requireLogin: true
+					requireLogin: true,
+					requireLogout: false
 				}
 			})
 			.state( 'boxview', {
 				url: '/boxview',
+				onEnter: function(Modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+					}
+				},
 				templateUrl: "../tpl/box_view/box_view.tpl.html",
 				controller: "galleryController",
 				data: {
-					requireLogin: true
+					requireLogin: true,
+					requireLogout: false
 				}
 			})
 			.state( 'upload', {
 				url: '/upload',
+				onEnter: function(Modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+					}
+				},
 				templateUrl: "../tpl/upload/upload.tpl.html",
 				data: {
-					requireLogin: true
+					requireLogin: true,
+					requireLogout: false
 				}
 				//controller: "uploadController"
 			});
 	});
 
-	app.factory('Modal', function() {
+	app.factory('Modal', function($window, $state) {
+		modalname = "";
 		modal = false;
 		modalopen = false;
 		return {
-			setModal: function(m) {
+			setModal: function(n, m) {
 				if (modalopen !== false) {
 					console.log("Warning: there is already an open modal.");
 				}
-				else if (modal !== false) {
+				else if (modal !== false || modalname !== "") {
 					console.log("Warning: there is already a registered modal.");
 				}
 				else {
+					modalname = n;
 					modal = m;
 				}
+			},
+			getModalName: function () {
+				return modalname;
 			},
 			checkModal: function() {
 				return (modal !== undefined && modal !== null && modal !== false);
@@ -120,6 +138,17 @@
 			openModal: function(obj) {
 				if (modal !== undefined && modal !== null && modal !== false) {
 					modalopen = modal.open(obj);
+					/*
+					//center the open modal in the browser window
+					modalopen.opened.then(function() {
+						console.log("opened");
+						var windowHeight = $(window).height();
+						var modalHeight = $(modalname).height();
+						console.log(windowHeight);
+						console.log(modalHeight);
+						$(modalname).css("margin-top", (windowHeight-modalHeight)/2);
+						$(modalname).css("margin-left", "auto");
+					});*/
 				}
 				else {
 					console.log("Error: can't open modal because it isn't registered.");
@@ -127,9 +156,14 @@
 			},
 			closeModal: function() {
 				if (modalopen !== undefined && modalopen !== null && modalopen !== false) {
-					modalopen.close();
+					modalclose = modalopen.close();
+					//redirect state after modal closes, this allows user to open the modal again through click-based state transitions
+					/*modalclose.dismiss.then(function() {
+						$state.go('redirectfromloginorlogout');
+					});*/
 					modal = false;
 					modalopen = false;
+					modalname = "";
 				}
 				else {
 					console.log("Error: can't close modal because it isn't registered.");
@@ -138,12 +172,25 @@
 		};
 	});
 
+	/*
+	app.directive('resize', function($window) {
+		return {
+			restrict: 'A',
+			link: function(scope, element) {
+				//console.log(element.css('height'));
+				//console.log(element[0].offsetHeight);
+			}
+		};
+	});*/
+
 	app.factory('Auth', function() {
 		var loggedIn = false;
 		return {
+			//sets the login status
 			setLogin: function(loginStatus) {
 				loggedIn = loginStatus;
 			},
+			//returns the login status
 			isLoggedIn: function() {
 				return loggedIn;
 			}
@@ -154,6 +201,7 @@
 	app.factory('UserProfile', function($state, $window, $http, Auth, Modal) {
 		var userProfile = {};
 		return {
+			//gets the user profile from the server if properly authenticated already
 			loadProfile: function(alert) {
 				$http.get('/profile')
 				.success (function(data) {
@@ -201,30 +249,68 @@
 				userProfile = {};
 			}
 		}
-	})
+	});
 
-	app.controller("MainController", ["$scope", "$window", "$http", "$state", "Auth", "$modal", "UserProfile",
-		function($scope, $window, $http, $state, Auth, $modal, UserProfile) {
+	app.factory('Box', function() {
+		var currentBox = false;
+		var currentBoxContents = false;
+		return {
+			//sets the current box
+			setCurrentBox: function(b) {
+				currentBox = b;
 
-		/*
-		$scope.activateSignin = function() {
-			$modal.open({
-				scope: $scope,
-				windowTemplateUrl: "customwindow.html",
-				templateUrl: "../tpl/signin/signin.tpl.html",
-				backdropClass: "fullsize",
-				controller: "signinController"
-				//windowClass: "custom-signModal"
-			});
-		};*/
+				//also load the box contents
+				reqData = {
+					'boxname':  currentBox.id,
+				}
+				$http.post('/getbox', reqData)
+				.success (function(data) {
+					currentBoxContents = data;
+				})
+				.error (function() {
+					$.growl("Error retrieving box contents from the server for box id: " + currentBox.id, {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+				});
+			},
+			//returns the current box
+			getCurrentBox: function() {
+				if (currentBox === false) {
+					$.growl("There is no current box set", {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+				}
+				return currentBox;
+			}
+		};
+	});
 
-		//------------ variable initialization
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$modal", "Auth", "UserProfile", "Box",
+		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box) {
+		//------------ sets factory services to be accessible from $scope
 		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
+		$scope.box = Box;
+		/*
+		$("#signModal").on('hidden.bs.modal', function () {
+			console.log("reached"); //debug
+		    $location.path("/");
+		    $scope.$apply();
+		});
 
-		$scope.testvalue = "teststring"; //debug
-
-		console.log("testvalue is " + $scope.testvalue); //debug
+		$("#signDialog").on('hidden.bs.modal', function () {
+			console.log("reached"); //debug
+		    $location.path("/");
+		    $scope.$apply();
+		});*/
 
 		//------------ controller functions
 		//get the current state
@@ -235,68 +321,11 @@
 		$scope.compareState = function (state) {
 			return state === $state.current.name;
 		}
-		//returns the login status
-		$scope.isLoggedIn = function () {
-			return $scope.auth.isLoggedIn();
-		};
-		//hides all modal windows
-		$scope.hideModals = function () {
-			//close the login & signup modal
-			$('#signModal').modal('hide');
-			//close the create modal
-			$('#createBoxModal').modal('hide');
-		};
-		//sets the login state to be true
-		$scope.setLogin = function (loginStatus) {
-			$scope.auth.setLogin(loginStatus);
-			$scope.hideModals();
-			$state.go('redirectfromloginorlogout'); //go this state, which redirects to the home page whenever we sign in or sign out
-		};
-		//gets the user profile from the server if properly authenticated already
-		$scope.getProfile = function (alert) {
-			$http.get('/profile')
-			.success (function(data) {
-				if (data !== "") {
-					//if the user is logged in
-					$scope.setLogin(true);
-					$scope.userObject = data; //user object
-					//debug note: user/email is data.local.email
-					if (alert) {
-						$.growl("Found profile", {
-							type: "info",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-						});
-					}
-
-				}
-				else {
-					$.growl("Profile data is empty", {
-						type: "info",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
-				}
-			})
-			.error (function() {
-				$.growl("Error retrieving profile", {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
-			});
-		}
 
 		//gets the signed url that gives the item
 		$scope.getItem = function (boxuri, itemname) {
-			boxuri = "6.470/Boxes/6071e388-544d-4861-a877-e5107bed050b"; //debug
-			itemname = "batman.mp4"; //debug
+			//boxuri = "6.470/Boxes/6071e388-544d-4861-a877-e5107bed050b"; //debug
+			//itemname = "batman.mp4"; //debug
 			reqData = {
 				'uri':  boxuri,
 				'key': itemname
@@ -323,37 +352,43 @@
 				'boxname':  boxid,
 			}
 			$http.post('/getbox', reqData)
-				.success (function(data) {
-					console.log('return data'); //debug
-					console.log(data); //debug
-					return data;
-				})
-				.error (function() {
-					$.growl("Error retrieving box contents from the server for url: " + boxuri, {
-						type: "danger",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
+			.success (function(data) {
+				console.log('return data'); //debug
+				console.log(data); //debug
+				return data;
+			})
+			.error (function() {
+				$.growl("Error retrieving box contents from the server for box id: " + boxid, {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
 				});
+			});
 		}
 
 		//gets the user config file as a json for the current user
 		$scope.getUserConfig = function (user) {
-			user = $scope.userObject.local.email; //debug
+			user = $scope.userProfile.local.email; //debug
 			reqData = {
 				'username':  user,
 			}
 			$http.post('/getuserconfig', reqData)
-				.success (function(data) {
-					$scope.userinfo = JSON.parse(data);
-					$scope.userFound = true;
-					//console.log(userinfo);
-				})
-				.error (function() {
-					console.log("Error getting user config file for " + user + "!");
+			.success (function(data) {
+				$scope.userinfo = JSON.parse(data);
+				$scope.userFound = true;
+				//console.log(userinfo);
+			})
+			.error (function() {
+				$.growl("Error getting user config file for " + user, {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
 				});
+			});
 		}
 
 		//gets a box config file given the name
@@ -389,16 +424,7 @@
 					console.log("Error getting box contents for " + boxid + "!");
 				});
 		}
-		
 
-
-		//sets the current box
-		$scope.setCurrentBox = function (box) {
-			$scope.currentBox = box;
-			//gets the content of that box for the box-viewer
-			$scope.currentBoxContents = $scope.getBoxContents(box.id);
-			//TODO update the box viewer with the contents of the box in 'boxContents'
-		}
 		//logs the user out from the server
 		$scope.logout = function () {
 			$http.get('/logout')
@@ -411,12 +437,9 @@
 					}
 				});
 
-				//clears the logged-in user profile in userObject
-				$scope.userProfile.clearProfile();
-				//clears all forms from previous user
-				$('.form-create').trigger("reset");
-				//set the login to be false
-				$scope.auth.setLogin(false);
+				$scope.userProfile.clearProfile(); //clears the logged-in user profile in userObject
+				$('.form-create').trigger("reset"); //clears all forms from previous user
+				$scope.auth.setLogin(false); //set the login to be false
 			})
 			.error (function() {
 				$.growl("Error logging out", {
@@ -429,8 +452,8 @@
 			});
 		};
 
-		$scope.getProfile(false); //we check if we are already logged in on the server
-		//if we are, then load the user data into our profile, which is the userObject object
+		UserProfile.loadProfile(true); //on page load, check if already logged in on the server
+		//if so, then load the user data into the user profile, which is the userObject object
 
 		//captures the height from $window using jquery
 		var height = $(window).height();
@@ -448,13 +471,26 @@
 		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
 		$("#createDialog").css("margin-left", "auto");
 
-		/*
+		//resize signup/login modal upon click
 		$('#loginButton').click(function() {
 			$scope.signModalInitResize();
 		});
 		$('#signupButton').click(function() {
 			$scope.signModalInitResize();
-		});*/
+		});
+
+		//DEBUG TODO CURRENTLY BROKEN
+		$scope.signModalInitResize = function () {
+			//quick hacky way to find dynamic position
+			var cheight = $(window).height();
+			var cdisplay = $('.modal').css("display");
+			$('#signModal').css("display","block");
+			var signModalHeight = $('#signDialog').height();
+			$('#signModal').css("display",cdisplay);
+
+			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
+			$("#signDialog").css("margin-left", "auto");
+		};
 
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
@@ -463,34 +499,35 @@
 			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
 			$("#createDialog").css("margin-left", "auto");
 
-			console.log("resize called"); //debug
-
 			//resize the login/signup modal
 			var signModalHeight = $('#signDialog').height();
-			console.log(newHeight);
-			console.log(signModalHeight);
 			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");
 		});
 	}]);
 
-	app.run(function($rootScope, $state, $location, Auth) {
+	app.run(function($rootScope, $state, $location, Auth, Modal) {
 	    $rootScope.$on( '$stateChangeStart', function(e, toState, toParams, fromState) {
 
-	    	console.log("toState url: " + toState.url); //debug
-	    	console.log("fromState url: " + fromState.url); //debug
-
 		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.isLoggedIn();
-		    console.log("!Auth.loggedin: " + !Auth.isLoggedIn()); //debug
-		    console.log(" should we login: " + shouldLogin); //debug
+
 		    //NOT authenticated
 		    if (shouldLogin) {
-		    	console.log("we should"); //debug
-		    	$state.go('signin');
+		    	if (Modal.checkOpenModal()) {
+					Modal.closeModal(); //closes any modal that's already open
+				}
+		    	$state.go('redirectfromloginorlogout');
 		    	e.preventDefault();
 		    	return;
 		    }
-		    console.log("we don't need to "); //debug
+		    else if (Auth.isLoggedIn() && toState.data.requireLogout) {
+		    	if (Modal.checkOpenModal()) {
+					Modal.closeModal(); //closes any modal that's already open
+				}
+		    	$state.go('redirectfromloginorlogout');
+		    	e.preventDefault();
+		    	return;
+		    }
 		});
 	});
 })();

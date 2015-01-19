@@ -6,6 +6,11 @@ issues:
 why is Created and Collaborated populateed 6 times (appended) instead of resetting and adding
 
 todo:
+- initial resize of sign modal doesn't work
+- if user goes to /signin state, closes modal, and tries to click login locally, the modal won't repop,
+	that's becuz the state didnt change, its still signin,
+	should have modal close redirect state
+- remember me
 -add user field for signup/signin
 -receive
 -automatically generate item.config for each upload

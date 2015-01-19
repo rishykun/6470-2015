@@ -1,30 +1,15 @@
 (function() {
 	var app = angular.module('main.signin', [
 		'ui.router',
-		'ui.bootstrap'
 	]);
 
-	app.controller ( 'signinController', function signinController ($rootScope, $scope, $http, $window, UserProfile) {
-		console.log("signinController called"); //debug
+	app.controller ( 'signinController', function signinController ($scope, $http, $window, Auth, UserProfile) {
 		$scope.formData = {}; //default empty form object to be populated
-		$scope.$parent.signModalTitle = "Login"; //sets the title of the signin/signup modal window
+		$scope.signModalTitle = "Login"; //sets the title of the signin/signup modal window
 
-		//resize signup/login modal upon click
-		$scope.signModalInitResize = function () {
-			//quick hacky way to find dynamic position
-			console.log("accessed"); //debug
-			var cheight = $(window).height();
-			var cdisplay = $('.modal').css("display");
-			$('#signModal').css("display","block");
-			var signModalHeight = $('#signDialog').height();
-			$('#signModal').css("display",cdisplay);
-
-			console.log(cheight); //debug
-			console.log(signModalHeight); //debug
-
-			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");
-		};
+		//sets factory services to be accessible from $scope
+		$scope.auth = Auth;
+		$scope.userProfile = UserProfile;
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.login = function () {
@@ -76,6 +61,6 @@
 			}
 		};
 
-		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
+		//$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
 })();
