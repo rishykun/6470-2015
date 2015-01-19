@@ -74,8 +74,6 @@
 			</div>
 		</div>
 
-
-
 		<!-- show navigation bar if we are logged in -->
 		<div ng-show="loggedIn">
 			<nav class="pull-right font-white" style="margin-top:5px; margin-right:5px;">
@@ -83,69 +81,78 @@
 		    	<div style="float: right">
 		    		<div style="float:left; padding-right: 10px; padding-top: 5px">
 				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Profile</a>
-				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="settings" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
+				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="boxview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
 			    	</div>
 			        <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
 		        </div>
 			</nav>
 		</div>
 
-		<div id="buttonGroup" class="text-center">
-			<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-border-fade custom-text-space-med" type="button" title="Start a new box!" data-toggle="modal" data-target="#createBoxModal">CREATE</button>
-			<div class="space-divider"/>
-			<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" data-toggle="modal" ui-sref="profileview" data-target="#receiveBoxModal">RECEIVE</button>
+
+		<div ng-show="compareState('profileview') || compareState('boxview')">
+			<div ui-view></div>
 		</div>
 
-		<!-- we keep this in index.html because we need to be able to access form-create to clear it when we log out-->
-		<div id="createBoxModal" class="modal fade font-gray" ng-controller="createController">
-			<div id="createDialog" class="modal-dialog custom-modal-compress">
-				<div class="modal-content custom-modal-rounded">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       					<h4 class="modal-title no-text-sel default-cursor">Create a box</h4>
+		<div ng-show="!compareState('profileview') && !compareState('boxview')">
+			<div id="buttonGroup" class="text-center">
+				<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-border-fade custom-text-space-med" type="button" title="Start a new box!" data-toggle="modal" data-target="#createBoxModal">CREATE</button>
+				<div class="space-divider"/>
+				<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" data-toggle="modal" ui-sref="profileview" data-target="#receiveBoxModal">RECEIVE</button>
+			</div>
+
+			<!-- we keep this in index.html because we need to be able to access form-create to clear it when we log out-->
+			<div id="createBoxModal" class="modal fade font-gray" ng-controller="createController">
+				<div id="createDialog" class="modal-dialog custom-modal-compress">
+					<div class="modal-content custom-modal-rounded">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	       					<h4 class="modal-title no-text-sel default-cursor">Create a box</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-create">
+					        	<label for="inputEmail" class="sr-only">Box Name</label>
+					        	<input type="text" id="inputEmail" class="form-control" ng-model="formData.boxname" placeholder="Enter the name of the box" required="" autofocus="">
+					        	<label></label>
+					        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!isLoggedIn()" ng-click="createBox()">Create box</button>
+					      	</form>
+						</div>
 					</div>
-					<div class="modal-body">
-						<form class="form-create">
-				        	<label for="inputEmail" class="sr-only">Box Name</label>
-				        	<input type="text" id="inputEmail" class="form-control" ng-model="formData.boxname" placeholder="Enter the name of the box" required="" autofocus="">
-				        	<label></label>
-				        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!isLoggedIn()" ng-click="createBox()">Create box</button>
-				      	</form>
+				</div>
+			</div>
+
+			<!-- debug -->
+			<div id="uploadBoxModal" class="modal fade font-gray" ng-controller="createController">
+				<div id="createDialog" class="modal-dialog custom-modal-compress">
+					<div class="modal-content custom-modal-rounded">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	       					<h4 class="modal-title no-text-sel default-cursor">Upload</h4>
+						</div>
+						<div class="modal-body" style="padding: 0px">
+							<div ui-view></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- debug -->
+			<div id="receiveBoxModal" class="modal fade font-gray" ng-controller="createController">
+				<div id="createDialog" class="modal-dialog custom-modal-compress">
+					<div class="modal-content custom-modal-rounded">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	       					<h4 class="modal-title no-text-sel default-cursor">Box insertname</h4>
+						</div>
+						<div class="modal-body">
+
+				        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="getUserConfig()">Get box</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- debug -->
-		<div id="uploadBoxModal" class="modal fade font-gray" ng-controller="createController">
-			<div id="createDialog" class="modal-dialog custom-modal-compress">
-				<div class="modal-content custom-modal-rounded">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       					<h4 class="modal-title no-text-sel default-cursor">Upload</h4>
-					</div>
-					<div class="modal-body" style="padding: 0px">
-						<div ui-view></div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- debug -->
-		<div id="receiveBoxModal" class="modal fade font-gray" ng-controller="createController">
-			<div id="createDialog" class="modal-dialog custom-modal-compress">
-				<div class="modal-content custom-modal-rounded">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       					<h4 class="modal-title no-text-sel default-cursor">Box insertname</h4>
-					</div>
-					<div class="modal-body">
-
-			        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="getUserConfig()">Get box</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 	</div>
 </body>
 <footer class="no-text-sel default-cursor" style="position:absolute; bottom:0; right:3px; width:100%; height:40px; text-align: right;">

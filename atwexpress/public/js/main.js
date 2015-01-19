@@ -9,6 +9,7 @@
 		]);
 
 	app.config (function ($stateProvider, $urlRouterProvider) {
+		$urlRouterProvider.otherwise("empty");
 		$stateProvider
 		.state( 'signin', {
 			url: '/',
@@ -24,6 +25,11 @@
 			url: '/',
 			templateUrl: "../tpl/profile/profileviewer.tpl.html",
 			controller: "profileController"
+		})
+		.state( 'boxview', {
+			url: '/',
+			templateUrl: "../tpl/box_view/box_view.tpl.html",
+			controller: "galleryController"
 		})
 		.state( 'upload', {
 			url: '/',
@@ -86,6 +92,19 @@
 		$scope.loggedIn = false; //default
 
 		//------------ controller functions
+		//get the current state
+		$scope.getCurrentState = function() {
+			return $state.current.name.trim();
+		};
+		//compares the parameter state with the current state
+		$scope.compareState = function (state) {
+			if (state === $state.current.name) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 		//returns the login status
 		$scope.isLoggedIn = function () {
 			return $scope.loggedIn;
@@ -197,13 +216,9 @@
 				'username':  user,
 			}
 			$http.post('/getuserconfig', reqData)
-
 			.success (function(data) {
-
-				console.log(data);
 				userinfo = JSON.parse(data);
-				console.log(userinfo.boxes_created);
-				return userinfo;
+				$scope.userConfig = userinfo;
 			})
 			.error (function() {
 				console.log("Error getting user config file for " + user + "!");

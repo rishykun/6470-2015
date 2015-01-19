@@ -125,7 +125,7 @@ module.exports = function(app, passport) {
                         var params = {
                             Bucket: bucketBox.substring(0,bucketBox.length-1),
                             Key: 'box.config',
-                            Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : "{}" }'
+                            Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : {} }'
                         };
                         //debug todo: change body: req.user.local.email to req.user.local.user when available
                         s3.upload(params, function(err, data) {
@@ -184,7 +184,6 @@ module.exports = function(app, passport) {
                 http.get(options,function(rep){
                     rep.setEncoding('utf8');
                     rep.on('data',function(info){
-                        console.log(info);
                         res.json(info);
                     });
                 }).on('error',function(err){
@@ -259,7 +258,7 @@ module.exports = function(app, passport) {
             Bucket: req.body.uri,
             Key: req.body.key
         };
-                
+
         //downloads the file directly onto the server
         /*
         var file = fs.createWriteStream('./public/temp.pdf');
