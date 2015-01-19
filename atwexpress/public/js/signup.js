@@ -4,6 +4,7 @@
 	]);
 
 	app.controller ( 'signupController', function signupController ($scope, $http, $window) {
+		console.log("signupController is called"); //debug
 		$scope.formData = {}; //default empty form object to be populated
 		$scope.$parent.signModalTitle = "Sign Up"; //sets the title of the signin/signup modal window
 
@@ -57,6 +58,6 @@
 			}
 		};
 
-		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
+		//$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
 })();

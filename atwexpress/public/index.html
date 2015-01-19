@@ -37,8 +37,19 @@
 	<script type='text/javascript' src="/js/tooltip.js"></script>
 </head>
 
-<body class="background-dark-slate">
+<!-- <body class="background-dark-slate"> -->
+<body style="background-color: rgb(60,60,75)">
 	<div ng-controller="MainController as mainCtrl">
+
+		<!-- window template -->
+		<!--
+		<script type="text/ng-template" id="customwindow.html">
+		    <div id= "signModal" tabindex="-1" role="dialog" class="modal fade font-gray" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" data-ng-click="close($event)">
+			    <div id="signDialog" class="modal-dialog custom-modal-compress" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}"><div class="modal-content custom-modal-rounded" modal-transclude></div></div>
+			</div>
+		</script>
+		-->
+
 		<a class="no-text-sel" href="/"><img class="icon-med" src="img/ico/logo.png" style="float: left;"></a>
 		<b class="no-text-sel default-cursor" style="margin-left: 5px; margin-top:25px; color:black; float: left">Shrödinger's Black Box</b>
 
@@ -53,26 +64,12 @@
 			                	<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 								</fb:login-button>
 			                </li>
-			                <li><a class="no-text-dec" id="signupButton" data-toggle="modal" data-target="#signModal" ui-sref="signup">Create Account</a></li>
-			                <li><a class="no-text-dec" id="loginButton" data-toggle="modal" data-target="#signModal" ui-sref="signin">Login Locally</a></li>
+			                <li><a class="no-text-dec" id="signupButton" ui-sref="signup">Create Account</a></li>
+			                <li><a class="no-text-dec" id="loginButton" ui-sref="signin">Login Locally</a></li>
 			            </ul>
 			        </li>
 			    </ul>
 			</nav>
-		</div>
-
-		<div id="signModal" class="modal fade font-gray">
-			<div id="signDialog" class="modal-dialog custom-modal-compress">
-				<div class="modal-content custom-modal-rounded">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       					<h4 class="modal-title no-text-sel default-cursor">{{signModalTitle}}</h4>
-					</div>
-					<div id="signBody" class="modal-body">
-						<div ui-view></div>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<!-- show navigation bar if we are logged in -->
@@ -90,7 +87,7 @@
 		</div>
 
 
-		<div ng-show="compareState('profileview') || compareState('boxview') || compareState('signin')"> <!-- debug -->
+		<div ng-show="compareState('profileview') || compareState('boxview') || compareState('signin') || compareState('signup')"> <!-- debug -->
 		<!-- <div ng-show="compareState('profileview') || compareState('boxview')"> -->
 			whyisthishere? because state is {{getCurrentState()}}<!-- debug -->
 			<div ui-view></div>

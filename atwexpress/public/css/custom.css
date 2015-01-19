@@ -135,6 +135,15 @@
 	border-radius: 20px;
 }
 
+/*
+.custom-signModal > .modal-dialog {
+  width: 400px;
+}
+
+.custom-signModal > .modal-content {
+  border-radius: 20px;
+}*/
+
 .custom-text-space-med {
 	letter-spacing: 3px;
 }

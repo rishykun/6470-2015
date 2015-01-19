@@ -5,7 +5,8 @@
 		'main.create',
 		'main.profile',
 		'main.gallery',
-		'ui.router'
+		'ui.router',
+		'ui.bootstrap'
 	]);
 
 	app.config (function ($stateProvider, $urlRouterProvider) {
@@ -13,16 +14,41 @@
 		$stateProvider
 			.state( 'signin', {
 				url: '/signin',
-				templateUrl: "../tpl/signin/signin.tpl.html",
-				controller: "signinController",
+				onEnter: function($modal) {
+					console.log("on enter"); //debug
+					$modal.open({
+						//windowTemplateUrl: "customwindow.html",
+						templateUrl: "../tpl/signin/signin.tpl.html",
+						controller: "signinController"
+						//windowClass: "custom-signModal"
+					});
+				},
 				data: {
 					requireLogin: false
 				}
 			})
 			.state( 'signup', {
 				url: '/signup',
-				templateUrl: "../tpl/signup/signup.tpl.html",
-				controller: "signupController",
+				onEnter: function($modal) {
+					console.log("on enter"); //debug
+					$modal.open({
+						template: [
+				        '<div class="modal-content">',
+				          '<div class="modal-header">',
+				            '<h3 class="modal-title">Regulamin</h3>',
+				          '</div>',
+				          '<div class="modal-body">',
+				          '$1. Give us all your money!',
+				          '</div>',
+				          '<div class="modal-footer">',
+				            '<button class="btn btn-primary" ng-click="$dismiss()">OK</button>',
+				          '</div>',
+				        '</div>'
+				        ].join(''),
+						//templateUrl: "../tpl/signup/signup.tpl.html",
+						controller: "signupController"
+					});
+				},
 				data: {
 					requireLogin: false
 				}
@@ -78,7 +104,6 @@
 		}
 		//returns the login status
 		$scope.isLoggedIn = function () {
-			console.log("calling isLoggedIn. result: " + $scope.auth.loggedIn);
 			return $scope.auth.loggedIn;
 		};
 		//hides all modal windows
@@ -90,8 +115,6 @@
 		};
 		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
-			console.log("current State"); //debug
-			console.log($scope.getCurrentState()); //debug
 			$scope.auth.loggedIn = loginStatus;
 			$scope.hideModals();
 			$state.go('redirectfromloginorlogout'); //go this state, which redirects to the home page whenever we sign in or sign out
@@ -292,24 +315,13 @@
 		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
 		$("#createDialog").css("margin-left", "auto");
 
-		//resize signup/login modal upon click
-		$scope.signModalInitResize = function () {
-			//quick hacky way to find dynamic position
-			var cheight = $(window).height();
-			var cdisplay = $('.modal').css("display");
-			$('#signModal').css("display","block");
-			var signModalHeight = $('#signDialog').height();
-			$('#signModal').css("display",cdisplay);
-
-			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");
-		};
+		/*
 		$('#loginButton').click(function() {
 			$scope.signModalInitResize();
 		});
 		$('#signupButton').click(function() {
 			$scope.signModalInitResize();
-		});
+		});*/
 
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
