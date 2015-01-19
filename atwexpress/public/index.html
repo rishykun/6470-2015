@@ -21,6 +21,8 @@
 	<script type="text/javascript" src="/angular-ui-router/release/angular-ui-router.js"></script>
 	<script type='text/javascript' src="/facebook-api/facebook.js"></script>
 	<script type='text/javascript' src="/bootstrap-growl/bootstrap-growl.js"></script>
+	<script type='text/javascript' src="/ui-bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+	<script type='text/javascript' src="/ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
 
 	<!-- internal source javascript -->
 	<script type='text/javascript' src="/js/main.js"></script>
@@ -80,8 +82,9 @@
 		    	<div style="float: left; padding-top:5px; padding-right:10px"> Welcome, {{userObject.local.email}}! </div>
 		    	<div style="float: right">
 		    		<div style="float:left; padding-right: 10px; padding-top: 5px">
-				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Profile</a>
-				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="boxview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
+		    			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Profile</a>
+		    			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" 
+		    			ui-sref="boxview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
 			    	</div>
 			        <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
 		        </div>

@@ -5,7 +5,8 @@
 		'main.create',
 		'main.profile',
 		'main.gallery',
-		'ui.router'
+		'ui.router',
+		'ui.bootstrap'
 		]);
 
 	app.config (function ($stateProvider, $urlRouterProvider) {
