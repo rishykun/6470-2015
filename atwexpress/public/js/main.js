@@ -178,24 +178,40 @@
 		}
 
 		//gets a box config file given the name
-		$scope.getBoxConfig = function (boxid) {
+		$scope.getBoxConfig = function (boxid,created) {
 			reqData = {
 				'boxid':  boxid,
 			}
 			$http.post('/getboxconfig', reqData)
 				.success (function(data) {
 
-					console.log("------- Data --------");
-					console.log(data);
 					boxinfo = JSON.parse(data);
 					console.log("------- Box Info -------");
 					console.log(boxinfo);
-					return boxinfo;
+					if(created)
+					{
+						console.log('adding to created');
+						$scope.Created.push(boxinfo);
+						console.log($scope.Created.length);
+					}
+					else
+					{
+						console.log('adding to collaborated');
+						$scope.Collaborated.push(boxinfo);
+					}
+					if(($scope.Created.length+$scope.Collaborated.length)==$scope.numboxes){
+						console.log('IN THE CREATED COLLABORATED');
+						console.log($scope.Created);
+						console.log($scope.Collaborated);
+					}
+					
 				})
 				.error (function() {
 					console.log("Error getting box contents for " + boxid + "!");
 				});
 		}
+		
+
 
 		//sets the current box
 		$scope.setCurrentBox = function (box) {
