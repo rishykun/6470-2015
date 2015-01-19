@@ -26,6 +26,11 @@
 				templateUrl: "../tpl/profile/profileviewer.tpl.html",
 				controller: "profileController"
 			})
+			.state( 'boxview', {
+				url: '/',
+				templateUrl: "../tpl/box_view/box_view.tpl.html",
+				controller: "galleryController"
+			})
 			.state( 'upload', {
 				url: '/',
 				templateUrl: "../tpl/upload/upload.tpl.html",
@@ -42,6 +47,7 @@
 		$scope.getCurrentState = function() {
 			return $state.current.name.trim();
 		};
+		//compares the parameter state with the current state
 		$scope.compareState = function (state) {
 			if (state === $state.current.name) {
 				return true;
@@ -163,7 +169,7 @@
 			$http.post('/getuserconfig', reqData)
 				.success (function(data) {
 					userinfo = JSON.parse(data);
-					return userinfo;
+					$scope.userConfig = userinfo;
 				})
 				.error (function() {
 					console.log("Error getting user config file for " + user + "!");

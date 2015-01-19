@@ -5,7 +5,6 @@
 
 	app.controller ( 'profileController', function profileController ($scope, $http, $window) {
 		console.log("IN PROFILE CONTROLLER");
-		$scope.userConfig = $scope.getUserConfig();
 		console.log($scope.userConfig);
 	});
 })();
