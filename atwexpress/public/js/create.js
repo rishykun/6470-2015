@@ -13,7 +13,7 @@
 					&& $scope.formData.boxname !== "") {
 					$http.post('/create', $scope.formData)
 					.success (function(data) {
-						$scope.setCurrentBox(data);
+						$scope.setCurrentBox(JSON.parse(data));
 						$('.form-create').trigger("reset"); //clears the signin form
 						$scope.hideModals();
 						$.growl("Successfully created a box on the server", {

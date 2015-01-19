@@ -3,6 +3,13 @@
   color: rgb(192,192,192);
 }
 
+/*forces ui-router induced ui-bootstrap modal window backdrop to be fullsize;
+fixes the glitch that gives the backdrop 0 width and/or height*/
+.fullsize {
+  width:100%;
+  height:100%;
+}
+
 .font-gray {
   color: rgb(128,128,128) !important;
 }
@@ -134,6 +141,15 @@
 .custom-modal-rounded {
 	border-radius: 20px;
 }
+
+/*
+.custom-signModal > .modal-dialog {
+  width: 400px;
+}
+
+.custom-signModal > .modal-content {
+  border-radius: 20px;
+}*/
 
 .custom-text-space-med {
 	letter-spacing: 3px;

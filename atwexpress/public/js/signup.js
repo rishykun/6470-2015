@@ -3,9 +3,13 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'signupController', function signupController ($scope, $http, $window) {
+	app.controller ( 'signupController', function signupController ($scope, $http, $window, Auth, UserProfile) {
 		$scope.formData = {}; //default empty form object to be populated
-		$scope.$parent.signModalTitle = "Sign Up"; //sets the title of the signin/signup modal window
+		$scope.signModalTitle = "Sign Up"; //sets the title of the signin/signup modal window
+
+		//sets factory services to be accessible from $scope
+		$scope.auth = Auth;
+		$scope.userProfile = UserProfile;
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.signup = function () {
@@ -24,7 +28,7 @@
 								exit: 'animated fadeOutRight'
 							}
 						});
-						$scope.getProfile(true); //try to load the userprofile
+						$scope.userProfile.loadProfile(true); //try to load the userprofile
 					})
 					.error (function() {
 						$.growl("Error registering account to server", {
@@ -57,6 +61,6 @@
 			}
 		};
 
-		$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
+		//$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
 })();

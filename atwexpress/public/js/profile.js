@@ -4,6 +4,7 @@
 	]);
 
 	app.controller ( 'profileController', function profileController ($scope, $http, $window) {
+
 		
 		$scope.getUserBoxes = function (user) {
 			user = $scope.userObject.local.email; //debug
@@ -45,5 +46,6 @@
 
 
 		
+		//console.log("IN PROFILE CONTROLLER");
 	});
 })();
