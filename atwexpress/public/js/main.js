@@ -16,9 +16,11 @@
 				url: '/signin',
 				onEnter: function($modal) {
 					console.log("on enter"); //debug
+					//$scope.activateSignin();
 					$modal.open({
-						//windowTemplateUrl: "customwindow.html",
+						windowTemplateUrl: "customwindow.html",
 						templateUrl: "../tpl/signin/signin.tpl.html",
+						backdropClass: "fullsize",
 						controller: "signinController"
 						//windowClass: "custom-signModal"
 					});
@@ -86,12 +88,93 @@
 	});
 
 	app.factory('Auth', function() {
-		return { loggedIn: false };
+		var loggedIn = false;
+		return {
+			setLogin: function(loginStatus) {
+				loggedIn = loginStatus;
+			},
+			isLoggedIn: function() {
+				return loggedIn;
+			}
+		};
 	});
 
-	app.controller("MainController", function($scope, $window, $http, $state, Auth) {
+	//factory that generates a service for managing the userprofile
+	app.factory('UserProfile', function($state, $window, $http, Auth) {
+		var userProfile = {};
+		return {
+			loadProfile: function(alert) {
+				$http.get('/profile')
+				.success (function(data) {
+					if (data !== "") {
+						//if the user is logged in
+						$('#signModal').modal('hide'); //close the login & signup modal
+						$('#createBoxModal').modal('hide'); //close the create modal
+						Auth.setLogin(true); //set our login status to be true
+						userProfile = data; //load data into the user profile
+						//debug note: user/email is data.local.email
+						if (alert) {
+							$.growl("Found profile", {
+								type: "info",
+								animate: {
+									enter: 'animated fadeInRight',
+									exit: 'animated fadeOutRight'
+								}
+							});
+						}
+						$state.go('redirectfromloginorlogout');
+					}
+					else {
+						$.growl("Profile data is empty", {
+							type: "info",
+							animate: {
+								enter: 'animated fadeInRight',
+								exit: 'animated fadeOutRight'
+							}
+						});
+					}
+				})
+				.error (function() {
+					$.growl("Error retrieving profile", {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+				});
+			},
+			getProfile: function() {
+				return userProfile;
+			},
+			clearProfile: function() {
+				userProfile = {};
+			}
+		}
+	})
+
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "Auth", "$modal", "UserProfile",
+		function($scope, $window, $http, $state, Auth, $modal, UserProfile) {
+
+		/*
+		$scope.activateSignin = function() {
+			$modal.open({
+				scope: $scope,
+				windowTemplateUrl: "customwindow.html",
+				templateUrl: "../tpl/signin/signin.tpl.html",
+				backdropClass: "fullsize",
+				controller: "signinController"
+				//windowClass: "custom-signModal"
+			});
+		};*/
+
 		//------------ variable initialization
-		$scope.auth = Auth; //default
+		$scope.auth = Auth;
+		$scope.userProfile = UserProfile;
+
+		$scope.testvalue = "teststring"; //debug
+
+		console.log("testvalue is " + $scope.testvalue); //debug
 
 		//------------ controller functions
 		//get the current state
@@ -104,7 +187,7 @@
 		}
 		//returns the login status
 		$scope.isLoggedIn = function () {
-			return $scope.auth.loggedIn;
+			return $scope.auth.isLoggedIn();
 		};
 		//hides all modal windows
 		$scope.hideModals = function () {
@@ -115,7 +198,7 @@
 		};
 		//sets the login state to be true
 		$scope.setLogin = function (loginStatus) {
-			$scope.auth.loggedIn = loginStatus;
+			$scope.auth.setLogin(loginStatus);
 			$scope.hideModals();
 			$state.go('redirectfromloginorlogout'); //go this state, which redirects to the home page whenever we sign in or sign out
 		};
@@ -279,11 +362,11 @@
 				});
 
 				//clears the logged-in user profile in userObject
-				$scope.userObject = {};
+				$scope.userProfile.clearProfile();
 				//clears all forms from previous user
 				$('.form-create').trigger("reset");
 				//set the login to be false
-				$scope.setLogin(false);
+				$scope.auth.setLogin(false);
 			})
 			.error (function() {
 				$.growl("Error logging out", {
@@ -335,7 +418,7 @@
 			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");
 		});
-	});
+	}]);
 
 	app.run(function($rootScope, $state, $location, Auth) {
 	    $rootScope.$on( '$stateChangeStart', function(e, toState, toParams, fromState) {
@@ -343,8 +426,8 @@
 	    	console.log("toState url: " + toState.url); //debug
 	    	console.log("fromState url: " + fromState.url); //debug
 
-		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.loggedIn;
-		    console.log("!Auth.loggedin: " + !Auth.loggedin); //debug
+		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.isLoggedIn();
+		    console.log("!Auth.loggedin: " + !Auth.isLoggedIn()); //debug
 		    console.log(" should we login: " + shouldLogin); //debug
 		    //NOT authenticated
 		    if (shouldLogin) {
