@@ -41,7 +41,7 @@
 	<div ng-controller="MainController as mainCtrl">
 
 		<!-- window template -->
-		<script type="text/ng-template" id="customwindow.html">
+		<script type="text/ng-template" id="custom_modal_window_template.html">
 		    <div id= "signModal" tabindex="-1" role="dialog" class="modal fade font-gray" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" data-ng-click="close($event)">
 			    <div id="signDialog" class="modal-dialog custom-modal-compress" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}"><div class="modal-content custom-modal-rounded" modal-transclude></div></div>
 			</div>

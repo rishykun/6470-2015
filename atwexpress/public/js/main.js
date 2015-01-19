@@ -14,16 +14,25 @@
 		$stateProvider
 			.state( 'signin', {
 				url: '/signin',
-				onEnter: function($modal) {
+				onEnter: function($modal, Modal) {
 					console.log("on enter"); //debug
 					//$scope.activateSignin();
-					$modal.open({
-						windowTemplateUrl: "customwindow.html",
+					Modal.setModal($modal);
+					Modal.openModal({
+						windowTemplateUrl: "custom_modal_window_template.html",
 						templateUrl: "../tpl/signin/signin.tpl.html",
 						backdropClass: "fullsize",
 						controller: "signinController"
 						//windowClass: "custom-signModal"
 					});
+					/*
+					$modal.open({
+						windowTemplateUrl: "custom_modal_window_template.html",
+						templateUrl: "../tpl/signin/signin.tpl.html",
+						backdropClass: "fullsize",
+						controller: "signinController"
+						//windowClass: "custom-signModal"
+					});*/
 				},
 				data: {
 					requireLogin: false
@@ -87,6 +96,48 @@
 			});
 	});
 
+	app.factory('Modal', function() {
+		modal = false;
+		modalopen = false;
+		return {
+			setModal: function(m) {
+				if (modalopen !== false) {
+					console.log("Warning: there is already an open modal.");
+				}
+				else if (modal !== false) {
+					console.log("Warning: there is already a registered modal.");
+				}
+				else {
+					modal = m;
+				}
+			},
+			checkModal: function() {
+				return (modal !== undefined && modal !== null && modal !== false);
+			},
+			checkOpenModal: function() {
+				return (modalopen !== undefined && modalopen !== null && modalopen !== false);
+			},
+			openModal: function(obj) {
+				if (modal !== undefined && modal !== null && modal !== false) {
+					modalopen = modal.open(obj);
+				}
+				else {
+					console.log("Error: can't open modal because it isn't registered.");
+				}
+			},
+			closeModal: function() {
+				if (modalopen !== undefined && modalopen !== null && modalopen !== false) {
+					modalopen.close();
+					modal = false;
+					modalopen = false;
+				}
+				else {
+					console.log("Error: can't close modal because it isn't registered.");
+				}
+			}
+		};
+	});
+
 	app.factory('Auth', function() {
 		var loggedIn = false;
 		return {
@@ -100,7 +151,7 @@
 	});
 
 	//factory that generates a service for managing the userprofile
-	app.factory('UserProfile', function($state, $window, $http, Auth) {
+	app.factory('UserProfile', function($state, $window, $http, Auth, Modal) {
 		var userProfile = {};
 		return {
 			loadProfile: function(alert) {
@@ -108,8 +159,7 @@
 				.success (function(data) {
 					if (data !== "") {
 						//if the user is logged in
-						$('#signModal').modal('hide'); //close the login & signup modal
-						$('#createBoxModal').modal('hide'); //close the create modal
+						Modal.closeModal(); //close the current modal
 						Auth.setLogin(true); //set our login status to be true
 						userProfile = data; //load data into the user profile
 						//debug note: user/email is data.local.email
@@ -413,8 +463,12 @@
 			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
 			$("#createDialog").css("margin-left", "auto");
 
+			console.log("resize called"); //debug
+
 			//resize the login/signup modal
 			var signModalHeight = $('#signDialog').height();
+			console.log(newHeight);
+			console.log(signModalHeight);
 			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");
 		});
