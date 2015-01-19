@@ -55,7 +55,6 @@
 						exit: 'animated fadeOutRight'
 					}
 				});
->>>>>>> master
 			}
 		};
 	});

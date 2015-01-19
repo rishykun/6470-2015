@@ -34,7 +34,55 @@
 
 	app.controller("MainController", function($scope, $window, $http, $state) {
 		//------------ variable initialization
-		
+		/*var gallery = [];
+		var thumbnails = [];
+		boxNameObj = {
+			boxname: "4daf956f-3a03-481a-ad55-818b1662daf4"
+		};
+		boxConfig = {boxname: boxNameObj.boxname+"/config"};
+		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+		$http.post('/getbox', boxNameObj)
+		.success (function(data) {
+			$http.post('/getbox', boxConfig)
+			.success (function(data) {
+				for (i=1; i < data.length; i++){
+					$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
+					.success (function(data) {
+						data = JSON.parse(data);
+						gallery.push({'num': gallery.length, 'Title': data.Title, 'Author': data.Author, 'Description':data.Description,
+							'Thumbs':data.Thumbs,'Comments':data.Comments});
+						console.log(gallery);
+					})
+					.error (function() {
+						console.log("Error getting config file");
+					});
+				}
+			})
+			.error (function() {
+				console.log("Error getting configuration!");
+			});
+		})
+		.error (function() {
+			console.log("Error getting box!");
+		});
+
+		$http.post('/getbox', boxThumb)
+		.success(function(data) {
+			for (i=1; i<data.length; i++){
+			$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
+			.success (function(data) {
+				data = JSON.parse(data);
+				thumbnails.push(data.uri);
+				console.log(thumbnails);
+			})
+			.error (function() {
+				console.log("Error getting thumbnail");
+			});
+		}})
+		.error (function(){
+			console.log("Error getting thumbnails!");
+		});*/
+
 		$scope.loggedIn = false; //default
 
 		//------------ controller functions

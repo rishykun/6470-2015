@@ -86,6 +86,7 @@
 	];*/
 	app.controller('GalleryController', function($scope, $window){
 		$scope.gallery = [];
+		$scope.thumbnails = [];
 
 		$scope.genGallery = function () {
 			boxNameObj = {
@@ -98,9 +99,11 @@
 				$http.post('/getbox', boxConfig)
 				.success (function(data) {
 					for (i=1; i < data.length; i++){
-						$http.post('/getitem', {'uri': boxConfig, 'key': data[i].Key})
+						$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
 						.success (function(data) {
-
+							data = JSON.parse(data);
+							$scope.gallery.push({'num': $scope.gallery.length, 'Title': data.Title, 'Author': data.Author, 'Description':data.Description,
+								'Thumbs':data.Thumbs,'Comments':data.Comments});
 						})
 						.error (function() {
 							console.log("Error getting config file");
@@ -110,26 +113,28 @@
 				.error (function() {
 					console.log("Error getting configuration!");
 				});
-				$http.post('/getbox', boxThumb)
-				.success (function(data) {
-					for (i=1; i < data.length; i++){
-						$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
-						.success (function(data) {
-							gallery[i-1].thumbnail = data.uri;
-						})
-						.error (function() {
-							console.log("Error getting thumbnail");
-						});
-					}
-				})
-				.error (function() {
-					console.log("Error getting thumnails!");
-				});
 			})
 			.error (function() {
 				console.log("Error getting box!");
 			});
-		};
+
+			$http.post('/getbox', boxThumb)
+			.success(function(data) {
+				for (i=1; i<data.length; i++){
+					$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
+					.success (function(data) {
+						data = JSON.parse(data);
+						thumbnails.push(data.uri);
+						console.log(thumbnails);
+					})
+					.error (function() {
+						console.log("Error getting thumbnail");
+					});
+				}})
+			.error (function(){
+				console.log("Error getting thumbnails!");
+			});
+		}
 
 		var windowHeight=$(window).height();
 		var windowWidth=$(window).width();
@@ -170,19 +175,18 @@
 				$('.image-comments').addClass("landscape-comments");
 			}
 		};
-		this.gallery = gallery;
-		this.num = -1;
-		this.curImg = "";
-		this.setNum = function(num){
-			this.num = num;
+		$scope.num = -1;
+		$scope.curImg = "";
+		$scope.setNum = function(num){
+			$scope.num = num;
 			if (num === -1){
-				this.curImg = '';
+				$scope.curImg = '';
 			}
 			else{
 				if (num === 0){
-					this.num = this.gallery.length;
+					$scope.num = $scope.gallery.length;
 				}
-				this.curImg = this.gallery[this.num-1].url;
+				$scope.curImg = $scope.thumbnails[num-1].url;
 			}
 		}
 		$('#singleImage').load(function() {
