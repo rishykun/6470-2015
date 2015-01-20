@@ -145,7 +145,7 @@
 				console.log("Error getting thumbnails!");
 			});
 			*/
-		}
+		};
 		var windowHeight=$(window).height();
 		var windowWidth=$(window).width();
 		$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
@@ -189,6 +189,7 @@
 		$scope.curImg = "";
 		$scope.setNum = function(num){
 			$scope.num = num;
+		};
 		$('#singleImage').load(function() {
 			var realWidth = this.width;
 			var realHeight = this.height;
@@ -208,5 +209,5 @@
 				}
 			};
 		});	
-	})
+	});
 })();

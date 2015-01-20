@@ -82,15 +82,20 @@
 			})
 			.state( 'boxview', {
 				url: '/boxview',
-				onEnter: function(Modal) {
+				onEnter: function(Modal, $modal) {
 					if (Modal.checkOpenModal()) {
 						Modal.closeModal(); //closes any modal that's already open
 					}
+					Modal.setModal("#boxModalDialog", $modal);
+					Modal.openModal({
+							//windowTemplateUrl: "custom_modal_window_template.html",
+							templateUrl: "../tpl/box_view/box_view.tpl.html",
+							backdropClass: "fullsize", //workaround for backdrop display glitch
+							controller: "GalleryController as galleryCtrl"
+						});
 				},
-				templateUrl: "../tpl/box_view/box_view.tpl.html",
-				controller: "galleryController",
 				data: {
-					requireLogin: true,
+					requireLogin: false,
 					requireLogout: false
 				}
 			})
