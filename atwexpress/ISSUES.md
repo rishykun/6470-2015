@@ -6,12 +6,13 @@ issues:
 why is Created and Collaborated populateed 6 times (appended) instead of resetting and adding
 
 todo:
-- initial resize of sign modal doesn't work
-- remember me
-- add user field for signup/signin
+- add user field for signup/signin [UNRESOLVED]
 - receive
+- upload
+- put create in its own state
+- initial resize of sign modal doesn't work
 - automatically generate item.config for each upload
-- prevent access to functions to stuff like get profile and shit if we're not logged in (use the isLoggedIn)
+- remember me
 - overwriting users & folders and in general in aws s3 server
 	prevent overwrite
-reserver certain words (to prevent overwrite of necessary initial items)
+- reserve certain words (to prevent overwrite of necessary initial items)
