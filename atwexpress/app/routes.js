@@ -127,11 +127,12 @@ module.exports = function(app, passport) {
     // processes the upload
     //debug TODO: it currently uploads to Boxes folder, we need to upload it to the current folder that we are viewing
     app.post('/upload', function(req, res) {
-        console.log(req.files.userPhoto); //debug
+        bucketBox = '6.470/Boxes';
+        console.log(req.files); //debug
         params = {
             Bucket: '6.470/Boxes',
-            Key: req.files.userPhoto.originalname,
-            Body: req.files.userPhoto.buffer
+            Key: req.files.upl.originalname,
+            Body: req.files.upl.buffer
         }
         s3.upload(params,function(err,data){
             if(!err){
@@ -139,14 +140,14 @@ module.exports = function(app, passport) {
 
                 //generate the item config file
                 var params = {
-                    Bucket: bucketBox.substring(0,bucketBox.length-1),
-                    Key: req.files.userPhoto.originalname + '.config',
-                    Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : [] }'
+                    Bucket: bucketBox + '/Config',
+                    Key: req.files.upl.originalname + '.config',
+                    Body: '{ "title": "placeholder title", "author": "' + req.user.local.email + '", "description": "placeholder description", "filetype": "' + req.files.upl.mimetype + '" }'
                 };
 
                 s3.upload(params,function(err,data){
                     if(!err){
-                        console.log('Successfully uploaded item.');
+                        console.log('Successfully uploaded item config.');
 
                         //res.status(200);
                         res.redirect('/');
@@ -405,7 +406,7 @@ module.exports = function(app, passport) {
 
         //creates a signed url to be accessible by the front-end
         s3.getSignedUrl('getObject', itemParams, function (err, url) {
-            res.json('{ "name": ' + '"batman"' + ', "uri": ' + '"' + url + '"' + '}');
+            res.json('{ "name": ' + '"' + req.body.key + '"' + ', "uri": ' + '"' + url + '"' + '}');
         });
     });
 

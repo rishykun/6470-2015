@@ -50,6 +50,12 @@
 			</div>
 		</script>
 
+		<script type="text/ng-template" id="uploadWindowTemplate">
+		    <div id= "uploadModal" tabindex="-1" role="dialog" class="modal fade font-gray" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" data-ng-click="close($event); $parent.resetState($event);">
+			    <div id="uploadDialog" class="modal-dialog" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}" style="width:250px"><div class="modal-content custom-modal-rounded" modal-transclude></div></div>
+			</div>
+		</script>
+
 		<script type="text/ng-template" id="galleryModal">
 		<div id="boxModal" class="modal fade" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" data-ng-click="close($event); $parent.resetState($event);">
 				<div class="modal-dialog"id="boxModalDialog" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}">
