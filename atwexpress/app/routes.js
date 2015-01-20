@@ -129,6 +129,8 @@ module.exports = function(app, passport) {
     app.post('/upload', function(req, res) {
         bucketBox = '6.470/Boxes';
         console.log(req.files); //debug
+        console.log("askdhasdkasdklashdkasdasdas");
+        console.log(req); //debug
         params = {
             Bucket: '6.470/Boxes',
             Key: req.files.upl.originalname,

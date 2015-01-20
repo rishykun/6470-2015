@@ -4,6 +4,7 @@
 		'main.signin',
 		'main.signup',
 		'main.create',
+		'main.upload',
 		'main.profile',
 		'main.gallery',
 		'ui.router',
@@ -111,7 +112,7 @@
 						windowTemplateUrl: "uploadWindowTemplate",
 						templateUrl: "../tpl/upload/upload.tpl.html",
 						backdropClass: "fullsize", //workaround for backdrop display glitch
-						//controller: "uploadController"
+						controller: "uploadController"
 					});
 
 				},
@@ -303,6 +304,7 @@
 							exit: 'animated fadeOutRight'
 						}
 					});
+					return '';
 				}
 
 				return currentBoxID;

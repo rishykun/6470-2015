@@ -15,6 +15,11 @@
 
 </form>
 
+<script>
+//adds box name, assumes there is a current box in view
+$('#upload').append('<input type="hidden" id="boxname" name="boxname" value="'+ {{box.getCurrentBoxID()}} +'"/>');
+ </script>
+
 <script src="tpl/upload/assets/js/jquery.knob.js"></script>
 
 <script src="tpl/upload/assets/js/jquery.ui.widget.js"></script>
