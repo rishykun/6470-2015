@@ -2,14 +2,9 @@
 	<div class="title" align="center" ng-show="num===-1">
 		<h4> NAME OF BOX </h4>
 	</div>
-	<!--{{gallery}}
-	{{gallery[0]}}
-	{{gallery[0].url}}-->
 	<div class="gallery" ng-show="num===-1">
 		<div class="image-wrapper hvr-glow-blue" ng-repeat="thumb in thumbnails track by $index" style="margin:5px">
 			<div class="shadow">
-				<!--{{thumb}}
-				{{thumb.url}}-->
 				<img class="images" ng-src="{{thumb}}" ng-click="setNum($index+1)" style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
 				<span id="gallery-text">{{gallery[$index].title}}</span>
 				<span id="gallery-author">{{gallery[$index].author}}</span>

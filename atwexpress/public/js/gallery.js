@@ -93,9 +93,11 @@
 			title:"Hot chick",
 			description:"Scarlett",
 			thumbs:0,
-			comments:[]}
-			];
-		$scope.thumbnails = ["http://i.imgur.com/2GaqmYa.jpg"];
+			comments:[]
+		}];
+		$scope.thumbnails = ["http://i.imgur.com/2GaqmYa.jpg", "http://i.imgur.com/Jx66U3Z.jpg", "http://i.imgur.com/L00hGiP.jpg",
+			"http://i.imgur.com/S5DIkzB.jpg", "http://i.imgur.com/S5DIkzB.jpg", "http://i.imgur.com/S5DIkzB.jpg"
+		];
 
 		$scope.genGallery = function () {/*
 			boxNameObj = {

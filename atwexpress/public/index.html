@@ -49,6 +49,15 @@
 			</div>
 		</script>
 
+		<script type="text/ng-template" id="galleryModal">
+		<div id="boxModal" class="modal fade" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" data-ng-click="close($event); $parent.resetState($event);">
+				<div class="modal-dialog"id="boxModalDialog" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}">
+					<div class="modal-content" id="boxModalCont" modal-transclude>
+					</div>
+				</div>
+			</div>
+		</script>
+
 		<a class="no-text-sel" ui-sref="redirectfromloginorlogout"><img class="icon-med" src="img/ico/logo.png" style="float: left;"></a>
 		<b class="no-text-sel default-cursor" style="margin-left: 5px; margin-top:25px; color:black; float: left">Shrödinger's Black Box</b>
 

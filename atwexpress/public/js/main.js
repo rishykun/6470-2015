@@ -88,7 +88,7 @@
 					}
 					Modal.setModal("#boxModalDialog", $modal);
 					Modal.openModal({
-							//windowTemplateUrl: "custom_modal_window_template.html",
+							windowTemplateUrl: "galleryModal",
 							templateUrl: "../tpl/box_view/box_view.tpl.html",
 							backdropClass: "fullsize", //workaround for backdrop display glitch
 							controller: "GalleryController as galleryCtrl"
