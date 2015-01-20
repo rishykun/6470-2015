@@ -14,13 +14,17 @@
 		//redirects to the home page
 		$scope.resetState = function (s) {
 			console.log(s);
-			console.log(s.target.className);
-			//hacky way to prevent redirect unless we clicked outside the modal content window
+			//hacky way to prevent redirect unless we clicked outside the modal content window or the x button
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
-				|| s.target.className === "modal fade font-gray ng-isolate-scope in") {
+				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
+				|| s.currentTarget.className === "close") {
 				$state.go('redirectfromloginorlogout');
 			}
 		};
+
+		$scope.closeModal = function() {
+			$modalInstance.dismiss('cancel');
+		}
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.signup = function () {

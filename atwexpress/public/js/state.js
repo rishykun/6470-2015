@@ -7,7 +7,7 @@
 
 		//redirects to the home page
 		$scope.resetState = function () {
-			$state.go(redirectfromloginorlogout);
+			$state.go('redirectfromloginorlogout');
 		};
 	});
 })();

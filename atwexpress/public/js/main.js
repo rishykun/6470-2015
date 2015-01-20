@@ -460,11 +460,31 @@
 					console.log($scope.Created);
 					console.log($scope.Collaborated);
 				}
-
-			})
-			.error (function() {
-				console.log("Error getting box contents for " + boxid + "!");
-			});
+					boxinfo = JSON.parse(data);
+					console.log("------- Box Info -------");
+					console.log(boxinfo);
+					if(created)
+					{
+						console.log('adding to created');
+						$scope.Created.push(boxinfo);
+						document.getElementById('boxes').innerHTML = boxinfo.boxname;
+						console.log($scope.Created.length);
+					}
+					else
+					{
+						console.log('adding to collaborated');
+						$scope.Collaborated.push(boxinfo);
+					}
+					if(($scope.Created.length+$scope.Collaborated.length)==$scope.numboxes){
+						console.log('IN THE CREATED COLLABORATED');
+						console.log($scope.Created);
+						console.log($scope.Collaborated);
+					}
+					
+				})
+				.error (function() {
+					console.log("Error getting box contents for " + boxid + "!");
+				});
 		}
 
 		//logs the user out from the server
