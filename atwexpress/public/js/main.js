@@ -444,12 +444,11 @@
 				boxinfo = JSON.parse(data);
 				if(created)
 				{
-
 					$scope.newCreatedBox = true;
 					for(i in $scope.Created)
 					{
 						//TODO: change the equality? so it doesnt just rely on names
-						if($scope.Created[i].name==boxinfo.name)
+						if($scope.Created[i].boxname==boxinfo.boxname)
 						{
 							$scope.newCreatedBox = false;
 						}
@@ -457,12 +456,13 @@
 					//Here verify that the box is not already on the list
 					if($scope.newCreatedBox){
 						$scope.Created.push(boxinfo);
-						createdList = document.getElementById('createdList');
 						boxitem = document.createElement('ul');
 						//pick based on fraction complete
 						entry0 = document.createElement('li');
 						boxImage1 = document.createElement("IMG");
     					boxImage1.setAttribute("src", "img/ico/logo.png");
+    					boxImage1.setAttribute("height", 100);
+    					boxImage1.setAttribute("width", 100);
     					entry0.appendChild(boxImage1);
     					boxitem.appendChild(entry0);
 						entry1 = document.createElement('li');
@@ -474,17 +474,17 @@
 						boxitem.appendChild(entry1);
 						boxitem.appendChild(entry2);
 						boxitem.appendChild(entry3);
+						createdList = document.getElementById('createdList');
 						createdList.appendChild(boxitem);
 					}
 				}
 				else
 				{
-				
 					$scope.newCollaboratedBox = true;
 					for(i in $scope.Collaborated)
 					{
 						//TODO: change the equality? so it doesnt just rely on names
-						if($scope.Collaborated[i].name==boxinfo.name)
+						if($scope.Collaborated[i].boxname==boxinfo.boxname)
 						{
 							$scope.newCollaboratedBox = false;
 						}
@@ -492,22 +492,24 @@
 					//Here verify that the box is not already on the list
 					if($scope.newCollaboratedBox){
 						$scope.Collaborated.push(boxinfo);
-						collaboratedList = document.getElementById('collaboratedList');
 						boxItemCl = document.createElement('ul');
 						entryCl0 = document.createElement('li');
 						boxImageCl1 = document.createElement("IMG");
     					boxImageCl1.setAttribute("src", "img/ico/logo.png");
+    					boxImageCl1.setAttribute("height", 100);
+    					boxImageCl1.setAttribute("width", 100);
     					entryCl0.appendChild(boxImageCl1);
     					boxItemCl.appendChild(entryCl0);
 						entryCl1 = document.createElement('li');
-						entryCl.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
+						entryCl1.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
 						entryCl2 = document.createElement('li');
 						entryCl2.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
 						entryCl3 = document.createElement('li');
 						entryCl3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
-						boxItemCl.append(entryCl1);
-						boxItemCl.append(entryCl2);
-						boxItemCl.append(entryCl3);
+						boxItemCl.appendChild(entryCl1);
+						boxItemCl.appendChild(entryCl2);
+						boxItemCl.appendChild(entryCl3);
+						collaboratedList = document.getElementById('collaboratedList');
 						collaboratedList.appendChild(boxItemCl);
 					}
 
