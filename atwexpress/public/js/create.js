@@ -3,14 +3,19 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'createController', function createController ($scope, $http, $window) {
+	app.controller ( 'createController', function createController ($scope, $http, $window, UserProfile) {
+		$scope.userProfile=UserProfile;
+		
 		$scope.formData = {}; //default empty form object to be populated
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.createBox = function () {
+			user = $scope.userProfile.getProfile().local.email;
+			$scope.formData.username = user;
 			if ($scope.formData.hasOwnProperty("boxname")) {
 				if ($scope.formData.boxname !== undefined && $scope.formData.boxname !== null
 					&& $scope.formData.boxname !== "") {
+					//needs to send username/email as well
 					$http.post('/create', $scope.formData)
 					.success (function(data) {
 						$scope.setCurrentBox(JSON.parse(data));

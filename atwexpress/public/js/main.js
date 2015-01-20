@@ -258,23 +258,23 @@
 	});
 
 	app.factory('Box', function() {
-		var currentBox = false;
+		var currentBoxID = false;
 		var currentBoxContents = false;
 		return {
 			//sets the current box
-			setCurrentBox: function(b) {
-				currentBox = b;
+			setCurrentBoxID: function(b) {
+				currentBoxID = b;
 
 				//also load the box contents
 				reqData = {
-					'boxname':  currentBox.id,
+					'boxname':  currentBoxID,
 				}
 				$http.post('/getbox', reqData)
 				.success (function(data) {
 					currentBoxContents = data;
 				})
 				.error (function() {
-					$.growl("Error retrieving box contents from the server for box id: " + currentBox.id, {
+					$.growl("Error retrieving box contents from the server for box id: " + currentBoxID, {
 						type: "danger",
 						animate: {
 							enter: 'animated fadeInRight',
@@ -284,8 +284,8 @@
 				});
 			},
 			//returns the current box
-			getCurrentBox: function() {
-				if (currentBox === false) {
+			getCurrentBoxID: function() {
+				if (currentBoxID === false) {
 					$.growl("There is no current box set", {
 						type: "danger",
 						animate: {
@@ -294,13 +294,68 @@
 						}
 					});
 				}
-				return currentBox;
+
+				return currentBoxID;
+			},
+
+			getCurrentBoxContents: function() {
+				if (currentBoxContents === false) {
+					$.growl("There is no current box set", {
+						type: "danger",
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+				}
+
+				return currentBoxContents;
 			}
+
 		};
 	});
+	app.factory('BoxList', function() {
+		var created = [];
+		var collaborated = [];
+		return{
+			addCreatedBoxJson: function(bjson){
+				newCreatedBox = true;
+					for(i in created)
+					{
+						if(created[i].boxname==bjson.boxname)
+						{
+							newCreatedBox = false;
+						}
+					}
+				if(newCreatedBox){
+					created.push(bjson);
+				}
+			},
+			addCollaboratedBoxJson: function(bjson){
+				newCollaboratedBox = true;
+					for(i in collaborated)
+					{
+						//TODO: change the equality? so it doesnt just rely on names
+						if(collaborated[i].boxname==bjson.boxname)
+						{
+							newCollaboratedBox = false;
+						}
+					}
+					if(newCollaboratedBox){
+						collaborated.push(bjson);
+					}
+			},
+			getCreatedBoxes: function(){
+				return created;
+			},
+			getCollaboratedBoxes: function(){
+				return collaborated;
+			}
+		}
+	});
 
-	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$modal", "Auth", "UserProfile", "Box",
-		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box) {
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$modal", "Auth", "UserProfile", "Box","BoxList",
+		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box,BoxList) {
 		
 		/*var gallery = [];
 		var thumbnails = [];
@@ -354,6 +409,7 @@
 		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
 		$scope.box = Box;
+		$scope.boxlist = BoxList;
 
 		//------------ controller functions
 		//get the current state
@@ -442,77 +498,16 @@
 			$http.post('/getboxconfig', reqData)
 			.success (function(data) {
 				boxinfo = JSON.parse(data);
+				boxinfo.id=boxid;
 				if(created)
 				{
-					$scope.newCreatedBox = true;
-					for(i in $scope.Created)
-					{
-						//TODO: change the equality? so it doesnt just rely on names
-						if($scope.Created[i].boxname==boxinfo.boxname)
-						{
-							$scope.newCreatedBox = false;
-						}
-					}
-					//Here verify that the box is not already on the list
-					if($scope.newCreatedBox){
-						$scope.Created.push(boxinfo);
-						boxitem = document.createElement('div');
-						boxitem.setAttribute("class","box-wrapper");
-						//pick based on fraction complete;
-						boxImage1 = document.createElement("IMG");
-    					boxImage1.setAttribute("src", "img/ico/logo.png");
-    					boxImage1.setAttribute("height", 100);
-    					boxImage1.setAttribute("width", 100);
-    					boxitem.appendChild(boxImage1);
-						entry1 = document.createElement("p");
-						entry1.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
-						entry2 = document.createElement("p");
-						entry2.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
-						//entry3 = document.createElement('li');
-						//entry3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
-						boxitem.appendChild(entry1);
-						boxitem.appendChild(entry2);
-						//boxitem.appendChild(entry3);
-						createdList = document.getElementById('createdList');
-						createdList.appendChild(boxitem);
-					}
+					$scope.boxlist.addCreatedBoxJson(boxinfo);
+			
 				}
 				else
 				{
-					$scope.newCollaboratedBox = true;
-					for(i in $scope.Collaborated)
-					{
-						//TODO: change the equality? so it doesnt just rely on names
-						if($scope.Collaborated[i].boxname==boxinfo.boxname)
-						{
-							$scope.newCollaboratedBox = false;
-						}
-					}
-					//Here verify that the box is not already on the list
-					if($scope.newCollaboratedBox){
-						$scope.Collaborated.push(boxinfo);
-						boxItemCl = document.createElement('div');
-						boxItemCl.setAttribute("class","box-wrapper");
-						boxImageCl1 = document.createElement("IMG");
-    					boxImageCl1.setAttribute("src", "img/ico/logo.png");
-    					boxImageCl1.setAttribute("height", 100);
-    					boxImageCl1.setAttribute("width", 100);
-    					boxItemCl.appendChild(boxImageCl1);
-						entryCl1 = document.createElement("p");
-						entryCl1.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
-						entryCl2 = document.createElement("p");
-						entryCl2.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
-						//entryCl3 = document.createElement('li');
-						//entryCl3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
-						boxItemCl.appendChild(entryCl1);
-						boxItemCl.appendChild(entryCl2);
-						//boxItemCl.appendChild(entryCl3);
-						collaboratedList = document.getElementById('collaboratedList');
-						collaboratedList.appendChild(boxItemCl);
-					}
-
-				}
-					
+					$scope.boxlist.addCollaboratedBoxJson(boxinfo);
+				}	
 				})
 				.error (function() {
 					console.log("Error getting box contents for " + boxid + "!");

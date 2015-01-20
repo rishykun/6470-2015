@@ -3,10 +3,10 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'profileController', function profileController ($scope, $http, $window) {
+	app.controller ( 'profileController', function profileController ($scope, $http, $window,BoxList) {
 
+		$scope.boxlist = BoxList;
 		$scope.getUserBoxes = function (user) {
-			console.log($scope.userProfile.getProfile().local.email);
 			user = $scope.userProfile.getProfile().local.email; //debug
 			reqData = {
 				'username':  user,
@@ -16,9 +16,7 @@
 					$scope.userinfo = JSON.parse(data);
 					$scope.boxes_created =$scope.userinfo.boxes_created;
 					$scope.boxes_collaborated = $scope.userinfo.boxes_collaborated;
-					$scope.$parent.numboxes = $scope.userinfo.boxes_created.length + $scope.userinfo.boxes_collaborated.length;
-					$scope.$parent.Created = [];
-					$scope.$parent.Collaborated = [];
+				
 					//ALL VARIABLES MUST BE CLEARED WHEN STATE IS CHANGED? 
 //------------------------   retrieve box config ------------------
 				for(i=0;i< $scope.boxes_created.length;i++)
