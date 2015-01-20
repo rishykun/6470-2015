@@ -456,24 +456,23 @@
 					//Here verify that the box is not already on the list
 					if($scope.newCreatedBox){
 						$scope.Created.push(boxinfo);
-						boxitem = document.createElement('ul');
-						//pick based on fraction complete
-						entry0 = document.createElement('li');
+						boxitem = document.createElement('div');
+						boxitem.setAttribute("class","box-wrapper");
+						//pick based on fraction complete;
 						boxImage1 = document.createElement("IMG");
     					boxImage1.setAttribute("src", "img/ico/logo.png");
     					boxImage1.setAttribute("height", 100);
     					boxImage1.setAttribute("width", 100);
-    					entry0.appendChild(boxImage1);
-    					boxitem.appendChild(entry0);
-						entry1 = document.createElement('li');
+    					boxitem.appendChild(boxImage1);
+						entry1 = document.createElement("p");
 						entry1.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
-						entry2 = document.createElement('li');
+						entry2 = document.createElement("p");
 						entry2.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
-						entry3 = document.createElement('li');
-						entry3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
+						//entry3 = document.createElement('li');
+						//entry3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
 						boxitem.appendChild(entry1);
 						boxitem.appendChild(entry2);
-						boxitem.appendChild(entry3);
+						//boxitem.appendChild(entry3);
 						createdList = document.getElementById('createdList');
 						createdList.appendChild(boxitem);
 					}
@@ -492,23 +491,22 @@
 					//Here verify that the box is not already on the list
 					if($scope.newCollaboratedBox){
 						$scope.Collaborated.push(boxinfo);
-						boxItemCl = document.createElement('ul');
-						entryCl0 = document.createElement('li');
+						boxItemCl = document.createElement('div');
+						boxItemCl.setAttribute("class","box-wrapper");
 						boxImageCl1 = document.createElement("IMG");
     					boxImageCl1.setAttribute("src", "img/ico/logo.png");
     					boxImageCl1.setAttribute("height", 100);
     					boxImageCl1.setAttribute("width", 100);
-    					entryCl0.appendChild(boxImageCl1);
-    					boxItemCl.appendChild(entryCl0);
-						entryCl1 = document.createElement('li');
+    					boxItemCl.appendChild(boxImageCl1);
+						entryCl1 = document.createElement("p");
 						entryCl1.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
-						entryCl2 = document.createElement('li');
+						entryCl2 = document.createElement("p");
 						entryCl2.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
-						entryCl3 = document.createElement('li');
-						entryCl3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
+						//entryCl3 = document.createElement('li');
+						//entryCl3.appendChild(document.createTextNode('Box ID: ' + boxid + ' We can use this to give the uri to the box'));
 						boxItemCl.appendChild(entryCl1);
 						boxItemCl.appendChild(entryCl2);
-						boxItemCl.appendChild(entryCl3);
+						//boxItemCl.appendChild(entryCl3);
 						collaboratedList = document.getElementById('collaboratedList');
 						collaboratedList.appendChild(boxItemCl);
 					}
