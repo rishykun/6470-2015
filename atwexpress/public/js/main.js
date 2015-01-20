@@ -283,6 +283,9 @@
 					});
 				});
 			},
+			setCurrentBox:function(b){
+				currentBoxContents = b;
+			},
 			//returns the current box
 			getCurrentBoxID: function() {
 				if (currentBoxID === false) {

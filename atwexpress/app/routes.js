@@ -193,6 +193,8 @@ module.exports = function(app, passport) {
                             else {
                                 console.log("Successfully generated box configuration.");
 
+
+                                
                                 //create the config folder
                                 s3.headBucket({Bucket:bucketBox + "Config/"}, function(err,data){
                                     if(err){
@@ -212,7 +214,49 @@ module.exports = function(app, passport) {
                                                             }
                                                             else {
                                                                 console.log("Successfully created thumbnails folder.");
-                                                                res.json('{ "name" : "' + req.body.boxname + '", "id" : "' + boxId + '", "uri" : "' + bucketBox + '" }');
+                                                                // --------------Updating User Config File --------------
+                                                                    var userParams = {
+                                                                        Bucket:'6.470',
+                                                                        Key: 'Users/'+req.body.username+'/user.config'
+                                                                    }
+
+
+                                                                    s3.getSignedUrl('getObject', userParams, function (err, url) {
+                                                                        var http = require('http');
+                                                                        var options = {
+                                                                            host: url.slice(8,24),
+                                                                            port: 80,
+                                                                            path: url.slice(24,url.length)
+                                                                        };
+
+                                                                        http.get(options,function(rep){
+                                                                            rep.setEncoding('utf8');
+                                                                            rep.on('data',function(info){
+                                                                                info = JSON.parse(info);
+                                                                                info.boxes_created.push(boxId);
+                                                                                var userConfigParams = {
+                                                                                    Bucket: '6.470/Users/'+req.body.username,
+                                                                                    Key: 'user.config',
+                                                                                    Body: JSON.stringify(info)
+                                                                                };
+                                                                                s3.upload(userConfigParams, function(err, data) {
+                                                                                    if (err) {       
+                                                                                        console.error(err);
+                                                                                    }
+                                                                                    else {
+                                                                                        console.log('Successfully updated user config');
+                                                                                        var boxConfigData = '{ "name" : "' + req.body.boxname + '", "id" : "' + boxId + '", "uri" : "' + bucketBox + '" }';
+                                                                                        res.json(boxConfigData);
+                                                                                    }
+                                                                                });
+                                                                            }).on('error',function(err){
+                                                                                console.log(err);
+                                                                            });
+                                                                            
+                                                                        });
+                                                                    });
+                                                                //-------------------------------------------------------
+
                                                             }
                                                         });
                                                      } else {
@@ -225,48 +269,7 @@ module.exports = function(app, passport) {
                                          console.error("Config already exists!");
                                      }
                                 });
-// --------------Updating User Config File --------------
-                                var userParams = {
-                                    Bucket:'6.470',
-                                    Key: 'Users/'+req.body.username+'/user.config'
-                                }
 
-
-                                s3.getSignedUrl('getObject', userParams, function (err, url) {
-                                    var http = require('http');
-                                    var options = {
-                                        host: url.slice(8,24),
-                                        port: 80,
-                                        path: url.slice(24,url.length)
-                                    };
-
-                                    http.get(options,function(rep){
-                                        rep.setEncoding('utf8');
-                                        rep.on('data',function(info){
-                                            console.log(info);
-                                            info = s2json.convert(info);
-                                            console.log(info);
-                                            info.boxes_created.push(boxId);
-                                            var userConfigParams = {
-                                                Bucket: '6.470/Users/'+req.body.username+'/',
-                                                Key: 'user.config',
-                                                Body: info
-                                            };
-                                            s3.upload(userConfigParams, function(err, data) {
-                                                if (err) {       
-                                                    console.error(err);
-                                                }
-                                                else {
-                                                    console.log('Successfully updated user config');
-                                                }
-                                            });
-                                        }).on('error',function(err){
-                                            console.log(err);
-                                        });
-                                        
-                                    });
-                                });
-//-------------------------------------------------------
 
                             }
                         });

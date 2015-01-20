@@ -3,9 +3,10 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'createController', function createController ($scope, $http, $window, UserProfile) {
+	app.controller ( 'createController', function createController ($scope, $http, $window, UserProfile,Box,Modal) {
 		$scope.userProfile=UserProfile;
-		
+		$scope.box = Box;
+		$scope.modal = Modal;
 		$scope.formData = {}; //default empty form object to be populated
 
 		//attempts authentication on the server with the credentials from the form
@@ -18,9 +19,9 @@
 					//needs to send username/email as well
 					$http.post('/create', $scope.formData)
 					.success (function(data) {
-						$scope.setCurrentBox(JSON.parse(data));
+						$scope.box.setCurrentBox(JSON.parse(data));
 						$('.form-create').trigger("reset"); //clears the signin form
-						$scope.hideModals();
+						$scope.modal.closeModal();
 						$.growl("Successfully created a box on the server", {
 							type: "success",
 							animate: {
