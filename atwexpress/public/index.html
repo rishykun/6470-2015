@@ -49,6 +49,15 @@
 			</div>
 		</script>
 
+		<script type="text/ng-template" id="galleryModal">
+		<div id="boxModal" class="modal fade" ng-class="{in: animate}" ng-style="{'z-index': 1050 + index*10, display: 'block'}" data-ng-click="close($event); $parent.resetState($event);">
+				<div class="modal-dialog"id="boxModalDialog" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}">
+					<div class="modal-content" id="boxModalCont" modal-transclude>
+					</div>
+				</div>
+			</div>
+		</script>
+
 		<a class="no-text-sel" ui-sref="redirectfromloginorlogout"><img class="icon-med" src="img/ico/logo.png" style="float: left;"></a>
 		<b class="no-text-sel default-cursor" style="margin-left: 5px; margin-top:25px; color:black; float: left">Shrödinger's Black Box</b>
 
@@ -77,8 +86,9 @@
 		    	<div style="float: left; padding-top:5px; padding-right:10px"> Welcome, {{userProfile.getProfile().local.email}}! </div>
 		    	<div style="float: right">
 		    		<div style="float:left; padding-right: 10px; padding-top: 5px">
-				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Profile</a>
-				    	<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="boxview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
+		    			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Profile</a>
+		    			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" 
+		    			 style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px" href="#/">Settings</a>
 			    	</div>
 			        <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
 		        </div>

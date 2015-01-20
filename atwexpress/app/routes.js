@@ -312,6 +312,33 @@ module.exports = function(app, passport) {
         });
     });
 
+    app.post('/getitemconfig', function(req, res) {
+        //TODO: handle not logged in user -> redirect to somewhere else?
+        var itemParams = {
+            Bucket: req.body.uri,
+            Key: req.body.key
+        }
+          s3.getSignedUrl('getObject', itemParams, function (err, url) {
+                var http = require('http');
+                var options = {
+                    host: url.slice(8,24),
+                    port: 80,
+                    path: url.slice(24,url.length)
+                };
+                
+                http.get(options,function(rep){
+                    rep.setEncoding('utf8');
+                    rep.on('data',function(info){
+                        console.log(info);
+                        res.json(info);
+                    });
+                }).on('error',function(err){
+                    console.log(err);
+                });
+        
+            });
+    });
+
     app.post('/getitem', function (req, res) {
         console.log(req.body.uri); //debug
         console.log(req.body.key); //debug
@@ -330,7 +357,7 @@ module.exports = function(app, passport) {
 
         //creates a signed url to be accessible by the front-end
         s3.getSignedUrl('getObject', itemParams, function (err, url) {
-            res.json("{ 'name': " + "'batman'" + ", 'uri': " + url + "}");
+            res.json('{ "name": ' + '"batman"' + ', "uri": ' + '"' + url + '"' + '}');
         });
     });
 

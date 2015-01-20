@@ -1,5 +1,5 @@
 (function() {
-var app = angular.module( "main.gallery", ['ui.router']);
+	var app = angular.module( "main.gallery", ['ui.router']);
 	/*var gallery = [
 	{
 		num: 1,
@@ -84,11 +84,75 @@ var app = angular.module( "main.gallery", ['ui.router']);
 		comments:[]
 	}
 	];*/
-	app.controller('galleryController', function($window){
+	app.controller('GalleryController', function($scope, $window){
+		$scope.gallery = [{
+			num: 1,
+			url: "http://i.imgur.com/2GaqmYa.jpg",
+			author: "niggermaster",
+			thumbnail:"",
+			title:"Hot chick",
+			description:"Scarlett",
+			thumbs:0,
+			comments:[]
+		}];
+		$scope.thumbnails = ["http://i.imgur.com/2GaqmYa.jpg", "http://i.imgur.com/Jx66U3Z.jpg", "http://i.imgur.com/L00hGiP.jpg",
+			"http://i.imgur.com/S5DIkzB.jpg", "http://i.imgur.com/S5DIkzB.jpg", "http://i.imgur.com/S5DIkzB.jpg"
+		];
+
+		$scope.genGallery = function () {/*
+			boxNameObj = {
+				boxname: "4daf956f-3a03-481a-ad55-818b1662daf4"
+			};
+			boxConfig = {boxname: boxNameObj.boxname+"/config"};
+			boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+			
+			$http.post('/getbox', boxNameObj)
+			.success (function(data) {
+				$http.post('/getbox', boxConfig)
+				.success (function(data) {
+					for (i=1; i < data.length; i++){
+						$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
+						.success (function(data) {
+							data = JSON.parse(data);
+							$scope.gallery.push({'num': $scope.gallery.length, 'Title': data.Title, 'Author': data.Author, 'Description':data.Description,
+								'Thumbs':data.Thumbs,'Comments':data.Comments});
+						})
+						.error (function() {
+							console.log("Error getting config file");
+						});
+					}
+				})
+				.error (function() {
+					console.log("Error getting configuration!");
+				});
+			})
+			.error (function() {
+				console.log("Error getting box!");
+			});
+
+			$http.post('/getbox', boxThumb)
+			.success(function(data) {
+				for (i=1; i<data.length; i++){
+					$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
+					.success (function(data) {
+						data = JSON.parse(data);
+						thumbnails.push(data.uri);
+						console.log(thumbnails);
+					})
+					.error (function() {
+						console.log("Error getting thumbnail");
+					});
+				}})
+			.error (function(){
+				console.log("Error getting thumbnails!");
+			});
+			*/
+		};
 		var windowHeight=$(window).height();
 		var windowWidth=$(window).width();
 		$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
 		$('.buttons').css("padding-bottom", windowHeight*0.03+"px");
+
 		var adjustDisplay = function(ratio) {
 			if (ratio >= 1){
 				$('#singleImageWrapper').removeClass("landscape-wrapper");
@@ -123,22 +187,11 @@ var app = angular.module( "main.gallery", ['ui.router']);
 				$('.image-comments').addClass("landscape-comments");
 			}
 		};
-		/*
-		this.gallery = gallery;
-		this.num = -1;
-		this.curImg = "";
-		this.setNum = function(num){
-			this.num = num;
-			if (num === -1){
-				this.curImg = '';
-			}
-			else{
-				if (num === 0){
-					this.num = this.gallery.length;
-				}
-				this.curImg = this.gallery[this.num-1].url;
-			}
-		}*/
+		$scope.num = -1;
+		$scope.curImg = "";
+		$scope.setNum = function(num){
+			$scope.num = num;
+		};
 		$('#singleImage').load(function() {
 			var realWidth = this.width;
 			var realHeight = this.height;
@@ -158,5 +211,5 @@ var app = angular.module( "main.gallery", ['ui.router']);
 				}
 			};
 		});	
-	})
+	});
 })();

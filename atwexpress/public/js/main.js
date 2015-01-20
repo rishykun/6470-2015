@@ -82,15 +82,20 @@
 			})
 			.state( 'boxview', {
 				url: '/boxview',
-				onEnter: function(Modal) {
+				onEnter: function(Modal, $modal) {
 					if (Modal.checkOpenModal()) {
 						Modal.closeModal(); //closes any modal that's already open
 					}
+					Modal.setModal("#boxModalDialog", $modal);
+					Modal.openModal({
+							windowTemplateUrl: "galleryModal",
+							templateUrl: "../tpl/box_view/box_view.tpl.html",
+							backdropClass: "fullsize", //workaround for backdrop display glitch
+							controller: "GalleryController as galleryCtrl"
+						});
 				},
-				templateUrl: "../tpl/box_view/box_view.tpl.html",
-				controller: "galleryController",
 				data: {
-					requireLogin: true,
+					requireLogin: false,
 					requireLogout: false
 				}
 			})
@@ -296,6 +301,55 @@
 
 	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$modal", "Auth", "UserProfile", "Box",
 		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box) {
+		
+		/*var gallery = [];
+		var thumbnails = [];
+		boxNameObj = {
+			boxname: "4daf956f-3a03-481a-ad55-818b1662daf4"
+		};
+		boxConfig = {boxname: boxNameObj.boxname+"/config"};
+		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+		$http.post('/getbox', boxNameObj)
+		.success (function(data) {
+			$http.post('/getbox', boxConfig)
+			.success (function(data) {
+				for (i=1; i < data.length; i++){
+					$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
+					.success (function(data) {
+						data = JSON.parse(data);
+						gallery.push({'num': gallery.length, 'Title': data.Title, 'Author': data.Author, 'Description':data.Description,
+							'Thumbs':data.Thumbs,'Comments':data.Comments});
+						console.log(gallery);
+					})
+					.error (function() {
+						console.log("Error getting config file");
+					});
+				}
+			})
+			.error (function() {
+				console.log("Error getting configuration!");
+			});
+		})
+		.error (function() {
+			console.log("Error getting box!");
+		});
+
+		$http.post('/getbox', boxThumb)
+		.success(function(data) {
+			for (i=1; i<data.length; i++){
+			$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
+			.success (function(data) {
+				data = JSON.parse(data);
+				thumbnails.push(data.uri);
+				console.log(thumbnails);
+			})
+			.error (function() {
+				console.log("Error getting thumbnail");
+			});
+		}})
+		.error (function(){
+			console.log("Error getting thumbnails!");
+		});*/
 		//------------ sets factory services to be accessible from $scope
 		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
@@ -386,8 +440,26 @@
 				'boxid':  boxid,
 			}
 			$http.post('/getboxconfig', reqData)
-				.success (function(data) {
-
+			.success (function(data) {
+				boxinfo = JSON.parse(data);
+				console.log("------- Box Info -------");
+				console.log(boxinfo);
+				if(created)
+				{
+					console.log('adding to created');
+					$scope.Created.push(boxinfo);
+					console.log($scope.Created.length);
+				}
+				else
+				{
+					console.log('adding to collaborated');
+					$scope.Collaborated.push(boxinfo);
+				}
+				if(($scope.Created.length+$scope.Collaborated.length)==$scope.numboxes){
+					console.log('IN THE CREATED COLLABORATED');
+					console.log($scope.Created);
+					console.log($scope.Collaborated);
+				}
 					boxinfo = JSON.parse(data);
 					console.log("------- Box Info -------");
 					console.log(boxinfo);
