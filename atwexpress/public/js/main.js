@@ -395,6 +395,7 @@
 					{
 						console.log('adding to created');
 						$scope.Created.push(boxinfo);
+						document.getElementById('boxes').innerHTML = boxinfo.boxname;
 						console.log($scope.Created.length);
 					}
 					else

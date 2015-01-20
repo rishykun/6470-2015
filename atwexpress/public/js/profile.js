@@ -7,7 +7,8 @@
 
 		
 		$scope.getUserBoxes = function (user) {
-			user = $scope.userObject.local.email; //debug
+			console.log($scope.userProfile.getProfile().local.email);
+			user = $scope.userProfile.getProfile().local.email; //debug
 			reqData = {
 				'username':  user,
 			}
@@ -29,8 +30,8 @@
 				//Don't move on unless all post requests are completed or some fail
 				for(i=0;i< $scope.boxes_collaborated.length;i++)
 					{
-						console.log($scope.boxes_collaborated[i],false);
-						$scope.getBoxConfig($scope.boxes_collaborated[i]);
+						console.log($scope.boxes_collaborated[i]);
+						$scope.getBoxConfig($scope.boxes_collaborated[i],false);
 					}
 				
 				
