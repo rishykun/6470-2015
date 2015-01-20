@@ -393,18 +393,52 @@
 					console.log(boxinfo);
 					if(created)
 					{
-						console.log('adding to created');
-						$scope.Created.push(boxinfo);
-						document.getElementById('boxes').innerHTML = boxinfo.boxname;
-						console.log($scope.Created.length);
+
+						$scope.newCreatedBox = true;
+						for(i in $scope.Created)
+						{
+							//TODO: change the equality? so it doesnt just rely on names
+							if($scope.Created[i].name==boxinfo.name)
+							{
+								$scope.newCreatedBox = false;
+							}
+						}
+						//Here verify that the box is not already on the list
+						if($scope.newCreatedBox){
+							$scope.Created.push(boxinfo);
+							var createdList = document.getElementById('createdList')
+							var entry = document.createElement('li');
+							entry.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
+							entry.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
+							entry.appendChild(document.createTextNode('Box ID: ' + boxid + 'We can use this to give the uri to the box'));
+							createdList.appendChild(entry);
+						}
 					}
 					else
 					{
-						console.log('adding to collaborated');
-						$scope.Collaborated.push(boxinfo);
+					
+						$scope.newCollaboratedBox = true;
+						for(i in $scope.Collaborated)
+						{
+							//TODO: change the equality? so it doesnt just rely on names
+							if($scope.Collaborated[i].name==boxinfo.name)
+							{
+								$scope.newCollaboratedBox = false;
+							}
+						}
+						//Here verify that the box is not already on the list
+						if($scope.newCollaboratedBox){
+							$scope.Collaborated.push(boxinfo);
+							var collaboratedList = document.getElementById('collaboratedList')
+							var entryCl = document.createElement('li');
+							entryCl.appendChild(document.createTextNode('Box Name: '+boxinfo.boxname));
+							entryCl.appendChild(document.createTextNode('Items in Box: ' + boxinfo.itemcount + '/' + boxinfo.capacity));
+							entryCl.appendChild(document.createTextNode('Box ID: ' + boxid + 'We can use this to give the uri to the box'));
+							collaboratedList.appendChild(entryCl);
+						}
+
 					}
 					if(($scope.Created.length+$scope.Collaborated.length)==$scope.numboxes){
-						console.log('IN THE CREATED COLLABORATED');
 						console.log($scope.Created);
 						console.log($scope.Collaborated);
 					}

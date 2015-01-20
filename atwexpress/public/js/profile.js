@@ -5,7 +5,6 @@
 
 	app.controller ( 'profileController', function profileController ($scope, $http, $window) {
 
-		
 		$scope.getUserBoxes = function (user) {
 			console.log($scope.userProfile.getProfile().local.email);
 			user = $scope.userProfile.getProfile().local.email; //debug

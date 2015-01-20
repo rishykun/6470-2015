@@ -302,7 +302,7 @@ module.exports = function(app, passport) {
             http.get(options,function(rep){
                 rep.setEncoding('utf8');
                 rep.on('data',function(info){
-                    console.log(info);
+                    //console.log(info);
                     res.json(info);
                 });
             }).on('error',function(err){
