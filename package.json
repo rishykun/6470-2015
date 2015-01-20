@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "main": "server.js",
+  "engines": {
+    "node": "0.10.x"
+  },
   "dependencies": {
     "express": "~4.10.6",
     "ejs": "~1.0.0",
@@ -21,6 +24,14 @@
     "method-override": "~1.0.0",
     "express-session": "~1.0.0",
     "serve-favicon": "~2.2.0",
-    "debug": "~2.1.1"
+    "debug": "~2.1.1",
+
+    "aws-sdk": "latest",
+    "multer": "latest",
+    "node-uuid": "latest",
+    "string-to-json": "latest"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
