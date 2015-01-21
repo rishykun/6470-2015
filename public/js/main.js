@@ -67,6 +67,26 @@
 					requireLogout: false
 				}
 			})
+			.state( 'create', {
+				url: '/create',
+				onEnter: function($modal, Modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+						//this can happen if the state switches directly from signup to signin or vice-versa
+					}
+					Modal.setModal("#signDialog", $modal); //not a typo since we're using signWindowTemplate
+					Modal.openModal({
+						windowTemplateUrl: "signWindowTemplate", //not a typo, signWindowTemplate works for create modal
+						templateUrl: "../tpl/create/create.tpl.html",
+						backdropClass: "fullsize", //workaround for backdrop display glitch
+						controller: "createController"
+					});
+				},
+				data: {
+					requireLogin: true,
+					requireLogout: false
+				}
+			})
 			.state( 'profileview', {
 				url: '/profile',
 				onEnter: function(Modal) {
@@ -399,56 +419,8 @@
 	});
 
 	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$modal", "Auth", "UserProfile", "Box","BoxList",
-		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box,BoxList) {
-		
-		/*var gallery = [];
-		var thumbnails = [];
-		boxNameObj = {
-			boxname: "4daf956f-3a03-481a-ad55-818b1662daf4"
-		};
-		boxConfig = {boxname: boxNameObj.boxname+"/config"};
-		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
-		$http.post('/getbox', boxNameObj)
-		.success (function(data) {
-			$http.post('/getbox', boxConfig)
-			.success (function(data) {
-				for (i=1; i < data.length; i++){
-					$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
-					.success (function(data) {
-						data = JSON.parse(data);
-						gallery.push({'num': gallery.length, 'Title': data.Title, 'Author': data.Author, 'Description':data.Description,
-							'Thumbs':data.Thumbs,'Comments':data.Comments});
-						console.log(gallery);
-					})
-					.error (function() {
-						console.log("Error getting config file");
-					});
-				}
-			})
-			.error (function() {
-				console.log("Error getting configuration!");
-			});
-		})
-		.error (function() {
-			console.log("Error getting box!");
-		});
+		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box, BoxList) {
 
-		$http.post('/getbox', boxThumb)
-		.success(function(data) {
-			for (i=1; i<data.length; i++){
-			$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
-			.success (function(data) {
-				data = JSON.parse(data);
-				thumbnails.push(data.uri);
-				console.log(thumbnails);
-			})
-			.error (function() {
-				console.log("Error getting thumbnail");
-			});
-		}})
-		.error (function(){
-			console.log("Error getting thumbnails!");
-		});*/
 		//------------ sets factory services to be accessible from $scope
 		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
@@ -464,6 +436,43 @@
 		$scope.compareState = function (state) {
 			return state === $state.current.name;
 		}
+
+		//called when the create button on the home page is clicked
+		//check if user is logged in before going to the create state
+		//which is where the create modal is handled by the create controller
+		//if the user is not logged in, simply display a message requiring authorization
+		$scope.goCreate = function() {
+			if ($scope.auth.isLoggedIn()) {
+				$state.go('create');
+			}
+			else {
+				$.growl("Please login to use the create button", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
+			}
+		};
+
+		//called when the receive button on the home page is clicked
+		//check if user is logged in before going to the receive state
+		//if the user is not logged in, simply display a message requiring authorization
+		$scope.goReceive = function() {
+			if ($scope.auth.isLoggedIn()) {
+				$state.go('receive');
+			}
+			else {
+				$.growl("Please login to use the receive button", {
+					type: "danger",
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
+			}
+		};
 
 		//gets the signed url that gives the item
 		$scope.getItem = function (boxuri, itemname) {
@@ -487,6 +496,10 @@
 			});
 		};
 
+		//DEBUG TODO
+		//this function relies on return data upon success
+		//this leads to failure because success is a callback (asynchronous call)
+		//so nothing is returned when the function is executed
 		//gets the contents of the specified box uri from the server
 		$scope.getBoxContents = function (boxid) {
 			reqData = {
@@ -511,6 +524,8 @@
 
 		//DEBUG TODO
 		//MOST LIKELY NOT USED (DOUBLE CHECK)
+		//ALSO, $scope.userinfo and $scope.userFound are not used anywhere
+		//ALSO, UserProfile (factory) serves the purpose of these 2 variables
 		//profile.js uses function $scope.getUserBoxes instead
 		//gets the user config file as a json for the current user
 		$scope.getUserConfig = function (user) {
@@ -522,7 +537,6 @@
 			.success (function(data) {
 				$scope.userinfo = JSON.parse(data);
 				$scope.userFound = true;
-				//console.log(userinfo);
 			})
 			.error (function() {
 				$.growl("Error getting user config file for " + user, {
@@ -544,19 +558,17 @@
 			.success (function(data) {
 				boxinfo = JSON.parse(data);
 				boxinfo.id=boxid;
-				if(created)
-				{
+				if(created) {
 					$scope.boxlist.addCreatedBoxJson(boxinfo);
 			
 				}
-				else
-				{
+				else {
 					$scope.boxlist.addCollaboratedBoxJson(boxinfo);
 				}	
-				})
-				.error (function() {
-					console.log("Error getting box contents for " + boxid + "!");
-				});
+			})
+			.error (function() {
+				console.log("Error getting box contents for " + boxid + "!");
+			});
 		}
 
 		//logs the user out from the server
@@ -578,7 +590,7 @@
 				if ($scope.modal.checkModal() || $scope.modal.checkOpenModal()) {
 					$scope.modal.clearModal();
 				}
-				$('.form-create').trigger("reset"); //clears all forms from previous user
+				$state.go('redirectfromloginorlogout'); //upon logout, redirect back to the home page
 			})
 			.error (function() {
 				$.growl("Error logging out", {
@@ -645,12 +657,13 @@
 		});
 	}]);
 
+	//checks to prevent illegal states
 	app.run(function($rootScope, $state, $location, Auth, Modal, Box) {
 	    $rootScope.$on( '$stateChangeStart', function(e, toState, toParams, fromState) {
 
 		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.isLoggedIn();
 
-		    //NOT authenticated
+		    //not authenticated, should not access states that require authentication
 		    if (shouldLogin) {
 		    	if (Modal.checkOpenModal()) {
 					Modal.closeModal(); //closes any modal that's already open
@@ -659,6 +672,7 @@
 		    	e.preventDefault();
 		    	return;
 		    }
+		    //cannot access states that require user to not be authenticated
 		    else if (Auth.isLoggedIn() && toState.data.requireLogout) {
 		    	if (Modal.checkOpenModal()) {
 					Modal.closeModal(); //closes any modal that's already open
@@ -667,7 +681,7 @@
 		    	e.preventDefault();
 		    	return;
 		    }
-		    //prevent us from getting to the upload page without a box id set (meaning we did not set a box to upload to)
+		    //prevent user from getting to the upload page without a box id set (meaning user did not set a box to upload to)
 		    else if (toState.url === '/upload' && Box.getCurrentBoxID() === '') {
 		    	$state.go('redirectfromloginorlogout');
 		    	e.preventDefault();

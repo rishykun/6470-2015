@@ -66,29 +66,9 @@
 
 		<div ng-show="!compareState('profileview') && !compareState('boxview') && !compareState('signin') && !compareState('signup')">
 			<div id="buttonGroup" class="text-center">
-				<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-border-fade custom-text-space-med" type="button" title="Start a new box!" data-toggle="modal" data-target="#createBoxModal">CREATE</button>
+				<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-border-fade custom-text-space-med" type="button" title="Start a new box!" ng-click="goCreate()">CREATE</button>
 				<div class="space-divider"/>
-				<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" data-toggle="modal" ui-sref="upload" data-target="#receiveBoxModal">RECEIVE</button>
-			</div>
-
-			<!-- we keep this in index.html because we need to be able to access form-create to clear it when we log out-->
-			<div id="createBoxModal" class="modal fade font-gray" ng-controller="createController">
-				<div id="createDialog" class="modal-dialog custom-modal-compress">
-					<div class="modal-content custom-modal-rounded">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	       					<h4 class="modal-title no-text-sel default-cursor">Create a box</h4>
-						</div>
-						<div class="modal-body">
-							<form class="form-create">
-					        	<label for="inputEmail" class="sr-only">Box Name</label>
-					        	<input type="text" id="inputEmail" class="form-control" ng-model="formData.boxname" placeholder="Enter the name of the box" required="" autofocus="">
-					        	<label></label>
-					        	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!auth.isLoggedIn()" ng-click="createBox()">Create box</button>
-					      	</form>
-						</div>
-					</div>
-				</div>
+				<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-border-fade custom-text-space-med" type="button" title="Receive a random box!" ng-click="goReceive()">RECEIVE</button>
 			</div>
 	</div>
 </body>
