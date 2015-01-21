@@ -418,14 +418,15 @@
 		}
 	});
 
-	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$modal", "Auth", "UserProfile", "Box","BoxList",
-		function($scope, $window, $http, $state, $modal, Auth, UserProfile, Box, BoxList) {
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "Auth", "UserProfile", "Box", "BoxList", "Modal",
+		function($scope, $window, $http, $state, Auth, UserProfile, Box, BoxList, Modal) {
 
 		//------------ sets factory services to be accessible from $scope
 		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
 		$scope.box = Box;
 		$scope.boxlist = BoxList;
+		$scope.modal = Modal;
 
 		//------------ controller functions
 		//get the current state
