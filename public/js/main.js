@@ -23,7 +23,7 @@
 					}
 					Modal.setModal("#signDialog", $modal);
 					Modal.openModal({
-						windowTemplateUrl: "custom_modal_window_template.html",
+						windowTemplateUrl: "signWindowTemplate",
 						templateUrl: "../tpl/signin/signin.tpl.html",
 						backdropClass: "fullsize", //workaround for backdrop display glitch
 						controller: "signinController"
@@ -43,7 +43,7 @@
 					}
 					Modal.setModal("#signDialog", $modal);
 					Modal.openModal({
-						windowTemplateUrl: "custom_modal_window_template.html",
+						windowTemplateUrl: "signWindowTemplate",
 						templateUrl: "../tpl/signup/signup.tpl.html",
 						backdropClass: "fullsize", //workaround for backdrop display glitch
 						controller: "signupController"
@@ -89,7 +89,7 @@
 					}
 					Modal.setModal("#boxModalDialog", $modal);
 					Modal.openModal({
-						windowTemplateUrl: "galleryModal",
+						windowTemplateUrl: "galleryWindowTemplate",
 						templateUrl: "../tpl/box_view/box_view.tpl.html",
 						backdropClass: "fullsize", //workaround for backdrop display glitch
 						controller: "GalleryController as galleryCtrl"
@@ -674,5 +674,26 @@
 		    	return;
 		    }
 		});
+	});
+
+	app.directive ('logoHeader', function() {
+		return {
+			templateUrl: "../tpl/header/logo.tpl.html"
+		}
+	});
+	app.directive ('loginBar', function() {
+		return {
+			templateUrl: "../tpl/navbar/loginbar.tpl.html"
+		}
+	});
+	app.directive ('navBar', function() {
+		return {
+			templateUrl: "../tpl/navbar/navbar.tpl.html"
+		}
+	});
+	app.directive ('customFooter', function() {
+		return {
+			templateUrl: "../tpl/footer/footer.tpl.html"
+		}
 	});
 })();
