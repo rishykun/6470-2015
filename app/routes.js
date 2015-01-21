@@ -59,9 +59,18 @@ s3.listBuckets (function (err, data) {
 // app/routes.js
 module.exports = function(app, passport) {
 
-    //used to get user object, check if logged in first
-    app.get('/profile',isLoggedIn, function(req, res) {
-        res.json(req.user);
+    //used to get user object
+    //doesn't call isLoggedIn since it's necessary to NOT return an error if the user isn't authenticated
+    //instead, the result should always be a success, but a success returning 'false' indicates to the front end that there is no profile to be loaded
+    //this is so that the front-end doesn't encounter an error in the beginning when it always checks for the profile
+    //which is the only way for the front-end to know whether the user is logged in or not
+    app.get('/profile', function(req, res) {
+        if (req.isAuthenticated()) {
+            res.json(req.user);
+        }
+        else {
+            res.json(false);
+        }
     });
     
     app.get('/logout', function(req, res) {
@@ -423,5 +432,5 @@ function isLoggedIn(req, res, next) {
     }
 
     console.log("User not authenticated.");
-    return false;
+    return next("User not authenticated."); //causes http request to fail with an error
 }

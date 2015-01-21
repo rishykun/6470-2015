@@ -110,7 +110,7 @@
 			loadProfile: function(alert) {
 				$http.get('/profile')
 				.success (function(data) {
-					if (data !== "") {
+					if (data !== false) {
 						//if the user is logged in
 						Modal.closeModal(); //close the current modal
 						Auth.setLogin(true); //set our login status to be true
@@ -123,11 +123,9 @@
 						}
 						$state.go('home');
 					}
-					else {
-						$growl.box("Error", "Profile empty", {
-							class: "warning"
-						}).open();
-					}
+					//don't notify of an empty profile
+					//because this function is called immediately upon loading the website to check if the user is already logged in
+					//users who just arrive on the website shouldn't be bothered immediately by a warning message
 				})
 				.error (function() {
 					$growl.box("Error", "Cannot retrieve profile", {

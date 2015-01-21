@@ -10,6 +10,7 @@ todo:
 	b. upon upload success or fail, display growl message
 	c. add a more obvious path to get to uploads (upload button)?
 - refactor:
+	put auth as part of userprofile
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
 - initial resize of sign modal doesn't work

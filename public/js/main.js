@@ -6,6 +6,8 @@
 		'main.upload',
 		'main.profile',
 		'main.gallery',
+		'angular-loading-bar',
+		'ngAnimate',
 		'ui.growl',
 		'ui.router',
 		'ui.bootstrap'
