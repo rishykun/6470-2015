@@ -254,7 +254,7 @@
 								type: "info",
 								animate: {
 									enter: 'animated fadeInRight',
-									exit: 'animated fadeOutRight'
+									exit: 'animated fadeOutRight',
 								}
 							});
 						}
