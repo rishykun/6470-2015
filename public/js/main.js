@@ -114,6 +114,7 @@
 		modalname = "";
 		modal = false;
 		modalopen = false;
+		modalopenevent = function () {};
 		return {
 			setModal: function(n, m) {
 				if (modalopen !== false) {
@@ -125,6 +126,14 @@
 				else {
 					modalname = n;
 					modal = m;
+				}
+			},
+			setModalOpenEvent: function(f) {
+				if (modalopen !== false) {
+					console.log("Warning: there is already an open modal.");
+				}
+				else {
+					modalopenevent = f;
 				}
 			},
 			getModalName: function () {
@@ -139,6 +148,9 @@
 			openModal: function(obj) {
 				if (modal !== undefined && modal !== null && modal !== false) {
 					modalopen = modal.open(obj);
+					modalopen.opened.then(function () {
+						modalopenevent();
+					});
 					/*
 					//center the open modal in the browser window
 					modalopen.opened.then(function() {
@@ -157,7 +169,7 @@
 			},
 			closeModal: function() {
 				if (modalopen !== undefined && modalopen !== null && modalopen !== false) {
-					modalclose = modalopen.close();
+					modalopen.close();
 					//redirect state after modal closes, this allows user to open the modal again through click-based state transitions
 					/*modalclose.dismiss.then(function() {
 						$state.go('redirectfromloginorlogout');
@@ -165,6 +177,7 @@
 					modal = false;
 					modalopen = false;
 					modalname = "";
+					modalopenevent = function() {};
 				}
 				else {
 					console.log("Error: can't close modal because it isn't registered.");
