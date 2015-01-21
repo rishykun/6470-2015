@@ -8,18 +8,13 @@
 
 		<a>Browse</a>
 		<input type="file" name="upl" multiple />
+		<input type="hidden" id="boxname" name="boxname" value="{{box.getCurrentBoxID()}}"/>
 	</div>
 
 	<ul>
 	</ul>
 
 </form>
-
-<script>
-//adds box name, assumes there is a current box in view
-$('#uploadForm').append('<input type="hidden" id="boxname" name="boxname" value="'+ "placeholderboxid" +'"/>');
-//$('#upload').append('<input type="hidden" id="boxname" name="boxname" value="'+ {{box.getCurrentBoxID()}} +'"/>');
- </script>
 
 <script src="tpl/upload/assets/js/jquery.knob.js"></script>
 

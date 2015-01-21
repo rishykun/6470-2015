@@ -127,12 +127,9 @@ module.exports = function(app, passport) {
     // processes the upload
     //debug TODO: it currently uploads to Boxes folder, we need to upload it to the current folder that we are viewing
     app.post('/uploadgoodies', function(req, res) {
-        bucketBox = '6.470/Boxes';
-        console.log(req.files); //debug
-        console.log("askdhasdkasdklashdkasdasdas");
-        console.log(req); //debug
+        bucketBox = '6.470/Boxes/' + req.body.boxname;
         params = {
-            Bucket: '6.470/Boxes',
+            Bucket: bucketBox,
             Key: req.files.upl.originalname,
             Body: req.files.upl.buffer
         }
