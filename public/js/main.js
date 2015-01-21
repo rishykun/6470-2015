@@ -168,7 +168,7 @@
 			$http.get('/logout')
 			.success (function(data) {
 				$growl.box("Success", "Logged out", {
-					class: "info"
+					class: "primary"
 				}).open();
 
 				$scope.userProfile.clearProfile(); //clears the logged-in user profile in userObject
