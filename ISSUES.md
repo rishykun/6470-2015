@@ -9,7 +9,9 @@ todo:
 - add user field for signup/signin [UNRESOLVED]
 - receive
 - upload changing state and going back doesn't work
-- put create in its own state
+- refactor:
+	put main controller's resize in its own controller/factory/whatever
+	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
 - initial resize of sign modal doesn't work
 - remember me
 - overwriting users & folders and in general in aws s3 server
