@@ -8,10 +8,9 @@ why is Created and Collaborated populateed 6 times (appended) instead of resetti
 todo:
 - add user field for signup/signin [UNRESOLVED]
 - receive
-- upload
+- upload changing state and going back doesn't work
 - put create in its own state
 - initial resize of sign modal doesn't work
-- automatically generate item.config for each upload
 - remember me
 - overwriting users & folders and in general in aws s3 server
 	prevent overwrite

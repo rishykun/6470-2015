@@ -102,13 +102,22 @@
 			})
 			.state( 'upload', {
 				url: '/upload',
-				onEnter: function(Modal, $modal) {					
-				},
 				data: {
 					requireLogin: true,
 					requireLogout: false
 				},
-				controller: "uploadController"
+				onEnter: function(Modal, $modal) {
+					if (Modal.checkOpenModal()) {
+						Modal.closeModal(); //closes any modal that's already open
+					}
+					Modal.setModal("#uploadDialog", $modal);
+					Modal.openModal({
+						windowTemplateUrl: "uploadWindowTemplate",
+						templateUrl: "../tpl/upload/upload.tpl.html",
+						backdropClass: "fullsize", //workaround for backdrop display glitch
+						controller: "uploadController"
+					});
+				}
 			});
 	});
 
@@ -116,7 +125,7 @@
 		modalname = "";
 		modal = false;
 		modalopen = false;
-		modelopenevent = function() {};
+		modalopenevent = function () {};
 		return {
 			setModal: function(n, m) {
 				if (modalopen !== false) {
@@ -150,8 +159,8 @@
 			openModal: function(obj) {
 				if (modal !== undefined && modal !== null && modal !== false) {
 					modalopen = modal.open(obj);
-					modalopen.opened.then(function() {
-						modelopenevent();
+					modalopen.opened.then(function () {
+						modalopenevent;
 					});
 					/*
 					//center the open modal in the browser window
@@ -179,7 +188,7 @@
 					modal = false;
 					modalopen = false;
 					modalname = "";
-					modelopenevent = function() {};
+					modalopenevent = function() {};
 				}
 				else {
 					console.log("Error: can't close modal because it isn't registered.");
@@ -273,7 +282,6 @@
 		var currentBoxContents = false;
 		return {
 			//sets the current box
-			//if second parameter is true, grab box contents as well
 			setCurrentBoxID: function(b, getContents) {
 				currentBoxID = b;
 
@@ -613,7 +621,7 @@
 		});
 	}]);
 
-	app.run(function($rootScope, $state, $location, Auth, Modal) {
+	app.run(function($rootScope, $state, $location, Auth, Modal, Box) {
 	    $rootScope.$on( '$stateChangeStart', function(e, toState, toParams, fromState) {
 
 		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.isLoggedIn();
@@ -631,6 +639,12 @@
 		    	if (Modal.checkOpenModal()) {
 					Modal.closeModal(); //closes any modal that's already open
 				}
+		    	$state.go('redirectfromloginorlogout');
+		    	e.preventDefault();
+		    	return;
+		    }
+		    //prevent us from getting to the upload page without a box id set (meaning we did not set a box to upload to)
+		    else if (toState.url === '/upload' && Box.getCurrentBoxID() === '') {
 		    	$state.go('redirectfromloginorlogout');
 		    	e.preventDefault();
 		    	return;

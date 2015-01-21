@@ -20,8 +20,10 @@
 					$http.post('/create', $scope.formData)
 					.success (function(data) {
 						jsonData = JSON.parse(data);
-						$scope.box.setCurrentBoxID(jsonData.id);
-						$scope.box.setCurrentBoxContents(jsonData.id);
+
+						$scope.box.setCurrentBoxID(jsonData.id, false);
+						$scope.box.setCurrentBoxContents(jsonData);
+						
 						$('.form-create').trigger("reset"); //clears the signin form
 						$scope.modal.closeModal();
 						$.growl("Successfully created a box on the server", {
