@@ -102,24 +102,11 @@
 			})
 			.state( 'upload', {
 				url: '/upload',
-				onEnter: function(Modal, $modal) {
-					if (Modal.checkOpenModal()) {
-						Modal.closeModal(); //closes any modal that's already open
-					}
-
-					Modal.setModal("#uploadDialog", $modal);
-					Modal.openModal({
-						windowTemplateUrl: "uploadWindowTemplate",
-						templateUrl: "../tpl/upload/upload.tpl.html",
-						backdropClass: "fullsize", //workaround for backdrop display glitch
-						controller: "uploadController"
-					});
-
-				},
 				data: {
 					requireLogin: true,
 					requireLogout: false
-				}
+				},
+				controller: "uploadController"
 			});
 	});
 
