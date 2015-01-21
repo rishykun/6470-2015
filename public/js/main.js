@@ -1,6 +1,5 @@
 (function() {
 	var app = angular.module( "main", [
-		'main.state',
 		'main.signin',
 		'main.signup',
 		'main.create',
@@ -37,9 +36,14 @@
 		$scope.getCurrentState = function() {
 			return $state.current.name.trim();
 		};
-		//compares the parameter state with the current state
-		$scope.compareState = function (state) {
-			return state === $state.current.name;
+		//compares the current state against the list of states provided
+		$scope.compareState = function (stateList) {
+			if (stateList.indexOf($state.current.name) !== -1) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 
 		//called when the create button on the home page is clicked
@@ -51,7 +55,7 @@
 				$state.go('create');
 			}
 			else {
-				$.growl("Please login to use the create button", {
+				$.growl("Please login or signup to use the create button", {
 					type: "danger",
 					animate: {
 						enter: 'animated fadeInRight',
@@ -69,7 +73,7 @@
 				$state.go('receive');
 			}
 			else {
-				$.growl("Please login to use the receive button", {
+				$.growl("Please login or signup to use the receive button", {
 					type: "danger",
 					animate: {
 						enter: 'animated fadeInRight',

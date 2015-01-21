@@ -83,7 +83,7 @@
 				}
 			}
 			else {
-				$.growl("Please login to use the create button", {
+				$.growl("Please login or signup to use the create button", {
 					type: "danger",
 					animate: {
 						enter: 'animated fadeInRight',
