@@ -6,6 +6,7 @@
 		'main.upload',
 		'main.profile',
 		'main.gallery',
+		'ui.growl',
 		'ui.router',
 		'ui.bootstrap'
 	]);
@@ -21,8 +22,8 @@
 		};
 	});*/
 
-	app.controller("MainController", ["$scope", "$window", "$http", "$state", "Auth", "UserProfile", "Box", "BoxList", "Modal",
-		function($scope, $window, $http, $state, Auth, UserProfile, Box, BoxList, Modal) {
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "Auth", "UserProfile", "Box", "BoxList", "Modal",
+		function($scope, $window, $http, $state, $growl, Auth, UserProfile, Box, BoxList, Modal) {
 
 		//------------ sets factory services to be accessible from $scope
 		$scope.auth = Auth;
@@ -55,13 +56,9 @@
 				$state.go('create');
 			}
 			else {
-				$.growl("Please login or signup to use the create button", {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Error", "Please login or signup to use the create button", {
+					class: "warning"
+				}).open();
 			}
 		};
 
@@ -73,13 +70,9 @@
 				$state.go('receive');
 			}
 			else {
-				$.growl("Please login or signup to use the receive button", {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Error", "Please login or signup to use the receive button", {
+					class: "warning"
+				}).open();
 			}
 		};
 
@@ -95,13 +88,9 @@
 				console.log(data); //debug
 			})
 			.error (function() {
-				$.growl("Error retrieving item from the server", {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Error", "Cannot retrieve item from the server", {
+					class: "danger"
+				}).open();
 			});
 		};
 
@@ -121,13 +110,9 @@
 				return data;
 			})
 			.error (function() {
-				$.growl("Error retrieving box contents from the server for box id: " + boxid, {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Error", "Cannot retrieve box contents from the server for the following box ID: " + boxid, {
+					class: "danger"
+				}).open();
 			});
 		}
 
@@ -148,13 +133,9 @@
 				$scope.userFound = true;
 			})
 			.error (function() {
-				$.growl("Error getting user config file for " + user, {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Error", "Cannot retrieve user configuration file for " + user, {
+					class: "danger"
+				}).open();
 			});
 		}
 
@@ -184,13 +165,9 @@
 		$scope.logout = function () {
 			$http.get('/logout')
 			.success (function(data) {
-				$.growl("Successfully logged out", {
-					type: "info",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Success", "Logged out", {
+					class: "info"
+				}).open();
 
 				$scope.userProfile.clearProfile(); //clears the logged-in user profile in userObject
 				$scope.auth.setLogin(false); //set the login to be false
@@ -199,16 +176,12 @@
 				if ($scope.modal.checkModal() || $scope.modal.checkOpenModal()) {
 					$scope.modal.clearModal();
 				}
-				$state.go('redirectfromloginorlogout'); //upon logout, redirect back to the home page
+				$state.go('home'); //upon logout, redirect back to the home page
 			})
 			.error (function() {
-				$.growl("Error logging out", {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Error", "Cannot log out", {
+					class: "danger"
+				}).open();
 			});
 		};
 

@@ -1,10 +1,11 @@
 (function() {
 	var app = angular.module('main.create', [
+		'ui.growl',
 		'ui.router'
 	]);
 
-	app.controller ("createController", ["$scope", "$window", "$http", "$state", "$modalInstance", "$modal", "Auth", "UserProfile", "Box",
-		function createController ($scope, $window, $http, $state, $modalInstance, Modal, Auth, UserProfile, Box) {
+	app.controller ("createController", ["$scope", "$window", "$http", "$state", "$modalInstance", "$growl", "Modal", "Auth", "UserProfile", "Box",
+		function createController ($scope, $window, $http, $state, $modalInstance, $growl, Modal, Auth, UserProfile, Box) {
 		$scope.auth = Auth;
 		$scope.userProfile=UserProfile;
 		$scope.box = Box;
@@ -17,7 +18,7 @@
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
 				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
 				|| s.currentTarget.className === "close") {
-				$state.go('redirectfromloginorlogout');
+				$state.go('home');
 			}
 		};
 
@@ -43,53 +44,33 @@
 							
 							$('.form-create').trigger("reset"); //clears the signin form
 							$scope.modal.closeModal();
-							$.growl("Successfully created a box on the server", {
-								type: "success",
-								animate: {
-									enter: 'animated fadeInRight',
-									exit: 'animated fadeOutRight'
-								}
-							});
+							$growl.box("Success", "Created a box on the server", {
+								class: "success"
+							}).open();
 							$state.go('upload');
 						})
 						.error (function() {
-							$.growl("Error creating a box on the server", {
-							type: "danger",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-							});
+							$growl.box("Error", "Cannot create a box on the server", {
+								class: "danger"
+							}).open();
 						});
 					}
 					else {
-						$.growl("Form is empty", {
-							type: "info",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-						});
+						$growl.box("Warning", "Empty form", {
+							class: "warning"
+						}).open();
 					}
 				}
 				else {
-					$.growl("Form is empty", {
-						type: "info",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
+					$growl.box("Warning", "Empty form", {
+						class: "warning"
+					}).open();
 				}
 			}
 			else {
-				$.growl("Please login or signup to use the create button", {
-					type: "danger",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Warning", "Please login or signup to use the create button", {
+					class: "warning"
+				}).open();
 			}
 		};
 	}]);

@@ -2,7 +2,7 @@
 	var app = angular.module( "main" );
 
 	//handles modals
-	app.factory('Modal', function($window, $state) {
+	app.factory('Modal', function($window, $state, $growl) {
 		modalname = "";
 		modal = false;
 		modalopen = false;
@@ -64,7 +64,7 @@
 					modalopen.close();
 					//redirect state after modal closes, this allows user to open the modal again through click-based state transitions
 					/*modalclose.dismiss.then(function() {
-						$state.go('redirectfromloginorlogout');
+						$state.go('home');
 					});*/
 					modal = false;
 					modalopen = false;
@@ -117,34 +117,22 @@
 						userProfile = data; //load data into the user profile
 						//debug note: user/email is data.local.email
 						if (alert) {
-							$.growl("Found profile", {
-								type: "info",
-								animate: {
-									enter: 'animated fadeInRight',
-									exit: 'animated fadeOutRight',
-								}
-							});
+							$growl.box("Success", "Profile found", {
+								class: "primary"
+							}).open();
 						}
-						$state.go('redirectfromloginorlogout');
+						$state.go('home');
 					}
 					else {
-						$.growl("Profile data is empty", {
-							type: "info",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-						});
+						$growl.box("Error", "Profile empty", {
+							class: "warning"
+						}).open();
 					}
 				})
 				.error (function() {
-					$.growl("Error retrieving profile", {
-						type: "danger",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
+					$growl.box("Error", "Cannot retrieve profile", {
+						class: "danger"
+					}).open();
 				});
 			},
 			getProfile: function() {
@@ -174,13 +162,9 @@
 						currentBoxContents = data;
 					})
 					.error (function() {
-						$.growl("Error retrieving box contents from the server for box id: " + currentBoxID, {
-							type: "danger",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-						});
+						$growl.box("Error", "Cannot retrieve box contents from the server for the following box ID: " + currentBoxID, {
+							class: "danger"
+						}).open();
 					});
 				}
 			},
@@ -190,26 +174,18 @@
 			//returns the current box
 			getCurrentBoxID: function() {
 				if (currentBoxID === false) {
-					$.growl("There is no current box id set", {
-						type: "danger",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
+					$growl.box("Error", "No current box ID set", {
+						class: "danger"
+					}).open();
 					return '';
 				}
 				return currentBoxID;
 			},
 			getCurrentBoxContents: function() {
 				if (currentBoxContents === false) {
-					$.growl("There is no current box (contents) set", {
-						type: "danger",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
+					$growl.box("Error", "No current box (contents) set", {
+						class: "danger"
+					}).open();
 				}
 
 				return currentBoxContents;

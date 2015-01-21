@@ -12,7 +12,7 @@
 		    	if (Modal.checkOpenModal()) {
 					Modal.closeModal(); //closes any modal that's already open
 				}
-		    	$state.go('redirectfromloginorlogout');
+		    	$state.go('home');
 		    	e.preventDefault();
 		    	return;
 		    }
@@ -21,13 +21,13 @@
 		    	if (Modal.checkOpenModal()) {
 					Modal.closeModal(); //closes any modal that's already open
 				}
-		    	$state.go('redirectfromloginorlogout');
+		    	$state.go('home');
 		    	e.preventDefault();
 		    	return;
 		    }
 		    //prevent user from getting to the upload page without a box id set (meaning user did not set a box to upload to)
 		    else if (toState.url === '/upload' && Box.getCurrentBoxID() === '') {
-		    	$state.go('redirectfromloginorlogout');
+		    	$state.go('home');
 		    	e.preventDefault();
 		    	return;
 		    }

@@ -2,9 +2,6 @@ issues:
 - what happens if u log in at the same time from multiple locations
 - why is login slow for windows
 
-- why profile gets called 6 times
-why is Created and Collaborated populateed 6 times (appended) instead of resetting and adding
-
 todo:
 - add user field for signup/signin [UNRESOLVED]
 - receive

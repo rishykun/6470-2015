@@ -5,7 +5,9 @@
 	<title>Shrödinger's Black Box</title>
 
 	<!-- stylesheets -->
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="/font-awesome-4.2.0/css/font-awesome.css">
+	<link rel="stylesheet" href="/angular-ui-growl-master/css/growl.css">
 	<link rel="stylesheet" href="/css/hover.css">
 	<link rel="stylesheet" href="/css/animate.css">
 	<link rel="stylesheet" href="/css/custom.css">
@@ -13,7 +15,6 @@
 	<link rel="stylesheet" href="/css/signup.css">
 	<link rel="stylesheet" href="/css/rishad.css">
 	<link rel="stylesheet" href="/css/profile.css">
-	<link rel="stylesheet" href="/font-awesome-4.2.0/css/font-awesome.css">
 
 	<!-- external javascript -->
 	<script type="text/javascript" src="/jquery/jquery-2.1.3.min.js"></script>
@@ -21,7 +22,7 @@
 	<script type="text/javascript" src="/angular-1.3.8/angular.js"></script>
 	<script type="text/javascript" src="/angular-ui-router/release/angular-ui-router.js"></script>
 	<script type='text/javascript' src="/facebook-api/facebook.js"></script>
-	<script type='text/javascript' src="/bootstrap-growl/bootstrap-growl.js"></script>
+	<script type='text/javascript' src="/angular-ui-growl-master/src/growl.js"></script>
 	<script type="text/javascript" src="/ui-bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
 
 	<!-- internal source javascript -->
@@ -67,7 +68,7 @@
 			<div ui-view></div>
 		</div>
 
-		<div ng-show="compareState(['redirectfromloginorlogout', 'signin', 'signup', 'create', 'boxview', 'upload'])">
+		<div ng-show="compareState(['home', 'signin', 'signup', 'create', 'boxview', 'upload'])">
 			<div id="buttonGroup" class="text-center">
 				<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-border-fade custom-text-space-med" type="button" title="Start a new box!" ng-click="goCreate()">CREATE</button>
 				<div class="space-divider"/>

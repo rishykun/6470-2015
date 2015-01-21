@@ -45,7 +45,7 @@
 			}
 		})
 		//capture state from login or logout
-		.state( 'redirectfromloginorlogout', {
+		.state( 'home', {
 			url: '/',
 			onEnter: function(Modal) {
 				if (Modal.checkOpenModal()) {

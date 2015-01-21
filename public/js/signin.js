@@ -1,9 +1,10 @@
 (function() {
 	var app = angular.module('main.signin', [
+		'ui.growl',
 		'ui.router',
 	]);
 
-	app.controller ( 'signinController', function signinController ($scope, $http, $window, $state, $modalInstance, Auth, UserProfile) {
+	app.controller ( 'signinController', function signinController ($scope, $http, $window, $state, $modalInstance, $growl, Auth, UserProfile) {
 		$scope.formData = {}; //default empty form object to be populated
 		$scope.signModalTitle = "Login"; //sets the title of the signin/signup modal window
 
@@ -17,7 +18,7 @@
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
 				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
 				|| s.currentTarget.className === "close") {
-				$state.go('redirectfromloginorlogout');
+				$state.go('home');
 			}
 		};
 
@@ -35,43 +36,27 @@
 					$http.post('/login', $scope.formData)
 					.success (function(data) {
 						$('.form-signin').trigger("reset"); //clears the signin form
-						$.growl("Login successful", {
-							type: "success",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-						});
+						$growl.box("Success", "Logged in", {
+							class: "success"
+						}).open();
 						UserProfile.loadProfile(true); //try to load the userprofile
 					})
 					.error (function() {
-						$.growl("Error authenticating to server", {
-							type: "danger",
-							animate: {
-								enter: 'animated fadeInRight',
-								exit: 'animated fadeOutRight'
-							}
-						});
+						$growl.box("Error", "Cannot authenticate to server", {
+							class: "danger"
+						}).open();
 					});
 				}
 				else {
-					$.growl("Form is empty", {
-						type: "info",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
-					});
+					$growl.box("Warning", "Empty form", {
+						class: "warning"
+					}).open();
 				}
 			}
 			else {
-				$.growl("Form is empty", {
-					type: "info",
-					animate: {
-						enter: 'animated fadeInRight',
-						exit: 'animated fadeOutRight'
-					}
-				});
+				$growl.box("Warning", "Empty form", {
+					class: "warning"
+				}).open();
 			}
 		};
 
