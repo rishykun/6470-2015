@@ -2,7 +2,7 @@
 	var app = angular.module( "main" );
 
 	//handles modals
-	app.factory('Modal', function($window, $state, $growl) {
+	app.factory('Modal', function($window, $state) {
 		modalname = "";
 		modal = false;
 		modalopen = false;
@@ -103,7 +103,7 @@
 		};
 	});
 	//factory that generates a service for managing the userprofile
-	app.factory('UserProfile', function($state, $window, $http, Auth, Modal) {
+	app.factory('UserProfile', function($state, $window, $growl, $http, Auth, Modal) {
 		var userProfile = {};
 		return {
 			//gets the user profile from the server if properly authenticated already
@@ -144,7 +144,7 @@
 		}
 	});
 	//factory that holds the current box in view
-	app.factory('Box', function() {
+	app.factory('Box', function($growl) {
 		var currentBoxID = false;
 		var currentBoxContents = false;
 		return {

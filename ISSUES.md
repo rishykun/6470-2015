@@ -5,7 +5,10 @@ issues:
 todo:
 - add user field for signup/signin [UNRESOLVED]
 - receive
-- upload changing state and going back doesn't work
+- upload:
+	a. add options to uploading (setting title, description, etc.)
+	b. upon upload success or fail, display growl message
+	c. add a more obvious path to get to uploads (upload button)?
 - refactor:
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
