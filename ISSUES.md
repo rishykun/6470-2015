@@ -14,6 +14,7 @@ todo:
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
 - initial resize of sign modal doesn't work
+- enforce isLoggedIn for node.js routes that require authentication
 - remember me
 - overwriting users & folders and in general in aws s3 server
 	prevent overwrite
