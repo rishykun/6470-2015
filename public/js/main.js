@@ -191,8 +191,20 @@
 					modalopenevent = function() {};
 				}
 				else {
-					console.log("Error: can't close modal because it isn't registered.");
+					console.log("Error: can't close modal because it isn't open.");
 				}
+			},
+			clearModal: function() {
+				if (modalopen !== undefined && modalopen !== null && modalopen !== false) {
+					modalopen.close();
+				}
+				else if (modal === undefined || modal === null || modal === false) {
+					console.log("Error: can't clear modal because it isn't registered.");
+				}
+				modal = false;
+				modalopen = false;
+				modalname = "";
+				modalopenevent = function() {};
 			}
 		};
 	});
@@ -322,7 +334,6 @@
 				}
 				return currentBoxID;
 			},
-
 			getCurrentBoxContents: function() {
 				if (currentBoxContents === false) {
 					$.growl("There is no current box (contents) set", {
@@ -335,6 +346,10 @@
 				}
 
 				return currentBoxContents;
+			},
+			clearCurrentBox: function() {
+				currentBoxID = false;
+				currentBoxContents = false;
 			}
 
 		};
@@ -375,6 +390,10 @@
 			},
 			getCollaboratedBoxes: function(){
 				return collaborated;
+			},
+			clearBoxList: function() {
+				created = [];
+				collaborated = [];
 			}
 		}
 	});
@@ -553,8 +572,13 @@
 				});
 
 				$scope.userProfile.clearProfile(); //clears the logged-in user profile in userObject
-				$('.form-create').trigger("reset"); //clears all forms from previous user
 				$scope.auth.setLogin(false); //set the login to be false
+				$scope.box.clearCurrentBox();
+				$scope.boxlist.clearBoxList();
+				if ($scope.modal.checkModal() || $scope.modal.checkOpenModal()) {
+					$scope.modal.clearModal();
+				}
+				$('.form-create').trigger("reset"); //clears all forms from previous user
 			})
 			.error (function() {
 				$.growl("Error logging out", {
