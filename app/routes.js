@@ -154,7 +154,7 @@ module.exports = function(app, passport) {
                 var params = {
                     Bucket: bucketBox + '/Config',
                     Key: req.files.upl.originalname + '.config',
-                    Body: '{ "title": "placeholder title", "author": "' + req.user.local.email + '", "description": "placeholder description", "filetype": "' + req.files.upl.mimetype + '" }'
+                    Body: '{ "key": "' + req.files.upl.originalname + '", "title": "placeholder title", "author": "' + req.user.local.email + '", "description": "placeholder description", "filetype": "' + req.files.upl.mimetype + '" }'
                 };
 
                 s3.upload(params,function(err,data){
