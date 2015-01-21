@@ -3,7 +3,7 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'createController', function createController ($scope, $http, $window, UserProfile,Box,Modal) {
+	app.controller ( 'createController', function createController ($scope, $http, $window, $state, UserProfile, Box, Modal) {
 		$scope.userProfile=UserProfile;
 		$scope.box = Box;
 		$scope.modal = Modal;
@@ -19,7 +19,9 @@
 					//needs to send username/email as well
 					$http.post('/create', $scope.formData)
 					.success (function(data) {
-						$scope.box.setCurrentBox(JSON.parse(data));
+						jsonData = JSON.parse(data);
+						$scope.box.setCurrentBoxID(jsonData.id);
+						$scope.box.setCurrentBoxContents(jsonData.id);
 						$('.form-create').trigger("reset"); //clears the signin form
 						$scope.modal.closeModal();
 						$.growl("Successfully created a box on the server", {
@@ -29,9 +31,7 @@
 								exit: 'animated fadeOutRight'
 							}
 						});
-						$("#uploadBoxModal").modal('show');
-						//hacky
-						//$("<a href='/uploading'></a>").click();
+						$state.go('upload');
 					})
 					.error (function() {
 						$.growl("Error creating a box on the server", {

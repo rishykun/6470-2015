@@ -6,8 +6,12 @@
 	app.controller ( 'profileController', function profileController ($scope, $http, $window,BoxList) {
 
 		$scope.boxlist = BoxList;
+
+		//DEBUG TODO
+		//main.js has duplicate function $scope.getUserBoxes
+		//gets the user config file as a json for the current user
 		$scope.getUserBoxes = function (user) {
-			user = $scope.userProfile.getProfile().local.email; //debug
+			user = $scope.userProfile.getProfile().local.email;
 			reqData = {
 				'username':  user,
 			}

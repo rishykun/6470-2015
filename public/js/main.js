@@ -89,11 +89,11 @@
 					}
 					Modal.setModal("#boxModalDialog", $modal);
 					Modal.openModal({
-							windowTemplateUrl: "galleryModal",
-							templateUrl: "../tpl/box_view/box_view.tpl.html",
-							backdropClass: "fullsize", //workaround for backdrop display glitch
-							controller: "GalleryController as galleryCtrl"
-						});
+						windowTemplateUrl: "galleryModal",
+						templateUrl: "../tpl/box_view/box_view.tpl.html",
+						backdropClass: "fullsize", //workaround for backdrop display glitch
+						controller: "GalleryController as galleryCtrl"
+					});
 				},
 				data: {
 					requireLogin: false,
@@ -102,24 +102,13 @@
 			})
 			.state( 'upload', {
 				url: '/upload',
-				onEnter: function(Modal, $modal) {
-					if (Modal.checkOpenModal()) {
-						Modal.closeModal(); //closes any modal that's already open
-					}
-
-					Modal.setModal("#uploadDialog", $modal);
-					Modal.openModal({
-						windowTemplateUrl: "uploadWindowTemplate",
-						templateUrl: "../tpl/upload/upload.tpl.html",
-						backdropClass: "fullsize", //workaround for backdrop display glitch
-						controller: "uploadController"
-					});
-
+				onEnter: function(Modal, $modal) {					
 				},
 				data: {
 					requireLogin: true,
 					requireLogout: false
-				}
+				},
+				controller: "uploadController"
 			});
 	});
 
@@ -127,6 +116,7 @@
 		modalname = "";
 		modal = false;
 		modalopen = false;
+		modelopenevent = function() {};
 		return {
 			setModal: function(n, m) {
 				if (modalopen !== false) {
@@ -138,6 +128,14 @@
 				else {
 					modalname = n;
 					modal = m;
+				}
+			},
+			setModalOpenEvent: function(f) {
+				if (modalopen !== false) {
+					console.log("Warning: there is already an open modal.");
+				}
+				else {
+					modalopenevent = f;
 				}
 			},
 			getModalName: function () {
@@ -152,6 +150,9 @@
 			openModal: function(obj) {
 				if (modal !== undefined && modal !== null && modal !== false) {
 					modalopen = modal.open(obj);
+					modalopen.opened.then(function() {
+						modelopenevent();
+					});
 					/*
 					//center the open modal in the browser window
 					modalopen.opened.then(function() {
@@ -170,7 +171,7 @@
 			},
 			closeModal: function() {
 				if (modalopen !== undefined && modalopen !== null && modalopen !== false) {
-					modalclose = modalopen.close();
+					modalopen.close();
 					//redirect state after modal closes, this allows user to open the modal again through click-based state transitions
 					/*modalclose.dismiss.then(function() {
 						$state.go('redirectfromloginorlogout');
@@ -178,6 +179,7 @@
 					modal = false;
 					modalopen = false;
 					modalname = "";
+					modelopenevent = function() {};
 				}
 				else {
 					console.log("Error: can't close modal because it isn't registered.");
@@ -186,6 +188,7 @@
 		};
 	});
 
+	//TODO DEBUG
 	/*
 	app.directive('resize', function($window) {
 		return {
@@ -270,34 +273,37 @@
 		var currentBoxContents = false;
 		return {
 			//sets the current box
-			setCurrentBoxID: function(b) {
+			//if second parameter is true, grab box contents as well
+			setCurrentBoxID: function(b, getContents) {
 				currentBoxID = b;
 
-				//also load the box contents
-				reqData = {
-					'boxname':  currentBoxID,
-				}
-				$http.post('/getbox', reqData)
-				.success (function(data) {
-					currentBoxContents = data;
-				})
-				.error (function() {
-					$.growl("Error retrieving box contents from the server for box id: " + currentBoxID, {
-						type: "danger",
-						animate: {
-							enter: 'animated fadeInRight',
-							exit: 'animated fadeOutRight'
-						}
+				if (getContents) {
+					//also load the box contents
+					reqData = {
+						'boxname':  currentBoxID,
+					}
+					$http.post('/getbox', reqData)
+					.success (function(data) {
+						currentBoxContents = data;
+					})
+					.error (function() {
+						$.growl("Error retrieving box contents from the server for box id: " + currentBoxID, {
+							type: "danger",
+							animate: {
+								enter: 'animated fadeInRight',
+								exit: 'animated fadeOutRight'
+							}
+						});
 					});
-				});
+				}
 			},
-			setCurrentBox:function(b){
+			setCurrentBoxContents:function(b){
 				currentBoxContents = b;
 			},
 			//returns the current box
 			getCurrentBoxID: function() {
 				if (currentBoxID === false) {
-					$.growl("There is no current box set", {
+					$.growl("There is no current box id set", {
 						type: "danger",
 						animate: {
 							enter: 'animated fadeInRight',
@@ -306,13 +312,12 @@
 					});
 					return '';
 				}
-
 				return currentBoxID;
 			},
 
 			getCurrentBoxContents: function() {
 				if (currentBoxContents === false) {
-					$.growl("There is no current box set", {
+					$.growl("There is no current box (contents) set", {
 						type: "danger",
 						animate: {
 							enter: 'animated fadeInRight',
@@ -435,8 +440,6 @@
 
 		//gets the signed url that gives the item
 		$scope.getItem = function (boxuri, itemname) {
-			//boxuri = "6.470/Boxes/6071e388-544d-4861-a877-e5107bed050b"; //debug
-			//itemname = "batman.mp4"; //debug
 			reqData = {
 				'uri':  boxuri,
 				'key': itemname
@@ -479,9 +482,12 @@
 			});
 		}
 
+		//DEBUG TODO
+		//MOST LIKELY NOT USED (DOUBLE CHECK)
+		//profile.js uses function $scope.getUserBoxes instead
 		//gets the user config file as a json for the current user
 		$scope.getUserConfig = function (user) {
-			user = $scope.userProfile.local.email; //debug
+			user = $scope.userProfile.getProfile().local.email;
 			reqData = {
 				'username':  user,
 			}

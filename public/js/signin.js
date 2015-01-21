@@ -13,7 +13,6 @@
 
 		//redirects to the home page
 		$scope.resetState = function (s) {
-			console.log(s);
 			//hacky way to prevent redirect unless we clicked outside the modal content window or the x button
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
 				|| s.target.className === "modal fade font-gray ng-isolate-scope in"

@@ -2,7 +2,7 @@
 <link href="tpl/upload/assets/css/style.css" rel="stylesheet" />
 
 
-<form id="upload" method="post" action="upload" enctype="multipart/form-data">
+<form id="uploadform" method="post" action="upload" enctype="multipart/form-data">
 	<div id="drop">
 		Drop Here
 
@@ -14,11 +14,6 @@
 	</ul>
 
 </form>
-
-<script>
-//adds box name, assumes there is a current box in view
-$('#upload').append('<input type="hidden" id="boxname" name="boxname" value="'+ {{box.getCurrentBoxID()}} +'"/>');
- </script>
 
 <script src="tpl/upload/assets/js/jquery.knob.js"></script>
 
