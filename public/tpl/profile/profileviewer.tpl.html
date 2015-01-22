@@ -1,0 +1,21 @@
+<div id = "profileDiv" ng-controller="profileController">
+	<div id = "boxdisplay">
+	<div id = "createdDiv"> 
+		<div id = "createdHeader">Boxes Created</div>
+		<div id ="createdBoxDiv"ng-repeat="created in boxlist.getCreatedBoxes()" class = "box-wrapper">
+			<img src ="img/ico/logo.png" style = "width: 100px; height: 100px"></img>
+			<p>Box Name: {{created.boxname}}</p>
+			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
+		</div>
+	</div>
+	<div id = "collaboratedDiv">
+		<div id = "createdHeader">Boxes Collaborated</div>
+		<div id ="collaboratedBoxDiv"  ng-repeat="collaborated in boxlist.getCollaboratedBoxes()" class = "box-wrapper">
+			<img src ="img/ico/logo.png" style = "width: 100px; height: 100px"></img>
+			<p>Box Name: {{collaborated.boxname}}</p>
+			<p>Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
+		</div>
+		</div>
+	</div>
+</div>
+</div>

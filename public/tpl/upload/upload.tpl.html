@@ -1,0 +1,24 @@
+<link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel='stylesheet' />
+<link href="tpl/upload/assets/css/style.css" rel="stylesheet" />
+
+<form id="upload" method="post" action="uploadgoodies" enctype="multipart/form-data">
+	<div id="drop">
+		Drop Here
+
+		<a>Browse</a>
+		<input type="file" name="upl" multiple />
+		<input type="hidden" id="boxname" name="boxname" value="{{box.getCurrentBoxID()}}"/>
+	</div>
+
+	<ul>
+	</ul>
+
+</form>
+
+<script src="tpl/upload/assets/js/jquery.knob.js"></script>
+
+<script src="tpl/upload/assets/js/jquery.ui.widget.js"></script>
+<script src="tpl/upload/assets/js/jquery.iframe-transport.js"></script>
+<script src="tpl/upload/assets/js/jquery.fileupload.js"></script>
+
+<script src="tpl/upload/assets/js/script.js"></script>

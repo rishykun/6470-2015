@@ -1,0 +1,7 @@
+#boxdisplay{
+	padding-top: 100px;
+}
+.box-wrapper{
+	display: inline-block !important;
+	padding-left: 20px;
+}
