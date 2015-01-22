@@ -3,15 +3,15 @@
 		<h4 class="modal-title no-text-sel default-cursor">{{signModalTitle}}</h4>
 </div>
 <div id="signBody" class="modal-body">
-	<form class="form-signup">
+	<form id="signupForm" class="form-signup">
 		<h2 class="form-signup-heading no-text-sel default-cursor" style="margin-top: 0px">Please sign up</h2>
 		<label for="inputEmail" class="sr-only">Email address</label>
-		<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" ng-model="formData.email" ng-disabled="auth.isLoggedIn()" autofocus="">
+		<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" ng-model="formData.email" ng-disabled="userProfile.isLoggedIn()" autofocus="">
 		<label for="inputPassword" class="sr-only">Password</label>
-		<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" ng-model="formData.password" ng-disabled="auth.isLoggedIn()">
+		<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" ng-model="formData.password" ng-disabled="userProfile.isLoggedIn()">
 		<div>
 			<a class="pull-right" ui-sref="signin" style="margin-top:10px; margin-bottom:10px">Already have an account?</a>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="auth.isLoggedIn()" ng-click="signup()">Sign Up</button>
+		<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="userProfile.isLoggedIn()" ng-click="signup()">Sign Up</button>
 	</form>
 </div>

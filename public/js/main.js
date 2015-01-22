@@ -6,6 +6,7 @@
 		'main.upload',
 		'main.profile',
 		'main.gallery',
+		'main.modal',
 		'angular-loading-bar',
 		'ngAnimate',
 		'ui.growl',
@@ -24,11 +25,10 @@
 		};
 	});*/
 
-	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "Auth", "UserProfile", "Box", "BoxList", "Modal",
-		function($scope, $window, $http, $state, $growl, Auth, UserProfile, Box, BoxList, Modal) {
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "UserProfile", "Box", "BoxList", "Modal",
+		function($scope, $window, $http, $state, $growl, UserProfile, Box, BoxList, Modal) {
 
 		//------------ sets factory services to be accessible from $scope
-		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
 		$scope.box = Box;
 		$scope.boxlist = BoxList;
@@ -54,7 +54,7 @@
 		//which is where the create modal is handled by the create controller
 		//if the user is not logged in, simply display a message requiring authorization
 		$scope.goCreate = function() {
-			if ($scope.auth.isLoggedIn()) {
+			if ($scope.userProfile.isLoggedIn()) {
 				$state.go('create');
 			}
 			else {
@@ -68,7 +68,7 @@
 		//check if user is logged in before going to the receive state
 		//if the user is not logged in, simply display a message requiring authorization
 		$scope.goReceive = function() {
-			if ($scope.auth.isLoggedIn()) {
+			if ($scope.userProfile.isLoggedIn()) {
 				$state.go('receive');
 			}
 			else {
@@ -172,7 +172,6 @@
 				}).open();
 
 				$scope.userProfile.clearProfile(); //clears the logged-in user profile in userObject
-				$scope.auth.setLogin(false); //set the login to be false
 				$scope.box.clearCurrentBox();
 				$scope.boxlist.clearBoxList();
 				if ($scope.modal.checkModal() || $scope.modal.checkOpenModal()) {
@@ -190,21 +189,26 @@
 		UserProfile.loadProfile(true); //on page load, check if already logged in on the server
 		//if so, then load the user data into the user profile, which is the userObject object
 
+		
 		//captures the height from $window using jquery
 		var height = $(window).height();
 		var buttonHeight = $('#createBtn').height();
+
+		//vertically aligns the Create and Receive buttons in the center
+		$('#buttonGroup').css("padding-top", (height-buttonHeight)/2);
+
+
+
+		/*
+		//same for create modal
+		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
+		$("#createDialog").css("margin-left", "auto");
 
 		//quick hacky way to find dynamic position
 		$('.modal').css("display","block");
 		var createModalHeight = $('#createDialog').height();
 		var loginModalHeight = $('#loginDialog').height();
 		$('.modal').css("display","none");
-
-		//vertically aligns the Create and Receive buttons in the center
-		$('#buttonGroup').css("padding-top", (height-buttonHeight)/2);
-		//same for create modal
-		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
-		$("#createDialog").css("margin-left", "auto");
 
 		//resize signup/login modal upon click
 		$('#loginButton').click(function() {
@@ -226,18 +230,23 @@
 			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");
 		};
+		*/
+
 
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
 			var newHeight = $(window).height();
 			$('#buttonGroup').css("padding-top", newHeight / 2);
+
+			/*
 			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
 			$("#createDialog").css("margin-left", "auto");
 
 			//resize the login/signup modal
 			var signModalHeight = $('#signDialog').height();
 			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");
+			$("#signDialog").css("margin-left", "auto");*/
 		});
+		
 	}]);
 })();

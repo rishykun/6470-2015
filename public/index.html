@@ -2,6 +2,7 @@
 <html ng-app="main">
 <head lang="en">
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Shrödinger's Black Box</title>
 
 	<!-- stylesheets -->
@@ -16,6 +17,11 @@
 	<link rel="stylesheet" href="/css/signup.css">
 	<link rel="stylesheet" href="/css/rishad.css">
 	<link rel="stylesheet" href="/css/profile.css">
+	<!-- modern font -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:600,400' rel='stylesheet' type='text/css'>
+	<!--
+	<link rel="stylesheet" href="/css/modalalignfix.css">
+	-->
 
 	<!-- external javascript -->
 	<script type="text/javascript" src="/jquery/jquery-2.1.3.min.js"></script>
@@ -49,6 +55,13 @@
 	<script type='text/javascript' src="/js/upload.js"></script>
 	<script type='text/javascript' src="/js/profile.js"></script>
 	<script type='text/javascript' src="/js/gallery.js"></script>
+	<script type='text/javascript' src="/js/modal.js"></script>
+	<!--
+	<script type='text/javascript' src="/js/modalresize.js"></script>
+	-->
+	<!--
+	<script type='text/javascript' src="/js/modalalignfix.js"></script>
+	-->
 
 	<!-- custom tooltip -->
 	<link rel="stylesheet" href="/jquery/jquery-ui.css">
@@ -61,17 +74,17 @@
 	<div ng-include="'/tpl/modalwindow/uploadwindow.tpl.html'"></div>
 </head>
 
-<body class="background-dark-slate">
+<body class="background-dark-slate" style="font-family: 'Open Sans', sans-serif !important;">
 	<div ng-controller="MainController">
 		<logo-header></logo-header>
 
 		<!-- only show login options if we are not currently logged in-->
-		<div ng-show="!auth.isLoggedIn()">
+		<div ng-show="!userProfile.isLoggedIn()">
 			<login-bar></login-bar>
 		</div>
 
 		<!-- show navigation bar if we are logged in -->
-		<div ng-show="auth.isLoggedIn()">
+		<div ng-show="userProfile.isLoggedIn()">
 			<nav-bar></nav-bar>
 		</div>
 

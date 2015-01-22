@@ -89,21 +89,9 @@
 			}
 		};
 	});
-	app.factory('Auth', function() {
-		var loggedIn = false;
-		return {
-			//sets the login status
-			setLogin: function(loginStatus) {
-				loggedIn = loginStatus;
-			},
-			//returns the login status
-			isLoggedIn: function() {
-				return loggedIn;
-			}
-		};
-	});
 	//factory that generates a service for managing the userprofile
-	app.factory('UserProfile', function($state, $window, $growl, $http, Auth, Modal) {
+	app.factory('UserProfile', function($state, $window, $growl, $http, Modal) {
+		var loggedIn = false;
 		var userProfile = {};
 		return {
 			//gets the user profile from the server if properly authenticated already
@@ -113,7 +101,7 @@
 					if (data !== false) {
 						//if the user is logged in
 						Modal.closeModal(); //close the current modal
-						Auth.setLogin(true); //set our login status to be true
+						loggedIn = true; //set our login status to be true
 						userProfile = data; //load data into the user profile
 						//debug note: user/email is data.local.email
 						if (alert) {
@@ -138,6 +126,10 @@
 			},
 			clearProfile: function() {
 				userProfile = {};
+				loggedIn = false;
+			},
+			isLoggedIn: function() {
+				return loggedIn;
 			}
 		}
 	});

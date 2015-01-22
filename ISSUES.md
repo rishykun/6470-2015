@@ -9,6 +9,7 @@ todo:
 	a. add options to uploading (setting title, description, etc.)
 	b. upon upload success or fail, display growl message
 	c. add a more obvious path to get to uploads (upload button)?
+	d. change state and go back ruins upload
 - refactor:
 	put auth as part of userprofile
 	put main controller's resize in its own controller/factory/whatever
