@@ -7,6 +7,11 @@ todo:
 - receive (need checks)
 - upload:
 	a. add options to uploading (setting title, description, etc.)
+	b. automatic filetype check and automatic conversion to one standard multimedia format for each multimedia
+		.pdf for all text
+		.mp3 for all music
+		.mp4 for all videos
+		etc.
 	b. upon upload success or fail, display growl message
 	c. add a more obvious path to get to uploads (upload button)?
 	d. change state and go back ruins upload
