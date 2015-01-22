@@ -3,7 +3,7 @@
 	<div id = "createdDiv"> 
 		<div id = "createdHeader">Boxes Created</div>
 		<div id ="createdBoxDiv"ng-repeat="created in boxlist.getCreatedBoxes()" class = "box-wrapper">
-			<img src ="img/box.png" style = "width: 100px; height: 100px"></img>
+			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(created.id)"></img>
 			<p>Box Name: {{created.boxname}}</p>
 			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
 		</div>
