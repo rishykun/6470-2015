@@ -6,6 +6,7 @@
 		'main.upload',
 		'main.profile',
 		'main.gallery',
+		'main.modal',
 		'angular-loading-bar',
 		'ngAnimate',
 		'ui.growl',
@@ -232,6 +233,7 @@
 			$("#signDialog").css("margin-left", "auto");
 		};
 		*/
+
 
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {

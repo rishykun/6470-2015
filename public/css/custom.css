@@ -10,6 +10,23 @@ fixes the glitch that gives the backdrop 0 width and/or height*/
   height:100%;
 }
 
+.darkscreen {
+  z-index: 1040;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: black;
+  transition: opacity .15s linear;
+}
+
+.custom-navbar-size {
+  width: 100%;
+  height: 50px;
+  z-index: -2;
+}
+
 .font-gray {
   color: rgb(128,128,128) !important;
 }
@@ -22,6 +39,11 @@ fixes the glitch that gives the backdrop 0 width and/or height*/
 	margin-left: 10px;
 	height:auto;
 	display:inline-block;
+}
+
+.icon-small {
+  width:48px;
+  height:48px;
 }
 
 .icon-med {

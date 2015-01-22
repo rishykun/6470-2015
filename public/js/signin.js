@@ -18,12 +18,14 @@
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
 				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
 				|| s.currentTarget.className === "close") {
+				$('.form-signin').trigger("reset"); //clears the signin form
 				$state.go('home');
 			}
 		};
 
 		$scope.closeModal = function() {
 			$modalInstance.dismiss('cancel');
+			$('.form-signin').trigger("reset"); //clears the signin form
 		}
 
 		//attempts authentication on the server with the credentials from the form
@@ -33,15 +35,20 @@
 					&& $scope.formData.email !==""
 					&& $scope.formData.password !== undefined && $scope.formData.password !== null
 					&& $scope.formData.password !== "") {
+
+					$("#signinForm :input").prop("disabled", true); //disable form while post request is handled
+
 					$http.post('/login', $scope.formData)
 					.success (function(data) {
 						$('.form-signin').trigger("reset"); //clears the signin form
+						$("#signinForm :input").prop("disabled", false); //renable form
 						$growl.box("Success", "Logged in", {
 							class: "success"
 						}).open();
 						UserProfile.loadProfile(true); //try to load the userprofile
 					})
 					.error (function() {
+						$("#signinForm :input").prop("disabled", false); //renable form
 						$growl.box("Error", "Cannot authenticate to server", {
 							class: "danger"
 						}).open();
@@ -59,7 +66,5 @@
 				}).open();
 			}
 		};
-
-		//$scope.signModalInitResize(); //guarantees the resize of the signin/signup modal window when shown
 	});
 })();

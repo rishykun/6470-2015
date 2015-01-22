@@ -18,12 +18,14 @@
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
 				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
 				|| s.currentTarget.className === "close") {
+				$('.form-create').trigger("reset"); //clears the create form
 				$state.go('home');
 			}
 		};
 
 		$scope.closeModal = function() {
 			$modalInstance.dismiss('cancel');
+			$('.form-create').trigger("reset"); //clears the create form
 		}
 
 		//attempts authentication on the server with the credentials from the form
@@ -35,14 +37,14 @@
 					if ($scope.formData.boxname !== undefined && $scope.formData.boxname !== null
 						&& $scope.formData.boxname !== "") {
 						//needs to send username/email as well
+						$("#createForm :input").prop("disabled", true); //disable form while post request is handled
 						$http.post('/create', $scope.formData)
 						.success (function(data) {
 							jsonData = JSON.parse(data);
-
 							$scope.box.setCurrentBoxID(jsonData.id, false);
 							$scope.box.setCurrentBoxContents(jsonData);
-							
-							$('.form-create').trigger("reset"); //clears the signin form
+							$('.form-create').trigger("reset"); //clears the create form
+							$("#createForm :input").prop("disabled", false); //renable form
 							$scope.modal.closeModal();
 							$growl.box("Success", "Created a box on the server", {
 								class: "success"
@@ -50,6 +52,7 @@
 							$state.go('upload');
 						})
 						.error (function() {
+							$("#createForm :input").prop("disabled", false); //renable form
 							$growl.box("Error", "Cannot create a box on the server", {
 								class: "danger"
 							}).open();
