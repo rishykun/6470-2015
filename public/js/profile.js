@@ -25,13 +25,11 @@
 //------------------------   retrieve box config ------------------
 				for(i=0;i< $scope.boxes_created.length;i++)
 					{
-						console.log($scope.boxes_created[i]);
 						$scope.getBoxConfig($scope.boxes_created[i],true);
 					}
 				//Don't move on unless all post requests are completed or some fail
 				for(i=0;i< $scope.boxes_collaborated.length;i++)
 					{
-						console.log($scope.boxes_collaborated[i]);
 						$scope.getBoxConfig($scope.boxes_collaborated[i],false);
 					}
 				
