@@ -3,10 +3,10 @@
 		<h4> NAME OF BOX </h4>
 	</div>
 	<div class="gallery" ng-show="num===-1">
-		<div class="image-wrapper hvr-glow-blue" ng-repeat="thumb in thumbnails track by $index" style="margin:5px">
+		<div class="image-wrapper hvr-glow-blue" ng-repeat="image in gallery track by $index" style="margin:5px">
 			<div class="shadow">
-				<img class="images" ng-src="{{thumb}}" 
-				ng-click="setNum($index+1);genUrl($index+1);iconSize();setType(gallery[$index].Type)" 
+				<img class="images" ng-src="{{image.Thumbnail}}" 
+				ng-click="setNum($index+1);genUrl($index);iconSize();setType(gallery[$index].Type);vidPad();vidCss(gallery[$index].Type);genPdf(gallery[$index].Type)" 
 				style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
 				<span id="gallery-text">{{gallery[$index].Title}}</span>
 				<span id="gallery-author">{{gallery[$index].Author}}</span>
@@ -57,12 +57,13 @@
 			</videogular>
 		</div>
 		<div class="single-image-wrapper" id="pdf-view" ng-show="isPdf">
+		<object class="pdf-file" type="application/pdf" width="100%" height="100%"></object>
 		</div>
 		<div class ="image-text">
 			<div class="buttons">
-				<img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="genUrl((num-1)%(gallery.length));setNum((num-1)%(gallery.length))"/>
-				<img class = "return hvr-grow" ng-src="./icons/return.png" ng-click="setNum(-1)"/>
-				<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="genUrl((num+1)%(gallery.length));setNum((num+1)%(gallery.length))"/>
+				<img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="genUrl((gallery.length+num-2)%(gallery.length));vidCss(gallery[(gallery.length+num-2)%(gallery.length)].Type);genPdf(gallery[(gallery.length+num-2)%(gallery.length)].Type);setType(gallery[(gallery.length+num-2)%(gallery.length)].Type);setNum((num-1)%(gallery.length));pauseVid()"/>
+				<img class = "return hvr-grow" ng-src="./icons/return.png" ng-click="setNum(-1);pauseVid()"/>
+				<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="genUrl((num)%(gallery.length));setType(gallery[(num)%(gallery.length)].Type);vidCss(gallery[(num)%(gallery.length)].Type);genPdf(gallery[(num)%(gallery.length)].Type);setNum((num+1)%(gallery.length));pauseVid()"/>
 			</div>
 			<div class="profile-wrapper">
 				<img class="profile" src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p160x160/10353637_1047631608585894_7807827911058557415_n.jpg?oh=df17ffe6942fdb5dbe14412bf894a5ea&oe=552EA325&__gda__=1428938202_8b4c55c17cbd53b4a35a45a5138bcd77"/>

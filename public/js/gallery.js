@@ -59,31 +59,56 @@ var adjustDisplay = function(ratio) {
 			$('audio').trigger('pause');
 		};
 
+		$scope.gallerydata={};
 		$scope.gallery=[];
 
-		$scope.thumbnails=[];
-
 		boxNameObj = {
-			boxname: "137cab9e-9a52-4014-9c0f-3b48557bae39"
+			boxname: "6071e388-544d-4861-a877-e5107bed050b"
 		};
-		boxConfig = {boxname: boxNameObj.boxname+"/Config"};
-		boxThumb = {boxname: boxNameObj.boxname+"/Thumbnails"};
-		boxItems = {boxname: boxNameObj.boxname+"/Items"};
+		boxConfig = {boxname: boxNameObj.boxname+"/config"};
+		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+		boxItems = {boxname: boxNameObj.boxname+"/items"};
 		
 		$http.post('/getbox', boxConfig)
 		.success (function(data) {
 			// console.log("This is data");
 			// console.log(data);
-			console.log("box data");
-			console.log(data);
+			dlength = data.length;
 			for (i=1; i < data.length; i++){
 				$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
 				.success (function(data) {
-					console.log("This is data");
-					console.log(data);
+					// console.log("This is data");
+					// console.log(data);
 					data = JSON.parse(data);
-					$scope.gallery.push({"num": $scope.gallery.length, "Type": data.Type, "Title": data.Title, 
-						"Author": data.Author, "Description":data.Description, "Thumbs":data.Thumbs,"Comments":data.Comments});
+					key = data.key;
+					//"num": Object.keys($scope.gallerydata).length+1,
+					$scope.gallerydata[key]={"Type": data.Type, "Title": data.Title, 
+						"Author": data.Author, "Description":data.Description, "Thumbs":data.Thumbs,"Comments":data.Comments};
+					$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
+					.success(function(data){
+						data = JSON.parse(data);
+						key = data.key.substring(0, data.key.lastIndexOf('-t.jpg'));
+						$scope.gallerydata[key].Thumbnail = data.uri;
+						//console.log(Object.keys($scope.gallerydata).length);
+						//console.log(dlength-1);
+						if (Object.keys($scope.gallerydata).length === (dlength-1)) {
+							//console.log("went through");
+							var c = 0;
+							for (var key in $scope.gallerydata) {
+								//console.log("went through through");
+								if ($scope.gallerydata.hasOwnProperty(key)) {
+									//console.log("w t t t t ");
+									$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));
+									c++;
+								}
+							}
+							console.log($scope.gallery);
+						}
+						//console.log($scope.gallerydata);
+					})
+					.error (function(){
+						console.log("Error getting thumbnail");
+					});
 				})
 				.error (function() {
 					console.log("Error getting config file");
@@ -94,36 +119,48 @@ var adjustDisplay = function(ratio) {
 			console.log("Error getting configuration!");
 		});
 
-		$http.post('/getbox', boxThumb)
-		.success(function(data) {
-			for (i=1; i<data.length; i++){
-				$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
-				.success (function(data) {
-					data = JSON.parse(data);
-					$scope.thumbnails.push(data.uri);
-				})
-				.error (function() {
-					console.log("Error getting thumbnail");
-				});
-			}})
-		.error (function(){
-			console.log("Error getting thumbnails!");
-		});
+		// $http.post('/getbox', boxThumb)
+		// .success(function(data) {
+		// 	for (i=1; i<data.length; i++){
+		// 		$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
+		// 		.success (function(data) {
+		// 			data = JSON.parse(data);
+		// 			key = data.key.substr(data.lastIndexOf('/')+1);;
+		// 			$scope.gallerydata[key].Thumbnails = data.uri;
+		// 		})
+		// 		.error (function() {
+		// 			console.log("Error getting thumbnail");
+		// 		});
+		// 	}})
+		// .error (function(){
+		// 	console.log("Error getting thumbnails!");
+		// });
 
 		$scope.genUrl = function(num){
-			if (num === 0) {
-				num = $scope.gallery.length
-			}
+			// if (num === 0) {
+			// 	num = $scope.gallery.length
+			// }
 			$http.post('/getbox', boxItems)
 			.success(function(data) {
-				$http.post('/getitem', {'uri': '6.470', 'key': data[num].Key})
+				console.log('data');
+				console.log(data);
+				console.log('here');
+				console.log('uri');
+				console.log(boxItems.boxname);
+				console.log('key');
+				console.log($scope.gallery[num].key);
+				$http.post('/getitem', {'uri': '6.470/Boxes/'+boxItems.boxname, 'key': $scope.gallery[num].key})
 				.success (function(data) {
+					console.log('more data');
+					console.log(data);
 					data = JSON.parse(data);
 					$scope.curLink = data.uri;
+					console.log('link');
 					console.log($scope.curLink);
-					//var myPDF = PDFObject({url: $scope.curLink}).embed('pdf-view');
+					//var myPDF = PDFObject({url: ""}).embed('pdf-view');
+					$('.pdf-file').attr("data", $scope.curLink);
 					//console.log($scope.curLink);
-					//$scope.audio_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "audio/mp3"}];
+					$scope.audio_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "audio/mp3"}];
 					$scope.video_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "video/mp4"}];
 					//$scope.curLink = "https://www.google.com.ua/images/srpr/logo4w.png";
 				})
@@ -145,7 +182,6 @@ var adjustDisplay = function(ratio) {
 
 		$scope.setType = function(type) {
 			if (type === "Photo"){
-				console.log($scope.gallery);
 				console.log("Photo");
 				$scope.isImg = true;
 				$scope.isVid = false;
@@ -158,21 +194,22 @@ var adjustDisplay = function(ratio) {
 				$scope.isVid = true;
 				$scope.isAud = false;
 				$scope.isPdf = false;
+
+			}
+			else if (type === "Audio"){
+				console.log("Audio");
+				$scope.isImg = false;
+				$scope.isVid = false;
+				$scope.isAud = true;
+				$scope.isPdf = false;
+			}
+		 	else if (type === "Pdf"){
+				$scope.isImg = false;
+				$scope.isVid = false;
+				$scope.isAud = false;
+				$scope.isPdf = true;
 			}
 		}
-		// 	else if (type === "Audio"){
-		// 		$scope.isImg = false;
-		// 		$scope.isVid = false;
-		// 		$scope.isAud = true;
-		// 		$scope.isPdf = false;
-		// 	}
-		// 	else if (type === "Pdf"){
-		// 		$scope.isImg = false;
-		// 		$scope.isVid = false;
-		// 		$scope.isAud = false;
-		// 		$scope.isPdf = true;
-		// 	}
-		// }
 
 		$scope.setNum = function(num){
 			$scope.num = num;
