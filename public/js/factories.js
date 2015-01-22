@@ -138,7 +138,14 @@
 		var currentBoxID = false;
 		var currentBoxContents = false;
 		return {
-			//sets the current box
+			isBoxSet: function() {
+				if (currentBoxID !== false && currentBoxContents !== false) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			},
 			setCurrentBoxID: function(b, getContents) {
 				currentBoxID = b;
 
@@ -161,7 +168,6 @@
 			setCurrentBoxContents:function(b){
 				currentBoxContents = b;
 			},
-			//returns the current box
 			getCurrentBoxID: function() {
 				if (currentBoxID === false) {
 					$growl.box("Error", "No current box ID set", {

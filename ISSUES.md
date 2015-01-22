@@ -4,7 +4,7 @@ issues:
 
 todo:
 - add user field for signup/signin [UNRESOLVED]
-- receive
+- receive (need checks)
 - upload:
 	a. add options to uploading (setting title, description, etc.)
 	b. upon upload success or fail, display growl message
@@ -13,7 +13,11 @@ todo:
 - refactor:
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
-- initial resize of sign modal doesn't work
+- responsive design
+	sites that generate the three bars when browser window is small:
+		http://www.memsql.com/
+		http://www.neople.co.kr/neople/en/neople.php
+- initial resize of sign modal doesn't work [UNRESOLVED]
 - enforce isLoggedIn for node.js routes that require authentication
 - remember me
 - overwriting users & folders and in general in aws s3 server
