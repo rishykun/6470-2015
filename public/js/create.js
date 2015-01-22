@@ -4,9 +4,8 @@
 		'ui.router'
 	]);
 
-	app.controller ("createController", ["$scope", "$window", "$http", "$state", "$modalInstance", "$growl", "Modal", "Auth", "UserProfile", "Box",
-		function createController ($scope, $window, $http, $state, $modalInstance, $growl, Modal, Auth, UserProfile, Box) {
-		$scope.auth = Auth;
+	app.controller ("createController", ["$scope", "$window", "$http", "$state", "$modalInstance", "$growl", "Modal", "UserProfile", "Box",
+		function createController ($scope, $window, $http, $state, $modalInstance, $growl, Modal, UserProfile, Box) {
 		$scope.userProfile=UserProfile;
 		$scope.box = Box;
 		$scope.modal = Modal;
@@ -30,7 +29,7 @@
 
 		//attempts authentication on the server with the credentials from the form
 		$scope.createBox = function () {
-			if ($scope.auth.isLoggedIn()) {
+			if ($scope.userProfile.isLoggedIn()) {
 				user = $scope.userProfile.getProfile().local.email;
 				$scope.formData.username = user;
 				if ($scope.formData.hasOwnProperty("boxname")) {

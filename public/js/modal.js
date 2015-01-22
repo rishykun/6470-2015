@@ -3,12 +3,11 @@
 		'ui.router',
 	]);
 
-	app.controller ( 'modalController', function modalController ($scope, $http, $window, $state, Auth, UserProfile) {
+	app.controller ( 'modalController', function modalController ($scope, $http, $window, $state, UserProfile) {
 		$scope.formData = {}; //default empty form object to be populated
 		$scope.signModalTitle = "Login"; //sets the title of the signin/signup modal window
 
 		//sets factory services to be accessible from $scope
-		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
 
 		//redirects to the home page

@@ -79,12 +79,12 @@
 		<logo-header></logo-header>
 
 		<!-- only show login options if we are not currently logged in-->
-		<div ng-show="!auth.isLoggedIn()">
+		<div ng-show="!userProfile.isLoggedIn()">
 			<login-bar></login-bar>
 		</div>
 
 		<!-- show navigation bar if we are logged in -->
-		<div ng-show="auth.isLoggedIn()">
+		<div ng-show="userProfile.isLoggedIn()">
 			<nav-bar></nav-bar>
 		</div>
 

@@ -2,10 +2,10 @@
 	var app = angular.module( "main" );
 	
 	//checks to prevent illegal states
-	app.run(function($rootScope, $state, $location, Auth, Modal, Box) {
+	app.run(function($rootScope, $state, $location, UserProfile, Modal, Box) {
 	    $rootScope.$on( '$stateChangeStart', function(e, toState, toParams, fromState) {
 
-		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !Auth.isLoggedIn();
+		    var shouldLogin = toState.data !== undefined && toState.data.requireLogin && !UserProfile.isLoggedIn();
 
 		    //not authenticated, should not access states that require authentication
 		    if (shouldLogin) {

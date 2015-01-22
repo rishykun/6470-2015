@@ -25,11 +25,10 @@
 		};
 	});*/
 
-	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "Auth", "UserProfile", "Box", "BoxList", "Modal",
-		function($scope, $window, $http, $state, $growl, Auth, UserProfile, Box, BoxList, Modal) {
+	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "UserProfile", "Box", "BoxList", "Modal",
+		function($scope, $window, $http, $state, $growl, UserProfile, Box, BoxList, Modal) {
 
 		//------------ sets factory services to be accessible from $scope
-		$scope.auth = Auth;
 		$scope.userProfile = UserProfile;
 		$scope.box = Box;
 		$scope.boxlist = BoxList;
@@ -55,7 +54,7 @@
 		//which is where the create modal is handled by the create controller
 		//if the user is not logged in, simply display a message requiring authorization
 		$scope.goCreate = function() {
-			if ($scope.auth.isLoggedIn()) {
+			if ($scope.userProfile.isLoggedIn()) {
 				$state.go('create');
 			}
 			else {
@@ -69,7 +68,7 @@
 		//check if user is logged in before going to the receive state
 		//if the user is not logged in, simply display a message requiring authorization
 		$scope.goReceive = function() {
-			if ($scope.auth.isLoggedIn()) {
+			if ($scope.userProfile.isLoggedIn()) {
 				$state.go('receive');
 			}
 			else {
@@ -173,7 +172,6 @@
 				}).open();
 
 				$scope.userProfile.clearProfile(); //clears the logged-in user profile in userObject
-				$scope.auth.setLogin(false); //set the login to be false
 				$scope.box.clearCurrentBox();
 				$scope.boxlist.clearBoxList();
 				if ($scope.modal.checkModal() || $scope.modal.checkOpenModal()) {
