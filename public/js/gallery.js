@@ -67,6 +67,7 @@ var adjustDisplay = function(ratio) {
 			boxname: $scope.box.getCurrentBoxID()
 			//boxname: "137cab9e-9a52-4014-9c0f-3b48557bae39"
 		};
+		console.log(boxNameObj.boxname);
 		boxConfig = {boxname: boxNameObj.boxname+"/Config"};
 		boxThumb = {boxname: boxNameObj.boxname+"/Thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/Items"};
