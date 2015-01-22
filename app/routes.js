@@ -418,7 +418,7 @@ module.exports = function(app, passport) {
 
         //creates a signed url to be accessible by the front-end
         s3.getSignedUrl('getObject', itemParams, function (err, url) {
-            res.json('{ "name": ' + '"' + req.body.key + '"' + ', "uri": ' + '"' + url + '"' + '}');
+            res.json('{ "key": ' + '"' + req.body.key + '"' + ', "uri": ' + '"' + url + '"' + '}');
         });
     });
 
