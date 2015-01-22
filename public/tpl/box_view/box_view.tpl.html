@@ -5,24 +5,64 @@
 	<div class="gallery" ng-show="num===-1">
 		<div class="image-wrapper hvr-glow-blue" ng-repeat="thumb in thumbnails track by $index" style="margin:5px">
 			<div class="shadow">
-				<img class="images" ng-src="{{thumb}}" ng-click="setNum($index+1)" style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
-				<span id="gallery-text">{{gallery[$index].title}}</span>
-				<span id="gallery-author">{{gallery[$index].author}}</span>
-				<span id="gallery-likes">{{gallery[$index].thumbs}}</span>
-				<span id="gallery-comments">{{gallery[$index].comments.length}}</span>
+				<img class="images" ng-src="{{thumb}}" 
+				ng-click="setNum($index+1);genUrl($index+1);iconSize();setType(gallery[$index].Type)" 
+				style="cursor: hand;cursor: pointer;" width="200px" height="200px" />
+				<span id="gallery-text">{{gallery[$index].Title}}</span>
+				<span id="gallery-author">{{gallery[$index].Author}}</span>
+				<span id="gallery-likes">{{gallery[$index].Thumbs}}</span>
+				<span id="gallery-comments">{{gallery[$index].Comments.length}}</span>
 				<hr class="lineClass"/>
 			</div>
 		</div>
 	</div>
 	<div class = "single-image-view" ng-show="num !== -1">
-		<div class="single-image-wrapper" id="singleImageWrapper" style="position: relative;">
-			<img id="singleImage" class="image" ng-src="{{curImg}}" imageonload/>
+		<div class="single-image-wrapper" id="singleImageWrapper" ng-show="isImg" style="position: relative;">
+			<img id="singleImage" class="image" ng-src="{{curLink}}" imageonload />
+		</div>
+		<div class="video" ng-show="isVid">
+			<videogular vg-theme="theme" vg-responsive="true">
+				<vg-video vg-src="video_sources"></vg-video>
+				<vg-controls vg-autohide="true" vg-autohide-time="3000">
+					<vg-play-pause-button></vg-play-pause-button>
+					<vg-timedisplay>{{ currentTime | date:'mm:ss' }}</vg-timedisplay>
+					<vg-scrubBar><vg-scrubbarcurrenttime></vg-scrubbarcurrenttime></vg-scrubBar>
+					<vg-timedisplay>{{ timeLeft | date:'mm:ss' }}</vg-timedisplay>
+					<vg-volume>
+						<vg-mutebutton></vg-mutebutton>
+						<vg-volumebar></vg-volumebar>
+					</vg-volume>
+					<vg-fullscreenButton></vg-fullscreenButton>
+				</vg-controls>
+				<vg-overlay-play></vg-overlay-play>
+				<!-- <vg-poster-image vg-url='plugins.poster'></vg-poster-image>-->
+			</videogular>
+		</div>
+		<div class="audio" ng-show="isAud">
+			<videogular vg-theme="theme" vg-responsive="true">
+				<vg-audio vg-src="audio_sources"></vg-audio>
+				<vg-controls>
+					<vg-play-pause-button></vg-play-pause-button>
+					<vg-timedisplay>{{ currentTime | date:'mm:ss' }}</vg-timedisplay>
+					<vg-scrubBar><vg-scrubbarcurrenttime></vg-scrubbarcurrenttime></vg-scrubBar>
+					<vg-timedisplay>{{ timeLeft | date:'mm:ss' }}</vg-timedisplay>
+					<vg-volume>
+						<vg-mutebutton></vg-mutebutton>
+						<vg-volumebar></vg-volumebar>
+					</vg-volume>
+					<vg-fullscreenButton></vg-fullscreenButton>
+				</vg-controls>
+				<!-- <vg-overlay-play></vg-overlay-play> -->
+				<!-- <vg-poster-image vg-url='plugins.poster'></vg-poster-image>-->
+			</videogular>
+		</div>
+		<div class="single-image-wrapper" id="pdf-view" ng-show="isPdf">
 		</div>
 		<div class ="image-text">
 			<div class="buttons">
-				<img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="setNum((num-1)%(gallery.length))"/>
+				<img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="genUrl((num-1)%(gallery.length));setNum((num-1)%(gallery.length))"/>
 				<img class = "return hvr-grow" ng-src="./icons/return.png" ng-click="setNum(-1)"/>
-				<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="setNum((num+1)%(gallery.length))"/>
+				<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="genUrl((num+1)%(gallery.length));setNum((num+1)%(gallery.length))"/>
 			</div>
 			<div class="profile-wrapper">
 				<img class="profile" src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p160x160/10353637_1047631608585894_7807827911058557415_n.jpg?oh=df17ffe6942fdb5dbe14412bf894a5ea&oe=552EA325&__gda__=1428938202_8b4c55c17cbd53b4a35a45a5138bcd77"/>
@@ -31,10 +71,10 @@
 				Cheng Wang
 			</div>					
 			<div class="image-description">
-				<p> {{gallery[num-1].description}} </p>
+				<p> Test description </p>
 			</div>
 			<div class="image-comments">
-				I fap to her every night.
+				<p>Amazing!</p>
 			</div>
 		</div>
 	</div>

@@ -303,6 +303,7 @@ module.exports = function(app, passport) {
             Bucket: '6.470/',
             Prefix: 'Boxes/' + req.body.boxname
         }
+        
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
                 console.error(err, err.stack);
@@ -418,7 +419,7 @@ module.exports = function(app, passport) {
 
         //creates a signed url to be accessible by the front-end
         s3.getSignedUrl('getObject', itemParams, function (err, url) {
-            res.json('{ "key": ' + '"' + req.body.key + '"' + ', "uri": ' + '"' + url + '"' + '}');
+        	res.json('{ "key": ' + '"' + req.body.key + '"' + ', "uri": ' + '"' + url + '"' + '}');
         });
     });
 

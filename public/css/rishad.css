@@ -124,6 +124,18 @@
   max-height: 100%; 
 }
 
+.video {
+  height: 568px;
+}
+
+.audio {
+  height: 60px;
+}
+
+#pdf-view{
+  height: 600px;
+}
+
 .image-text{
   position:relative;
 }
