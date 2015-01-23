@@ -208,7 +208,7 @@ module.exports = function(app, passport) {
     app.post('/uploadgoodies', function(req, res) {
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         params = {
-            Bucket: bucketBox,
+            Bucket: bucketBox + "/items",
             Key: req.files.upl.originalname,
             Body: req.files.upl.buffer
         }
@@ -218,7 +218,7 @@ module.exports = function(app, passport) {
 
                 //generate the item config file
                 var params = {
-                    Bucket: bucketBox + '/Config',
+                    Bucket: bucketBox + '/config',
                     Key: req.files.upl.originalname + '.config',
                     Body: '{ "key": "' + req.files.upl.originalname + '", "title": "placeholder title", "author": "' + req.user.local.email + '", "description": "placeholder description", "filetype": "' + req.files.upl.mimetype + '" }'
                 };

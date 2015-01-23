@@ -12,9 +12,10 @@ todo:
 		.mp3 for all music
 		.mp4 for all videos
 		etc.
-	b. upon upload success or fail, display growl message
-	c. add a more obvious path to get to uploads (upload button)?
-	d. change state and go back ruins upload
+	c. upon upload success or fail, display growl message
+	d. add a more obvious path to get to uploads (upload button)?
+	e. change state and go back ruins upload
+	f. thumbnails generator
 - refactor:
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
