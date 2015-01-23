@@ -25,6 +25,7 @@ module.exports = function(app, passport, mongoose) {
     });
 
     var itemConfigSchema = new mongoose.Schema({
+        boxid: String,
         key: String,
         title: String,
         author: String,
@@ -164,11 +165,13 @@ module.exports = function(app, passport, mongoose) {
                             //check if boxes_available > 0
                             if (boxes_available.length > 0) {
                                 //randomly pick a box to give
-                                var j = Math.floor((Math.random() * boxes_available.length) + 1);
+                                var j = Math.floor((Math.random() * boxes_available.length));
+                                console.log("box returned, index: " + j); //debug
+                                console.log(boxes_available[j]); //debug
                                 res.json(boxes_available[j]);
                             }
                             else {
-                                next("\nNo available boxes");
+                                next("\nNo available boxes.");
                             }
                         }
                     });
@@ -187,9 +190,10 @@ module.exports = function(app, passport, mongoose) {
         }
         s3.upload(params,function(err,data){
             if(!err){
-                console.log('Successfully uploaded item.'); //debug
+                console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
                 //create item configuration in the database
                 var itemConfig = new itemConfigModel({
+                    boxid: req.body.boxname,
                     key: req.files.upl.originalname,
                     title: "placeholder title",
                     author : req.user.local.email,

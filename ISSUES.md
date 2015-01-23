@@ -15,6 +15,7 @@ todo:
 	d. add a more obvious path to get to uploads (upload button)?
 	e. change state and go back ruins upload
 	f. thumbnails generator
+	g. closing upload modal if we arrived to it from creating a box should RESET THE CURRENT BOX
 - refactor:
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
@@ -23,7 +24,6 @@ todo:
 		http://www.memsql.com/
 		http://www.neople.co.kr/neople/en/neople.php
 - initial resize of sign modal doesn't work [UNRESOLVED]
-- enforce isLoggedIn for node.js routes that require authentication
 - remember me
 - overwriting users & folders and in general in aws s3 server
 	prevent overwrite

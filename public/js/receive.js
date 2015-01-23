@@ -14,10 +14,8 @@
 				$("#receiveButton :input").prop("disabled", true); //disable button while get request is handled
 				$http.get('/receivebox')
 				.success (function(data) {
-					$scope.stringData = data.Prefix;
-					$scope.firstSlash = $scope.stringData.indexOf("/");
-					$scope.lastSlash = $scope.stringData.lastIndexOf("/");
-					$scope.boxid = $scope.stringData.slice($scope.firstSlash + 1, $scope.lastSlash);
+					console.log(data); //debug
+					$scope.boxid = data.boxid;
 					console.log($scope.boxid); //debug
 					/*
 					$scope.box.setCurrentBoxID(jsonData.id, false);
@@ -28,7 +26,7 @@
 					$growl.box("Success", "Retrieved a box from the server", {
 						class: "success"
 					}).open();
-					$state.go('upload');
+					//$state.go('upload');
 				})
 				.error (function() {
 					$("#receiveButton :input").prop("disabled", false); //renable button
