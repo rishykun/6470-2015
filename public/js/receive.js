@@ -11,7 +11,7 @@
 
 		if ($scope.userProfile.isLoggedIn()) {
 			if (!$scope.box.isBoxSet()) {
-				$("#receiveButton :input").prop("disabled", true); //disable button while get request is handled
+				//$("#receiveButton :input").prop("disabled", true); //disable button while get request is handled
 				$http.get('/receivebox')
 				.success (function(data) {
 					console.log(data); //debug
@@ -22,7 +22,7 @@
 					$scope.box.setCurrentBoxContents(jsonData);
 					*/
 					//TODO DEBUG do check at this point to make sure we can upload to box before going to uploads
-					$("#receiveButton :input").prop("disabled", false); //renable button
+					//$("#receiveButton :input").prop("disabled", false); //renable button
 					$growl.box("Success", "Retrieved a box from the server", {
 						class: "success"
 					}).open();
