@@ -194,25 +194,47 @@
 		};
 	});
 	//factory that holds a list of boxes for profile view
-	app.factory('BoxList', function($growl) {
+	app.factory('BoxList', function($http, $growl) {
 		var created = [];
 		var collaborated = [];
 		return{
 			//gets a box config file given the name
-			//and will either add it to created or collaborated depending on whether created is true
-			getBoxConfig: function (boxid, created) {
+			//and will either add it to created or collaborated depending on isCreated
+			getBoxConfig: function (boxid, isCreated) {
 				reqData = {
 					'boxid':  boxid,
 				}
 				$http.post('/getboxconfig', reqData)
 				.success (function(data) {
 					boxinfo = data;
-					if(created) {
-						created.push(boxinfo);
+					if(isCreated) {
+						//check if the box is already added to prevent duplicates
+						newCreatedBox = true;
+						for(i in created)
+						{
+							if(created[i].boxname === boxinfo.boxname)
+							{
+								newCreatedBox = false;
+							}
+						}
+						if (newCreatedBox) {
+							created.push(boxinfo);
+						}
 				
 					}
 					else {
-						collaborated.push(boxinfo);
+						//check if the box is already added to prevent duplicates
+						newCollaboratedBox = true;
+						for(i in collaborated)
+						{
+							if(collaborated[i].boxname === boxinfo.boxname)
+							{
+								newCollaboratedBox = false;
+							}
+						}
+						if (newCollaboratedBox) {
+							collaborated.push(boxinfo);
+						}
 					}	
 				})
 				.error (function() {
@@ -223,30 +245,30 @@
 			},
 			addCreatedBoxJson: function(bjson){
 				newCreatedBox = true;
-					for(i in created)
+				for(i in created)
+				{
+					if(created[i].boxname===bjson.boxname)
 					{
-						if(created[i].boxname==bjson.boxname)
-						{
-							newCreatedBox = false;
-						}
+						newCreatedBox = false;
 					}
+				}
 				if(newCreatedBox){
 					created.push(bjson);
 				}
 			},
 			addCollaboratedBoxJson: function(bjson){
 				newCollaboratedBox = true;
-					for(i in collaborated)
+				for(i in collaborated)
+				{
+					//TODO: change the equality? so it doesnt just rely on names
+					if(collaborated[i].boxname===bjson.boxname)
 					{
-						//TODO: change the equality? so it doesnt just rely on names
-						if(collaborated[i].boxname==bjson.boxname)
-						{
-							newCollaboratedBox = false;
-						}
+						newCollaboratedBox = false;
 					}
-					if(newCollaboratedBox){
-						collaborated.push(bjson);
-					}
+				}
+				if(newCollaboratedBox){
+					collaborated.push(bjson);
+				}
 			},
 			getCreatedBoxes: function(){
 				return created;
