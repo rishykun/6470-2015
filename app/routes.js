@@ -321,7 +321,7 @@ module.exports = function(app, passport, mongoose) {
     });
     
     //retrieve user configuration from the database
-    app.post('/getuserconfig', isLoggedIn, function(req, res) {
+    app.get('/getuserconfig', isLoggedIn, function(req, res) {
         userConfigModel.findOne(
             {username: req.user.local.email},
             function (err, data) {

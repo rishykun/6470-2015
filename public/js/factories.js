@@ -194,10 +194,33 @@
 		};
 	});
 	//factory that holds a list of boxes for profile view
-	app.factory('BoxList', function() {
+	app.factory('BoxList', function($growl) {
 		var created = [];
 		var collaborated = [];
 		return{
+			//gets a box config file given the name
+			//and will either add it to created or collaborated depending on whether created is true
+			getBoxConfig: function (boxid, created) {
+				reqData = {
+					'boxid':  boxid,
+				}
+				$http.post('/getboxconfig', reqData)
+				.success (function(data) {
+					boxinfo = data;
+					if(created) {
+						created.push(boxinfo);
+				
+					}
+					else {
+						collaborated.push(boxinfo);
+					}	
+				})
+				.error (function() {
+					$growl.box("Error", "Cannot retrieve box contents from the server for the following box ID: " + boxid, {
+						class: "danger"
+					}).open();
+				});
+			},
 			addCreatedBoxJson: function(bjson){
 				newCreatedBox = true;
 					for(i in created)
