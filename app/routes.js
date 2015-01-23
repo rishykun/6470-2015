@@ -137,6 +137,72 @@ module.exports = function(app, passport) {
         });
     })
 
+    //processes the receive box request
+    app.get('/receivebox', function (req, res, next) {
+
+        //get the user config file to see what boxes we've created and collaborated on
+        var userParams = {
+            Bucket:'6.470',
+            Key: 'Users/'+req.user.local.email+'/user.config'
+        }
+        s3.getSignedUrl('getObject', userParams, function (err, url) {
+            var http = require('http');
+            var options = {
+                host: url.slice(8,24),
+                port: 80,
+                path: url.slice(24,url.length)
+            };
+            
+            http.get(options,function(rep){
+                rep.setEncoding('utf8');
+                rep.on('data',function(info){ //doesn't wait until data is loaded completely sometimes
+                    jsonInfo = JSON.parse(info);
+                    boxes_created = jsonInfo.boxes_created;
+                    boxes_collaborated = jsonInfo.boxes_collaborated;
+
+                    //now get a list of boxes
+                    var boxParams = {
+                        Bucket: '6.470/',
+                        Prefix: 'Boxes/',
+                        Delimiter: '/'
+                    }
+                    
+                    s3.listObjects(boxParams, function (err, data) {
+                        if (err) {
+                            console.error(err, err.stack);
+                        }
+                        else {
+                            prefix_list = data.CommonPrefixes;
+
+                            //exclude the boxes that the user has already created/collaborated
+                            function excludeBoxes(value, index, array) {
+                                var found = false;
+                                for (i in boxes_created) {
+                                    if (value.Prefix === "Boxes/" + boxes_created[i] + "/") {
+                                        found = true;
+                                    }
+                                }
+                                for (i in boxes_collaborated) {
+                                    if (value.Prefix === "Boxes/" + boxes_collaborated[i] + "/") {
+                                        found = true;
+                                    }
+                                }
+                                return !found;
+                            }
+                            var boxes_available = prefix_list.filter(excludeBoxes);
+
+                            //randomly pick a box to give
+                            var j = Math.floor((Math.random() * boxes_available.length) + 1);
+                            res.json(boxes_available[j]);
+                        }
+                    });
+                });
+            }).on('error',function(err){
+                console.log(err);
+            });
+        });
+    });
+
     // processes the upload
     //debug TODO: it currently uploads to Boxes folder, we need to upload it to the current folder that we are viewing
     app.post('/uploadgoodies', function(req, res) {
@@ -292,8 +358,6 @@ module.exports = function(app, passport) {
                  console.error("Box (bucket) already exists!");
              }
         });
-
-  
     });
 
     // get contents of the form
@@ -362,6 +426,7 @@ module.exports = function(app, passport) {
             };
             
             http.get(options,function(rep){
+                //DEBUG todo, this succeeds even if no user is found (try undefined as user and see the result)
                 rep.setEncoding('utf8');
                 rep.on('data',function(info){
                     //console.log(info);

@@ -3,15 +3,17 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'profileController', function profileController ($scope, $http, $window,BoxList) {
+	app.controller ( 'profileController', function profileController ($scope, $http,$state, $window,BoxList,Box) {
 
 		$scope.boxlist = BoxList;
+		$scope.box = Box;
 
 		//DEBUG TODO
 		//main.js has duplicate function $scope.getUserBoxes
 		//gets the user config file as a json for the current user
 		$scope.getUserBoxes = function (user) {
 			user = $scope.userProfile.getProfile().local.email;
+			console.log($scope.userProfile.getProfile());
 			reqData = {
 				'username':  user,
 			}
@@ -21,7 +23,6 @@
 					$scope.boxes_created =$scope.userinfo.boxes_created;
 					$scope.boxes_collaborated = $scope.userinfo.boxes_collaborated;
 				
-					//ALL VARIABLES MUST BE CLEARED WHEN STATE IS CHANGED? 
 //------------------------   retrieve box config ------------------
 				for(i=0;i< $scope.boxes_created.length;i++)
 					{
@@ -34,14 +35,17 @@
 					}
 				
 				
-
-
 //------------------------------------------------------------------
 				})
 				.error (function() {
 					console.log("Error getting user config file for " + user + "!");
 				});
 		}
+		$scope.openBoxGallery = function(id){
+			$scope.box.setCurrentBoxID(id,false);
+			$state.go('boxview')
+		}
+
 		$scope.getUserBoxes();
 
 

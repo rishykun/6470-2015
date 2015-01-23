@@ -77,6 +77,14 @@
 				requireLogout: false
 			}
 		})
+		.state( 'receive', {
+			url: '/receive',
+			data: {
+				requireLogin: true,
+				requireLogout: false
+			},
+			controller: "receiveController"
+		})
 		.state( 'profileview', {
 			url: '/profile',
 			onEnter: function(Modal) {

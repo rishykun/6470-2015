@@ -23,6 +23,5 @@
 		$scope.closeModal = function() {
 			$modalInstance.dismiss('cancel');
 		}
-
 	});
 })();

@@ -3,6 +3,7 @@
 		'main.signin',
 		'main.signup',
 		'main.create',
+		'main.receive',
 		'main.upload',
 		'main.profile',
 		'main.gallery',
@@ -247,6 +248,5 @@
 			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
 			$("#signDialog").css("margin-left", "auto");*/
 		});
-		
 	}]);
 })();

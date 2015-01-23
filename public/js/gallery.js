@@ -41,7 +41,7 @@ var adjustDisplay = function(ratio) {
 		"com.2fdevs.videogular.plugins.poster",
 		'ui.router']);
 
-	app.controller('GalleryController', function($sce, $scope, $window, $http, Box){
+	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http,Box){
 		$scope.box = Box;
 		//$scope.video_sources=[];
 		//$scope.audio_sources=[];
@@ -61,10 +61,12 @@ var adjustDisplay = function(ratio) {
 
 		$scope.gallerydata={};
 		$scope.gallery=[];
-		boxNameObj = {boxname: $scope.box.getCurrentBoxId()}
-		// boxNameObj = {
-		// 	boxname: "6071e388-544d-4861-a877-e5107bed050b"
-		// };
+
+		boxNameObj = {
+			boxname: $scope.box.getCurrentBoxID()
+			//boxname: "137cab9e-9a52-4014-9c0f-3b48557bae39"
+		};
+		console.log(boxNameObj.boxname);
 		boxConfig = {boxname: boxNameObj.boxname+"/config"};
 		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/items"};

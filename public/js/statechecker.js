@@ -17,7 +17,7 @@
 		    	return;
 		    }
 		    //cannot access states that require user to not be authenticated
-		    else if (Auth.isLoggedIn() && toState.data.requireLogout) {
+		    else if (UserProfile.isLoggedIn() && toState.data.requireLogout) {
 		    	if (Modal.checkOpenModal()) {
 					Modal.closeModal(); //closes any modal that's already open
 				}
