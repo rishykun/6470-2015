@@ -179,14 +179,21 @@ module.exports = function(app, passport, mongoose) {
             }
         );
     });
+    //this is required for upload.tpl.html
+    app.get('/uploadgoodies', function(req, res, next) {
+        console.log(req.files);
+        res.json({});
+    });
 
     // processes the upload
     app.post('/uploadgoodies', isLoggedIn, function(req, res) {
+        console.log(req); //debug
+        var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         params = {
             Bucket: bucketBox + "/items",
-            Key: req.files.upl.originalname,
-            Body: req.files.upl.buffer
+            Key: thisFile.name,
+            Body: thisFile.buffer
         }
         s3.upload(params,function(err,data){
             if(!err){
@@ -194,11 +201,11 @@ module.exports = function(app, passport, mongoose) {
                 //create item configuration in the database
                 var itemConfig = new itemConfigModel({
                     boxid: req.body.boxname,
-                    key: req.files.upl.originalname,
-                    title: "placeholder title",
+                    key: thisFile.name,
+                    title: req.body.title,
                     author : req.user.local.email,
-                    description: "placeholder description",
-                    filetype: req.files.upl.mimetype
+                    description: req.body.title || "",
+                    filetype: thisFile.mimetype
                 });
                 itemConfig.save(function(err) {
                     if (err) {
@@ -219,7 +226,25 @@ module.exports = function(app, passport, mongoose) {
                                 else {
                                     console.log("Successfully updated box configuration in the database."); //debug
                                     console.log(data); //debug
-                                    res.redirect('/');
+
+                                    res.writeHead(200, {
+                                        'Content-Type': req.headers.accept
+                                            .indexOf('application/json') !== -1 ?
+                                                    'application/json' : 'text/plain'
+                                    });
+                                    response = {
+                                        "files": [
+                                            {
+                                                "name": thisFile.name,
+                                                "size": thisFile.size,
+                                                "url": "http://localhost:3000",
+                                                "thumbnailUrl": "http://localhost:3000",
+                                                "deleteUrl": "http://localhost:3000",
+                                                "deleteType": "DELETE"
+                                            }
+                                        ]
+                                    };
+                                    res.end(JSON.stringify(response));
                                 }
                             }
                         );

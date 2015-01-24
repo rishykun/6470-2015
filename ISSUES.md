@@ -28,3 +28,4 @@ todo:
 	prevent overwrite
 - delete boxes
 - reserve certain words (to prevent overwrite of necessary initial items)
+- message system/ contact users
