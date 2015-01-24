@@ -18,7 +18,6 @@ todo:
 	g. closing upload modal if we arrived to it from creating a box should RESET THE CURRENT BOX
 - refactor:
 	put main controller's resize in its own controller/factory/whatever
-	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
 - responsive design
 	sites that generate the three bars when browser window is small:
 		http://www.memsql.com/
