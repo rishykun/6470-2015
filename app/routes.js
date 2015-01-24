@@ -21,7 +21,8 @@ module.exports = function(app, passport, mongoose) {
         capacity: Number,
         itemcount: Number,
         owner: String,
-        collaborators: [String]
+        collaborators: [String],
+        completed: String
     });
 
     var itemConfigSchema = new mongoose.Schema({
@@ -217,6 +218,11 @@ module.exports = function(app, passport, mongoose) {
                                     console.error(err);
                                 }
                                 else {
+                                    if(data.itemcount == data.capacity){
+                                        data.completed = "true";
+                                        data.save();
+                                        console.log("Setting upload capacity to true");
+                                    }
                                     console.log("Successfully updated box configuration in the database."); //debug
                                     console.log(data); //debug
                                     res.redirect('/');
@@ -253,7 +259,8 @@ module.exports = function(app, passport, mongoose) {
                             capacity: 3, //default
                             itemcount: 0,
                             owner: req.user.local.email,
-                            collaborators: []
+                            collaborators: [],
+                            completed: "false"
                         });
                         boxConfig.save(function(err) {
                             if (err) {
