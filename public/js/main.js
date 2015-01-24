@@ -28,7 +28,7 @@
 
 	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "UserProfile", "Box", "BoxList", "Modal",
 		function($scope, $window, $http, $state, $growl, UserProfile, Box, BoxList, Modal) {
-
+		$scope.name = "Main";
 		//------------ sets factory services to be accessible from $scope
 		$scope.userProfile = UserProfile;
 		$scope.box = Box;
