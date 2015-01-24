@@ -79,6 +79,9 @@
 			}
 		};
 
+		//TODO DEBUG
+		//move this into the gallery.js file
+		//if gallerycontroller is the only one that calls this function
 		//gets the signed url that gives the item
 		$scope.getItem = function (boxuri, itemname) {
 			reqData = {
