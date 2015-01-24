@@ -4,5 +4,6 @@
 	]);
 
 	app.controller ( 'uploadController', function uploadController ($scope, $http, $window, Box, Modal, $modal) {
+		$scope.box = Box; //needed to set current box id
 	});
 })();

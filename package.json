@@ -1,6 +1,6 @@
 {
   "name": "atwexpress",
-  "version": "0.0.0-12",
+  "version": "0.0.0-14",
   "private": true,
   "main": "server.js",
   "engines": {
@@ -26,8 +26,7 @@
     "debug": "~2.1.1",
     "aws-sdk": "latest",
     "multer": "latest",
-    "node-uuid": "latest",
-    "string-to-json": "latest"
+    "node-uuid": "latest"
   },
   "scripts": {
     "start": "node server.js"

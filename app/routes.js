@@ -1,63 +1,41 @@
 var AWS = require('aws-sdk');
 var uuid = require('node-uuid'); //used for generating unique UUID numbers
 var fs = require('fs'); //used for file streaming
-var multer = require("multer");
-var s2json = require("string-to-json");
+var multer = require("multer"); //used to interpret/handle file data
 AWS.config.loadFromPath('./config/aws/config.json');
 var s3 = new AWS.S3();
 
-/*
-s3.createBucket( {Bucket: 'myBucket2'}, function (err, data) {
-    if (err) {       
-        console.error(err);
-    }
-    else {
-        console.log("SUCCESSFULLY CREATED bucket"); //debug
-    }
-});*/
-
-/*
-var params = {
-    Bucket: '6.470',
-    Key: "troll",
-    ContentType: "image/png",
-    ACL: 'public-read'
-};*/
-/*
-var fileStream = fs.createReadStream('./public/troll.png');
-fileStream.on('error', function (err) {
-    if (err) { throw err; }
-}); 
-fileStream.on('open', function () {
-    var s3 = new AWS.S3();
-    s3.putObject({
-        Bucket: '6.470/folder4',
-        Key: 'trolla.png',
-        Body: fileStream
-    }, function (err) {
-        if (err) { throw err; }
-    });
-});*/
-/*
-s3.upload(params, function(err, data) {
-    if (err) {       
-        console.error(err);
-    }
-    else {
-        console.log("Successfully uploaded data!");   
-    }
-});*/
-
-/*
-s3.listBuckets (function (err, data) {
-    for (var index in data.Buckets) {
-        var bucket = data.Buckets[index];
-        console.log("Bucket: ", bucket.Name, ' : ', bucket.CreationData);
-    }
-});*/
-
 // app/routes.js
-module.exports = function(app, passport) {
+module.exports = function(app, passport, mongoose) {
+
+    //for handling configuration information about the user, boxes, and items in the database
+    var userConfigSchema = new mongoose.Schema({
+        username: String,
+        boxes_created: [String],
+        boxes_collaborated: [String]
+    });
+
+    var boxConfigSchema = new mongoose.Schema({
+        boxid: String,
+        boxname: String,
+        capacity: Number,
+        itemcount: Number,
+        owner: String,
+        collaborators: [String]
+    });
+
+    var itemConfigSchema = new mongoose.Schema({
+        boxid: String,
+        key: String,
+        title: String,
+        author: String,
+        description: String,
+        filetype: String
+    });
+
+    var userConfigModel = mongoose.model('UserConfig', userConfigSchema);
+    var boxConfigModel = mongoose.model('BoxConfig', boxConfigSchema);
+    var itemConfigModel = mongoose.model('ItemConfig', itemConfigSchema);
 
     //used to get user object
     //doesn't call isLoggedIn since it's necessary to NOT return an error if the user isn't authenticated
@@ -113,19 +91,19 @@ module.exports = function(app, passport) {
                     else {
                         console.log("Successfully created user folder.");
 
-                        //create a config file for each newly-created box
-                        var params = {
-                            Bucket: bucketUser.substring(0,bucketUser.length-1),
-                            Key: 'user.config',
-                            Body: '{ "username" : "' + req.user.local.email + '", "boxes_created": [], "boxes_collaborated" : [] }'
-                        };
-                        //debug todo: change body: req.user.local.email to req.user.local.user when available
-                        s3.upload(params, function(err, data) {
-                            if (err) {       
+                        //create user configuration in the database
+                        var userConfig = new userConfigModel({
+                            username : req.user.local.email,
+                            boxes_created: [],
+                            boxes_collaborated : []
+                        });
+                        userConfig.save(function(err) {
+                            if (err) {
                                 console.error(err);
                             }
                             else {
-                                console.log("Successfully generated user configuration.");
+                                console.log("Successfully registered user configuration in the database."); //debug
+                                console.log(userConfig); //debug
                                 res.redirect('/');
                             }
                         });
@@ -138,115 +116,125 @@ module.exports = function(app, passport) {
     })
 
     //processes the receive box request
-    app.get('/receivebox', function (req, res, next) {
-
+    app.get('/receivebox', isLoggedIn, function (req, res, next) {
         //get the user config file to see what boxes we've created and collaborated on
-        var userParams = {
-            Bucket:'6.470',
-            Key: 'Users/'+req.user.local.email+'/user.config'
-        }
-        s3.getSignedUrl('getObject', userParams, function (err, url) {
-            var http = require('http');
-            var options = {
-                host: url.slice(8,24),
-                port: 80,
-                path: url.slice(24,url.length)
-            };
-            
-            http.get(options,function(rep){
-                rep.setEncoding('utf8');
-                rep.on('data',function(info){ //doesn't wait until data is loaded completely sometimes
-                    jsonInfo = JSON.parse(info);
-                    boxes_created = jsonInfo.boxes_created;
-                    boxes_collaborated = jsonInfo.boxes_collaborated;
+        userConfigModel.findOne(
+            {username: req.user.local.email},
+            function (err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log("Successfully retrieved user configuration in the database."); //debug
+                    console.log(data); //debug
 
-                    //now get a list of boxes
-                    var boxParams = {
-                        Bucket: '6.470/',
-                        Prefix: 'Boxes/',
-                        Delimiter: '/'
-                    }
-                    
-                    s3.listObjects(boxParams, function (err, data) {
+                    boxes_created = data.boxes_created;
+                    boxes_collaborated = data.boxes_collaborated;
+
+                    console.log("\nboxes created"); //debug
+                    console.log(boxes_created); //debug
+
+                    boxConfigModel.find(function (err, data) {
                         if (err) {
-                            console.error(err, err.stack);
+                            console.error(err);
                         }
                         else {
-                            prefix_list = data.CommonPrefixes;
+                            boxes_list = data;
+                            console.log("\nall box list"); //debug
+                            console.log(boxes_list); //debug
 
                             //exclude the boxes that the user has already created/collaborated
                             function excludeBoxes(value, index, array) {
                                 var found = false;
                                 for (i in boxes_created) {
-                                    if (value.Prefix === "Boxes/" + boxes_created[i] + "/") {
+                                    if (value.boxid === boxes_created[i]) {
                                         found = true;
                                     }
                                 }
                                 for (i in boxes_collaborated) {
-                                    if (value.Prefix === "Boxes/" + boxes_collaborated[i] + "/") {
+                                    if (value.boxid === boxes_collaborated[i]) {
                                         found = true;
                                     }
                                 }
                                 return !found;
                             }
-                            var boxes_available = prefix_list.filter(excludeBoxes);
+                            var boxes_available = boxes_list.filter(excludeBoxes);
+                            console.log("\nboxes available"); //debug
+                            console.log(boxes_available); //debug
 
-                            //randomly pick a box to give
-                            var j = Math.floor((Math.random() * boxes_available.length) + 1);
-                            res.json(boxes_available[j]);
+                            //check if boxes_available > 0
+                            if (boxes_available.length > 0) {
+                                //randomly pick a box to give
+                                var j = Math.floor((Math.random() * boxes_available.length));
+                                console.log("box returned, index: " + j); //debug
+                                console.log(boxes_available[j]); //debug
+                                res.json(boxes_available[j]);
+                            }
+                            else {
+                                next("\nNo available boxes.");
+                            }
                         }
                     });
-                });
-            }).on('error',function(err){
-                console.log(err);
-            });
-        });
+                }
+            }
+        );
     });
 
     // processes the upload
-    //debug TODO: it currently uploads to Boxes folder, we need to upload it to the current folder that we are viewing
-    app.post('/uploadgoodies', function(req, res) {
+    app.post('/uploadgoodies', isLoggedIn, function(req, res) {
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         params = {
-            Bucket: bucketBox,
+            Bucket: bucketBox + "/items",
             Key: req.files.upl.originalname,
             Body: req.files.upl.buffer
         }
         s3.upload(params,function(err,data){
             if(!err){
-                console.log('Successfully uploaded item.');
-
-                //generate the item config file
-                var params = {
-                    Bucket: bucketBox + '/Config',
-                    Key: req.files.upl.originalname + '.config',
-                    Body: '{ "key": "' + req.files.upl.originalname + '", "title": "placeholder title", "author": "' + req.user.local.email + '", "description": "placeholder description", "filetype": "' + req.files.upl.mimetype + '" }'
-                };
-
-                s3.upload(params,function(err,data){
-                    if(!err){
-                        console.log('Successfully uploaded item config.');
-
-                        //res.status(200);
-                        res.redirect('/');
-                    }
-                    else{
+                console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
+                //create item configuration in the database
+                var itemConfig = new itemConfigModel({
+                    boxid: req.body.boxname,
+                    key: req.files.upl.originalname,
+                    title: "placeholder title",
+                    author : req.user.local.email,
+                    description: "placeholder description",
+                    filetype: req.files.upl.mimetype
+                });
+                itemConfig.save(function(err) {
+                    if (err) {
                         console.error(err);
-                        //res.status(500);
-                        res.redirect('/upload');
+                    }
+                    else {
+                        console.log("Successfully registered item configuration in the database."); //debug
+                        console.log(itemConfig); //debug
+
+                        //update box configuration
+                        boxConfigModel.findOneAndUpdate(
+                            {boxid: req.body.boxname},
+                            {$inc: {itemcount: 1}},
+                            function (err, data) {
+                                if (err) {
+                                    console.error(err);
+                                }
+                                else {
+                                    console.log("Successfully updated box configuration in the database."); //debug
+                                    console.log(data); //debug
+                                    res.redirect('/');
+                                }
+                            }
+                        );
                     }
                 });
             }
             else{
                 console.error(err);
-                //res.status(500);
-                res.redirect('/upload');
+                res.redirect('/fail');
             }
         });
     });
 
     // process the create form
-    app.post('/create', function(req, res) {
+    app.post('/create', isLoggedIn, function(req, res) {
         var boxId = uuid.v4(); //generate a unique uuid for the box
         bucketBox = "6.470/Boxes/" + boxId + "/";
         s3.headBucket({Bucket:bucketBox}, function(err,data){
@@ -258,98 +246,55 @@ module.exports = function(app, passport) {
                     else {
                         console.log("Successfully created box.");
 
-                        //create a config file for each newly-created box
-                        var params = {
-                            Bucket: bucketBox.substring(0,bucketBox.length-1),
-                            Key: 'box.config',
-                            Body: '{ "boxname" : "' + req.body.boxname + '", "capacity" : "3", "itemcount" : "0", "owner" : "' + req.user.local.email + '", "collaborators" : [] }'
-                        };
-                        //debug todo: change body: req.user.local.email to req.user.local.user when available
-                        s3.upload(params, function(err, data) {
-                            if (err) {       
+                        //create box configuration in the database
+                        var boxConfig = new boxConfigModel({
+                            boxid: boxId,
+                            boxname: req.body.boxname,
+                            capacity: 3, //default
+                            itemcount: 0,
+                            owner: req.user.local.email,
+                            collaborators: []
+                        });
+                        boxConfig.save(function(err) {
+                            if (err) {
                                 console.error(err);
                             }
                             else {
-                                console.log("Successfully generated box configuration.");
+                                console.log("Successfully registered box configuration in the database."); //debug
+                                console.log(boxConfig); //debug
 
+                                //update user configuration to add this box as a box created
+                                userConfigModel.findOneAndUpdate(
+                                    {username: req.user.local.email},
+                                    {$push: {boxes_created: boxId}},
+                                    {upsert: true},
+                                    function (err, data) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        else {
+                                            console.log("Successfully updated user configuration in the database."); //debug
+                                            console.log(data); //debug
 
-                                
-                                //create the config folder
-                                s3.headBucket({Bucket:bucketBox + "Config/"}, function(err,data){
-                                    if(err){
-                                        s3.createBucket({Bucket:bucketBox + "Config/"},function(err,data){
-                                            if (err) {       
-                                                console.error(err);
-                                            }
-                                            else {
-                                                console.log("Successfully created config folder.");
-
-                                                //create the thumbnails folder
-                                                s3.headBucket({Bucket:bucketBox + "Thumbnails/"}, function(err,data){
-                                                    if(err){
-                                                        s3.createBucket({Bucket:bucketBox + "Thumbnails/"},function(err,data){
-                                                            if (err) {       
-                                                                console.error(err);
-                                                            }
-                                                            else {
-                                                                console.log("Successfully created thumbnails folder.");
-                                                                // --------------Updating User Config File --------------
-                                                                    var userParams = {
-                                                                        Bucket:'6.470',
-                                                                        Key: 'Users/'+req.body.username+'/user.config'
-                                                                    }
-
-
-                                                                    s3.getSignedUrl('getObject', userParams, function (err, url) {
-                                                                        var http = require('http');
-                                                                        var options = {
-                                                                            host: url.slice(8,24),
-                                                                            port: 80,
-                                                                            path: url.slice(24,url.length)
-                                                                        };
-
-                                                                        http.get(options,function(rep){
-                                                                            rep.setEncoding('utf8');
-                                                                            rep.on('data',function(info){
-                                                                                info = JSON.parse(info);
-                                                                                info.boxes_created.push(boxId);
-                                                                                var userConfigParams = {
-                                                                                    Bucket: '6.470/Users/'+req.body.username,
-                                                                                    Key: 'user.config',
-                                                                                    Body: JSON.stringify(info)
-                                                                                };
-                                                                                s3.upload(userConfigParams, function(err, data) {
-                                                                                    if (err) {       
-                                                                                        console.error(err);
-                                                                                    }
-                                                                                    else {
-                                                                                        console.log('Successfully updated user config');
-                                                                                        var boxConfigData = '{ "name" : "' + req.body.boxname + '", "id" : "' + boxId + '", "uri" : "' + bucketBox + '" }';
-                                                                                        res.json(boxConfigData);
-                                                                                    }
-                                                                                });
-                                                                            }).on('error',function(err){
-                                                                                console.log(err);
-                                                                            });
-                                                                            
-                                                                        });
-                                                                    });
-                                                                //-------------------------------------------------------
-
-                                                            }
-                                                        });
-                                                     } else {
-                                                         console.error("Thumbnails folder already exists!");
-                                                     }
-                                                });
-                                            }
-                                        });
-                                     } else {
-                                         console.error("Config already exists!");
-                                     }
-                                });
-
-
+                                            //create the thumbnails folder
+                                            s3.headBucket({Bucket:bucketBox + "Thumbnails/"}, function(err,data){
+                                                if(err){
+                                                    s3.createBucket({Bucket:bucketBox + "Thumbnails/"},function(err,data){
+                                                        if (err) {       
+                                                            console.error(err);
+                                                        }
+                                                        else {
+                                                            console.log("Successfully created thumbnails folder.");
+                                                            res.json(boxConfig);
+                                                        }
+                                                    });
+                                                 } else {
+                                                     console.error("Thumbnails folder already exists!");
+                                                 }
+                                            });
+                                        }
+                                    }
+                                );
                             }
                         });
                     }
@@ -361,7 +306,7 @@ module.exports = function(app, passport) {
     });
 
     // get contents of the form
-    app.post('/getbox', function(req, res) {
+    app.post('/getbox', isLoggedIn, function(req, res) {
 
         var boxParams = {
             Bucket: '6.470/',
@@ -379,94 +324,57 @@ module.exports = function(app, passport) {
         });
     });
     
-    //Get user config
-    app.post('/getuserconfig', function(req, res) {
-        //TODO: handle not logged in user -> redirect to somewhere else?
-        var userParams = {
-            Bucket:'6.470',
-            Key: 'Users/'+req.body.username+'/user.config'
-        }
-  
-
-          s3.getSignedUrl('getObject', userParams, function (err, url) {
-                var http = require('http');
-                var options = {
-                    host: url.slice(8,24),
-                    port: 80,
-                    path: url.slice(24,url.length)
-                };
-                
-                http.get(options,function(rep){
-                    rep.setEncoding('utf8');
-                    rep.on('data',function(info){
-                        res.json(info);
-                    });
-                }).on('error',function(err){
-                    console.log(err);
-                });
-        
-            });
+    //retrieve user configuration from the database
+    app.get('/getuserconfig', isLoggedIn, function(req, res) {
+        userConfigModel.findOne(
+            {username: req.user.local.email},
+            function (err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log("Successfully retrieved user configuration in the database."); //debug
+                    console.log(data); //debug
+                    res.json(data);
+                }
+            }
+        );
     });
 
-    //Get box config file
-    app.post('/getboxconfig', function(req, res) {
-        //TODO: handle not logged in user -> redirect to somewhere else?
-        var userParams = {
-            Bucket:'6.470',
-            Key: 'Boxes/'+req.body.boxid+'/box.config'
-        }
-  
-
-          s3.getSignedUrl('getObject', userParams, function (err, url) {
-            var http = require('http');
-            var options = {
-                host: url.slice(8,24),
-                port: 80,
-                path: url.slice(24,url.length)
-            };
-            
-            http.get(options,function(rep){
-                //DEBUG todo, this succeeds even if no user is found (try undefined as user and see the result)
-                rep.setEncoding('utf8');
-                rep.on('data',function(info){
-                    //console.log(info);
-                    res.json(info);
-                });
-            }).on('error',function(err){
-                console.log(err);
-            });
-    
-        });
+    //retrieve box configuration from the database
+    app.post('/getboxconfig', isLoggedIn, function(req, res) {
+        boxConfigModel.findOne(
+            {boxid: req.body.boxid},
+            function (err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log("Successfully retrieved box configuration in the database."); //debug
+                    console.log(data); //debug
+                    res.json(data);
+                }
+            }
+        );
     });
 
-    app.post('/getitemconfig', function(req, res) {
-        //TODO: handle not logged in user -> redirect to somewhere else?
-        var itemParams = {
-            Bucket: req.body.uri,
-            Key: req.body.key
-        }
-          s3.getSignedUrl('getObject', itemParams, function (err, url) {
-                var http = require('http');
-                var options = {
-                    host: url.slice(8,24),
-                    port: 80,
-                    path: url.slice(24,url.length)
-                };
-                
-                http.get(options,function(rep){
-                    rep.setEncoding('utf8');
-                    rep.on('data',function(info){
-                        console.log(info);
-                        res.json(info);
-                    });
-                }).on('error',function(err){
-                    console.log(err);
-                });
-        
-            });
+    app.post('/getitemconfig', isLoggedIn, function(req, res) {
+        itemConfigModel.findOne(
+            {key: req.body.key},
+            function (err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log("Successfully retrieved item configuration in the database."); //debug
+                    console.log(data); //debug
+                    res.json(data);
+                }
+            }
+        );
     });
 
-    app.post('/getitem', function (req, res) {
+    app.post('/getitem', isLoggedIn, function (req, res) {
         console.log(req.body.uri); //debug
         console.log(req.body.key); //debug
 
@@ -474,13 +382,6 @@ module.exports = function(app, passport) {
             Bucket: req.body.uri,
             Key: req.body.key
         };
-
-        //downloads the file directly onto the server
-        /*
-        var file = fs.createWriteStream('./public/temp.pdf');
-        item = s3.getObject(itemParams);
-        item.createReadStream().pipe(file);
-        */
 
         //creates a signed url to be accessible by the front-end
         s3.getSignedUrl('getObject', itemParams, function (err, url) {

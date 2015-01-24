@@ -114,7 +114,7 @@
 				});
 			},
 			data: {
-				requireLogin: false,
+				requireLogin: true,
 				requireLogout: false
 			}
 		})

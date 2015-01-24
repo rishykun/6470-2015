@@ -39,9 +39,8 @@
 						$("#createForm :input").prop("disabled", true); //disable form while post request is handled
 						$http.post('/create', $scope.formData)
 						.success (function(data) {
-							jsonData = JSON.parse(data);
-							$scope.box.setCurrentBoxID(jsonData.id, false);
-							$scope.box.setCurrentBoxContents(jsonData);
+							$scope.box.setCurrentBoxID(data.boxid, false);
+							$scope.box.setCurrentBoxContents(data);
 							$('.form-create').trigger("reset"); //clears the create form
 							$("#createForm :input").prop("disabled", false); //renable form
 							$scope.modal.closeModal();

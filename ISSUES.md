@@ -1,6 +1,5 @@
 issues:
 - what happens if u log in at the same time from multiple locations
-- why is login slow for windows
 
 todo:
 - add user field for signup/signin [UNRESOLVED]
@@ -12,9 +11,11 @@ todo:
 		.mp3 for all music
 		.mp4 for all videos
 		etc.
-	b. upon upload success or fail, display growl message
-	c. add a more obvious path to get to uploads (upload button)?
-	d. change state and go back ruins upload
+	c. upon upload success or fail, display growl message
+	d. add a more obvious path to get to uploads (upload button)?
+	e. change state and go back ruins upload
+	f. thumbnails generator
+	g. closing upload modal if we arrived to it from creating a box should RESET THE CURRENT BOX
 - refactor:
 	put main controller's resize in its own controller/factory/whatever
 	move box config and stuff like that out of main controller and into a service (maybe box or boxlist)
@@ -23,8 +24,8 @@ todo:
 		http://www.memsql.com/
 		http://www.neople.co.kr/neople/en/neople.php
 - initial resize of sign modal doesn't work [UNRESOLVED]
-- enforce isLoggedIn for node.js routes that require authentication
 - remember me
 - overwriting users & folders and in general in aws s3 server
 	prevent overwrite
+- delete boxes
 - reserve certain words (to prevent overwrite of necessary initial items)
