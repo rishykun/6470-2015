@@ -42,7 +42,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(methodOverride());
 app.use(express.static(__dirname + '/public'));
 
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, passport, mongoose); // load our routes and pass in our app and fully configured passport
 
 app.listen(port, hostname);
-console.log("Simple static server listening at http://" + hostname + ":" + port);
+console.log("Schrodinger's Black Box server listening at http://" + hostname + ":" + port);

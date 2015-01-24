@@ -79,6 +79,9 @@
 			}
 		};
 
+		//TODO DEBUG
+		//move this into the gallery.js file
+		//if gallerycontroller is the only one that calls this function
 		//gets the signed url that gives the item
 		$scope.getItem = function (boxuri, itemname) {
 			reqData = {
@@ -87,7 +90,7 @@
 			}
 			$http.post('/getitem', reqData)
 			.success (function(data) {
-				console.log("Success getting item:"); //debug
+				console.log("Success getting item"); //debug
 				console.log(data); //debug
 			})
 			.error (function() {
@@ -96,73 +99,6 @@
 				}).open();
 			});
 		};
-
-		//DEBUG TODO
-		//this function relies on return data upon success
-		//this leads to failure because success is a callback (asynchronous call)
-		//so nothing is returned when the function is executed
-		//gets the contents of the specified box uri from the server
-		$scope.getBoxContents = function (boxid) {
-			reqData = {
-				'boxname':  boxid,
-			}
-			$http.post('/getbox', reqData)
-			.success (function(data) {
-				console.log('return data'); //debug
-				console.log(data); //debug
-				return data;
-			})
-			.error (function() {
-				$growl.box("Error", "Cannot retrieve box contents from the server for the following box ID: " + boxid, {
-					class: "danger"
-				}).open();
-			});
-		}
-
-		//DEBUG TODO
-		//MOST LIKELY NOT USED (DOUBLE CHECK)
-		//ALSO, $scope.userinfo and $scope.userFound are not used anywhere
-		//ALSO, UserProfile (factory) serves the purpose of these 2 variables
-		//profile.js uses function $scope.getUserBoxes instead
-		//gets the user config file as a json for the current user
-		$scope.getUserConfig = function (user) {
-			user = $scope.userProfile.getProfile().local.email;
-			reqData = {
-				'username':  user,
-			}
-			$http.post('/getuserconfig', reqData)
-			.success (function(data) {
-				$scope.userinfo = JSON.parse(data);
-				$scope.userFound = true;
-			})
-			.error (function() {
-				$growl.box("Error", "Cannot retrieve user configuration file for " + user, {
-					class: "danger"
-				}).open();
-			});
-		}
-
-		//gets a box config file given the name
-		$scope.getBoxConfig = function (boxid,created) {
-			reqData = {
-				'boxid':  boxid,
-			}
-			$http.post('/getboxconfig', reqData)
-			.success (function(data) {
-				boxinfo = JSON.parse(data);
-				boxinfo.id=boxid;
-				if(created) {
-					$scope.boxlist.addCreatedBoxJson(boxinfo);
-			
-				}
-				else {
-					$scope.boxlist.addCollaboratedBoxJson(boxinfo);
-				}	
-			})
-			.error (function() {
-				console.log("Error getting box contents for " + boxid + "!");
-			});
-		}
 
 		//logs the user out from the server
 		$scope.logout = function () {
