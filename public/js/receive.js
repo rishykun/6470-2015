@@ -17,16 +17,15 @@
 					console.log(data); //debug
 					$scope.boxid = data.boxid;
 					console.log($scope.boxid); //debug
-					/*
-					$scope.box.setCurrentBoxID(jsonData.id, false);
-					$scope.box.setCurrentBoxContents(jsonData);
-					*/
+					
+					$scope.box.setCurrentBoxID($scope.box.id, true);
+					
 					//TODO DEBUG do check at this point to make sure we can upload to box before going to uploads
 					//$("#receiveButton :input").prop("disabled", false); //renable button
 					$growl.box("Success", "Retrieved a box from the server", {
 						class: "success"
 					}).open();
-					//$state.go('upload');
+					$state.go('upload');
 				})
 				.error (function() {
 					$("#receiveButton :input").prop("disabled", false); //renable button

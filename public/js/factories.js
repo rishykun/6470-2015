@@ -134,7 +134,7 @@
 		}
 	});
 	//factory that holds the current box in view
-	app.factory('Box', function($growl) {
+	app.factory('Box', function($growl, $http) {
 		var currentBoxID = false;
 		var currentBoxContents = false;
 		return {

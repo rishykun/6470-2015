@@ -32,7 +32,9 @@ $(function () {
     );
 
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+        console.log(data); //debug
         var inputs = data.context.find(':input');
+        console.log(inputs); //debug
         if (inputs.filter(function () {
                 return !this.value && $(this).prop('required');
             }).first().focus().length) {
@@ -40,6 +42,7 @@ $(function () {
             return false;
         }
         data.formData = inputs.serializeArray();
+        console.log(data.formData); //debug
     });
 
     if (window.location.hostname === 'blueimp.github.io') {
