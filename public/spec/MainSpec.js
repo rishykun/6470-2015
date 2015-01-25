@@ -1,5 +1,6 @@
 describe("main", function() {
   //var Server =  require('../js/main.js');
+  var index = require('../index.html');
   var scope, controller;
   //Tests
 
@@ -8,7 +9,7 @@ describe("main", function() {
   1. Test that signing up 
       - Creates ???
   2. Test that two people cannot sign up with the same username
-  3. Test that
+  3. Test that 
 
 
   */
@@ -30,6 +31,16 @@ describe("main", function() {
   });
 
 
+describe('signinController',function(){
+    beforeEach(inject(function($rootScope,$controller){
+    scope = $rootScope.$new();
+    controller = $controller('signinController',{
+      '$scope':scope
+      });
+    }));
+
+    it('login',function())
+  });
 
   //var angular = require('../../public/angular-1.3.8/angular.js');
   //var Main = require('../../public/js/main.js');

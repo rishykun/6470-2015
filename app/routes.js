@@ -196,6 +196,10 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
+        console.log("HERE");
+        console.log(thisFile.size);
+        var maxUploadSize = 10000000;
+        if(thisFile.size < maxUploadSize;){}
         s3.upload(params,function(err,data){
             if(!err){
                 console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
@@ -262,6 +266,12 @@ module.exports = function(app, passport, mongoose) {
                 res.redirect('/fail');
             }
         });
+        }
+        else
+        {
+            //Handle the size to big by notifying front end?
+            res.redirect('/fail');
+        }
     });
 
     // process the create form
