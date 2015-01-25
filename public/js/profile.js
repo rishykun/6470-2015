@@ -35,10 +35,8 @@
 				});
 		}
 		$scope.openBoxGallery = function(id,completed){
-			if(completed){
 			$scope.box.setCurrentBoxID(id, false);
 			$state.go('boxview');
-		}
 		};
 
 		$scope.getUserBoxes();

@@ -220,12 +220,15 @@ module.exports = function(app, passport, mongoose) {
                     console.error(err);
                 }
                 else{
-                    console.log(data.itemcount);
-                    console.log(data.capacity);
-                    if(data.itemcount<data.capacity){
-                        var maxUploadSize = 10000000; //limit to 10 mb per file
-                        //TODO DEBUG, move this check to client side front end so we dont waste data sending over to server for check
-                        if (thisFile.size < maxUploadSize) {
+                    console.log("itemcount " +data.itemcount);
+                    console.log("capacity "+ data.capacity);
+                    console.log("Request");
+                    console.log(req);
+                    console.log("NumUploads");
+                    console.log(req.body.numuploads);
+                    var itemsLeft = data.capacity-data.itemcount;
+                    //Does not pass upload if number of uploaded items total will exceed box capacity
+                    if(data.itemcount+req.body.numuploads<data.capacity){
                             s3.upload(params,function(err,data){
                                 if (!err) {
                                     console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
@@ -235,7 +238,7 @@ module.exports = function(app, passport, mongoose) {
                                         key: thisFile.name,
                                         title: req.body.title,
                                         author : req.user.local.email,
-                                        description: req.body.title || "",
+                                        description: req.body.description || "",
                                         filetype: thisFile.mimetype
                                     });
                                     itemConfig.save(function(err) {
@@ -293,14 +296,15 @@ module.exports = function(app, passport, mongoose) {
                                     res.redirect('/fail');
                                 }
                             });
-                        }
-                        else
-                        {
-                            //Handle the size to big by notifying front end?
-                            res.redirect('/fail');
-                        }
                     }
                     else{
+                        res.json({"files": [
+                    {
+                        "name": thisFile.name,
+                        "size": thisFile.size,
+                        "error": "Upload Fail! "+req.body.numuploads+" uploads will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                    }
+                    ]});
                         console.error("Exceeds box capacity!");
                     }
 
