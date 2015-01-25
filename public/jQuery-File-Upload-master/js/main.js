@@ -18,7 +18,9 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: 'http://localhost:3000/uploadgoodies'
+        url: 'http://localhost:3000/uploadgoodies',
+        maxFileSize: 25000000,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|pdf|mp3)$/i
     });
 
     // Enable iframe cross-domain access via redirect option:

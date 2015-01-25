@@ -212,7 +212,7 @@
 						newCreatedBox = true;
 						for(i in created)
 						{
-							if(created[i].boxname === boxinfo.boxname)
+							if(created[i].boxid === boxinfo.boxid)
 							{
 								newCreatedBox = false;
 							}
