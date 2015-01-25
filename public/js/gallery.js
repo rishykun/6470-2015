@@ -41,8 +41,8 @@ var adjustDisplay = function(ratio) {
 		"com.2fdevs.videogular.plugins.poster",
 		'ui.router']);
 
-	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http,Box){
-		$scope.box = Box;
+	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http){
+		//$scope.box = Box;
 		//$scope.video_sources=[];
 		//$scope.audio_sources=[];
 		$scope.theme="videogular/videogular-themes/videogular.css";
@@ -63,25 +63,27 @@ var adjustDisplay = function(ratio) {
 		$scope.gallery=[];
 
 		boxNameObj = {
-			boxname: $scope.box.getCurrentBoxID()
-			//boxname: "137cab9e-9a52-4014-9c0f-3b48557bae39"
+			//boxname: $scope.box.getCurrentBoxID()
+			boxname: "6071e388-544d-4861-a877-e5107bed050b"
 		};
 		console.log(boxNameObj.boxname);
 		boxConfig = {boxname: boxNameObj.boxname+"/config"};
 		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/items"};
-		
-		$http.post('/getbox', boxConfig)
+		console.log(boxItems.boxname);
+		$http.post('/getbox', boxItems)
 		.success (function(data) {
 			// console.log("This is data");
 			// console.log(data);
 			dlength = data.length;
 			for (i=1; i < data.length; i++){
-				$http.post('/getitemconfig', {'uri': '6.470', 'key': data[i].Key})
+				console.log(data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length));
+				$http.post('/getitemconfig', {/*'uri': '6.470',*/ 'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
 				.success (function(data) {
 					// console.log("This is data");
 					// console.log(data);
-					data = JSON.parse(data);
+					console.log(data);
+					//data = JSON.parse(data);
 					key = data.key;
 					//"num": Object.keys($scope.gallerydata).length+1,
 					$scope.gallerydata[key]={"Type": data.Type, "Title": data.Title, 

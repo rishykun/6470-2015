@@ -39,7 +39,9 @@ $(function () {
             data.context.find('button').prop('disabled', false);
             return false;
         }
+        var boxnameobj = $(this).serializeArray().filter(function(obj) {if(obj.name === 'boxname') return true;});
         data.formData = inputs.serializeArray();
+        data.formData = data.formData.concat(boxnameobj);
     });
 
     if (window.location.hostname === 'blueimp.github.io') {
