@@ -176,7 +176,7 @@ module.exports = function(app, passport, mongoose) {
                                 //update user configuration to add this box as a box collaborated
                                 userConfigModel.findOneAndUpdate(
                                     {username: req.user.local.email},
-                                    {$push: {boxes_collaborated: boxId}},
+                                    {$push: {boxes_collaborated: boxes_available[j].boxid}},
                                     {upsert: true},
                                     function (err, data) {
                                         if (err) {
@@ -403,7 +403,7 @@ module.exports = function(app, passport, mongoose) {
     });
 
     //retrieve box configuration from the database
-    app.post('/getboxconfig', isLoggedIn, function(req, res) {
+    app.get('/getboxconfig', isLoggedIn, function(req, res) {
         boxConfigModel.findOne(
             {boxid: req.body.boxid},
             function (err, data) {
@@ -419,7 +419,7 @@ module.exports = function(app, passport, mongoose) {
         );
     });
 
-    app.post('/getitemconfig', isLoggedIn, function(req, res) {
+    app.get('/getitemconfig', isLoggedIn, function(req, res) {
         itemConfigModel.findOne(
             {key: req.body.key},
             function (err, data) {
