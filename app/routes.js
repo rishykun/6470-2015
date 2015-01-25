@@ -211,7 +211,7 @@ module.exports = function(app, passport, mongoose) {
                     if (err) {
                         console.error(err);
                     }
-                    else {
+                    else {222
                         console.log("Successfully registered item configuration in the database."); //debug
                         console.log(itemConfig); //debug
 
