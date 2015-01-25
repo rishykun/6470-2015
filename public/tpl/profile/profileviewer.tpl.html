@@ -3,7 +3,7 @@
 	<div id = "createdDiv"> 
 		<div id = "createdHeader" class = "profileHeader">Boxes Created</div>
 		<div id ="createdBoxDiv" ng-repeat="created in boxlist.getCreatedBoxes()" class = "box-wrapper">
-			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(created.boxid)"></img>
+			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(created.boxid,created.completed)"></img>
 			<p>Box Name: {{created.boxname}}</p>
 			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
 		</div>
@@ -11,7 +11,7 @@
 	<div id = "collaboratedDiv">
 		<div id = "createdHeader" class = "profileHeader">Boxes Collaborated</div>
 		<div id ="collaboratedBoxDiv"  ng-repeat="collaborated in boxlist.getCollaboratedBoxes()" class = "box-wrapper">
-			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(collaborated.id)"></img>
+			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(collaborated.id,collaborated.completed)"></img>
 			<p>Box Name: {{collaborated.boxname}}</p>
 			<p>Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
 		</div>

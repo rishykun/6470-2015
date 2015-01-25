@@ -199,7 +199,7 @@ module.exports = function(app, passport, mongoose) {
         console.log("HERE");
         console.log(thisFile.size);
         var maxUploadSize = 10000000;
-        if(thisFile.size < maxUploadSize;){}
+        if(thisFile.size < maxUploadSize){
         s3.upload(params,function(err,data){
             if(!err){
                 console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
