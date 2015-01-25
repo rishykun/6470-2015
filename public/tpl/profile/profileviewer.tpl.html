@@ -11,7 +11,7 @@
 	<div id = "collaboratedDiv">
 		<div id = "createdHeader" class = "profileHeader">Boxes Collaborated</div>
 		<div id ="collaboratedBoxDiv"  ng-repeat="collaborated in boxlist.getCollaboratedBoxes()" class = "box-wrapper">
-			<img src ="img/box.png" style = "width: 100px; height: 100px"></img>
+			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(collaborated.id)"></img>
 			<p>Box Name: {{collaborated.boxname}}</p>
 			<p>Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
 		</div>

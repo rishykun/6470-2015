@@ -21,7 +21,8 @@ module.exports = function(app, passport, mongoose) {
         capacity: Number,
         itemcount: Number,
         owner: String,
-        collaborators: [String]
+        collaborators: [String],
+        completed: String
     });
 
     var itemConfigSchema = new mongoose.Schema({
@@ -195,6 +196,10 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
+        console.log("HERE");
+        console.log(thisFile.size);
+        var maxUploadSize = 10000000;
+        if(thisFile.size < maxUploadSize;){}
         s3.upload(params,function(err,data){
             if(!err){
                 console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
@@ -224,6 +229,11 @@ module.exports = function(app, passport, mongoose) {
                                     console.error(err);
                                 }
                                 else {
+                                    if(data.itemcount == data.capacity){
+                                        data.completed = "true";
+                                        data.save();
+                                        console.log("Setting upload capacity to true");
+                                    }
                                     console.log("Successfully updated box configuration in the database."); //debug
                                     console.log(data); //debug
 
@@ -256,6 +266,12 @@ module.exports = function(app, passport, mongoose) {
                 res.redirect('/fail');
             }
         });
+        }
+        else
+        {
+            //Handle the size to big by notifying front end?
+            res.redirect('/fail');
+        }
     });
 
     // process the create form
@@ -278,7 +294,8 @@ module.exports = function(app, passport, mongoose) {
                             capacity: 3, //default
                             itemcount: 0,
                             owner: req.user.local.email,
-                            collaborators: []
+                            collaborators: [],
+                            completed: "false"
                         });
                         boxConfig.save(function(err) {
                             if (err) {
