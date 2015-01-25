@@ -196,76 +196,78 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
-        console.log("HERE");
+        console.log("HERE"); //debug
         console.log(thisFile.size);
         var maxUploadSize = 10000000;
-        if(thisFile.size < maxUploadSize;){}
-        s3.upload(params,function(err,data){
-            if(!err){
-                console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
-                //create item configuration in the database
-                var itemConfig = new itemConfigModel({
-                    boxid: req.body.boxname,
-                    key: thisFile.name,
-                    title: req.body.title,
-                    author : req.user.local.email,
-                    description: req.body.title || "",
-                    filetype: thisFile.mimetype
-                });
-                itemConfig.save(function(err) {
-                    if (err) {
-                        console.error(err);
-                    }
-                    else {222
-                        console.log("Successfully registered item configuration in the database."); //debug
-                        console.log(itemConfig); //debug
 
-                        //update box configuration
-                        boxConfigModel.findOneAndUpdate(
-                            {boxid: req.body.boxname},
-                            {$inc: {itemcount: 1}},
-                            function (err, data) {
-                                if (err) {
-                                    console.error(err);
-                                }
-                                else {
-                                    if(data.itemcount == data.capacity){
-                                        data.completed = "true";
-                                        data.save();
-                                        console.log("Setting upload capacity to true");
+        if(thisFile.size < maxUploadSize) {
+            s3.upload(params,function(err,data){
+                if(!err){
+                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
+                    //create item configuration in the database
+                    var itemConfig = new itemConfigModel({
+                        boxid: req.body.boxname,
+                        key: thisFile.name,
+                        originalfilename: thisFile.originalfilename,
+                        title: req.body.title,
+                        author : req.user.local.email,
+                        description: req.body.title || "",
+                        filetype: thisFile.mimetype
+                    });
+                    itemConfig.save(function(err) {
+                        if (err) {
+                            console.error(err);
+                        }
+                        else {
+                            console.log("Successfully registered item configuration in the database."); //debug
+                            console.log(itemConfig); //debug
+
+                            //update box configuration
+                            boxConfigModel.findOneAndUpdate(
+                                {boxid: req.body.boxname},
+                                {$inc: {itemcount: 1}},
+                                function (err, data) {
+                                    if (err) {
+                                        console.error(err);
                                     }
-                                    console.log("Successfully updated box configuration in the database."); //debug
-                                    console.log(data); //debug
+                                    else {
+                                        if(data.itemcount == data.capacity){
+                                            data.completed = "true";
+                                            data.save();
+                                            console.log("Setting upload capacity to true");
+                                        }
+                                        console.log("Successfully updated box configuration in the database."); //debug
+                                        console.log(data); //debug
 
-                                    res.writeHead(200, {
-                                        'Content-Type': req.headers.accept
-                                            .indexOf('application/json') !== -1 ?
-                                                    'application/json' : 'text/plain'
-                                    });
-                                    response = {
-                                        "files": [
-                                            {
-                                                "name": thisFile.name,
-                                                "size": thisFile.size,
-                                                "url": "http://localhost:3000",
-                                                "thumbnailUrl": "http://localhost:3000",
-                                                "deleteUrl": "http://localhost:3000",
-                                                "deleteType": "DELETE"
-                                            }
-                                        ]
-                                    };
-                                    res.end(JSON.stringify(response));
+                                        res.writeHead(200, {
+                                            'Content-Type': req.headers.accept
+                                                .indexOf('application/json') !== -1 ?
+                                                        'application/json' : 'text/plain'
+                                        });
+                                        response = {
+                                            "files": [
+                                                {
+                                                    "name": thisFile.name,
+                                                    "size": thisFile.size,
+                                                    "url": "http://localhost:3000",
+                                                    "thumbnailUrl": "http://localhost:3000",
+                                                    "deleteUrl": "http://localhost:3000",
+                                                    "deleteType": "DELETE"
+                                                }
+                                            ]
+                                        };
+                                        res.end(JSON.stringify(response));
+                                    }
                                 }
-                            }
-                        );
-                    }
-                });
-            }
-            else{
-                console.error(err);
-                res.redirect('/fail');
-            }
-        });
+                            );
+                        }
+                    });
+                }
+                else{
+                    console.error(err);
+                    res.redirect('/fail');
+                }
+            });
         }
         else
         {
