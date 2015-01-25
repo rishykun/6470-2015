@@ -204,7 +204,7 @@
 				reqData = {
 					'boxid':  boxid,
 				}
-				$http.post('/getboxconfig', reqData)
+				$http.get('/getboxconfig', reqData)
 				.success (function(data) {
 					boxinfo = data;
 					if(isCreated) {
