@@ -32,17 +32,16 @@ $(function () {
     );
 
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
-        console.log(data); //debug
         var inputs = data.context.find(':input');
-        console.log(inputs); //debug
         if (inputs.filter(function () {
                 return !this.value && $(this).prop('required');
             }).first().focus().length) {
             data.context.find('button').prop('disabled', false);
             return false;
         }
+        var boxnameobj = $(this).serializeArray().filter(function(obj) {if(obj.name === 'boxname') return true;});
         data.formData = inputs.serializeArray();
-        console.log(data.formData); //debug
+        data.formData = data.formData.concat(boxnameobj);
     });
 
     if (window.location.hostname === 'blueimp.github.io') {
