@@ -205,110 +205,115 @@ module.exports = function(app, passport, mongoose) {
     });
 
     // processes the upload
-    app.post('/uploadgoodies', isLoggedIn, function(req, res) {
-        var thisFile = req.files['files[]'];
-        bucketBox = '6.470/Boxes/' + req.body.boxname;
-        params = {
-            Bucket: bucketBox + "/items",
-            Key: thisFile.name,
-            Body: thisFile.buffer
-        }
-        console.log("boxname is: " + req.body.boxname); //debug
-        boxConfigModel.findOne({"boxid": req.body.boxname},
-            function(err,data){
-                if(err){
-                    console.error(err);
-                }
-                else{
-
-                    console.log(data); //debug
-                    var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
-                    //Does not pass upload if number of uploaded items total will exceed box capacity
-                    var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
-                    if(newcount<=data.capacity){
-                            s3.upload(params,function(err,data){
-                                if (!err) {
-                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
-                                    //create item configuration in the database
-                                    var itemConfig = new itemConfigModel({
-                                        boxid: req.body.boxname,
-                                        key: thisFile.name,
-                                        title: req.body.title,
-                                        author : req.user.local.email,
-                                        description: req.body.description || "",
-                                        filetype: thisFile.mimetype
-                                    });
-                                    itemConfig.save(function(err) {
-                                        if (err) {
-                                            console.error(err);
-                                        }
-                                        else {
-                                            console.log("Successfully registered item configuration in the database."); //debug
-                                            console.log(itemConfig); //debug
-
-                                            //update box configuration
-                                            boxConfigModel.findOneAndUpdate(
-                                                {boxid: req.body.boxname},
-                                                {$inc: {itemcount: 1}},
-                                                function (err, data) {
-                                                    if (err) {
-                                                        console.error(err);
-                                                    }
-                                                    else {
-                                                        //mark our boxes as complete once the number of items has reached the capacity
-                                                        if (data.itemcount == data.capacity){
-                                                            data.completed = "true";
-                                                            data.save();
-                                                            console.log("Setting upload capacity to true"); //debug
-                                                        }
-                                                        console.log("Successfully updated box configuration in the database."); //debug
-                                                        console.log(data); //debug
-
-                                                        res.writeHead(200, {
-                                                            'Content-Type': req.headers.accept
-                                                                .indexOf('application/json') !== -1 ?
-                                                                        'application/json' : 'text/plain'
-                                                        });
-                                                        response = {
-                                                            "files": [
-                                                                {
-                                                                    "name": thisFile.name,
-                                                                    "size": thisFile.size,
-                                                                    "url": "http://localhost:3000",
-                                                                    "thumbnailUrl": "http://localhost:3000",
-                                                                    "deleteUrl": "http://localhost:3000",
-                                                                    "deleteType": "DELETE"
-                                                                }
-                                                            ]
-                                                        };
-                                                        res.end(JSON.stringify(response));
-                                                    }
-                                                }
-                                            );
-                                        }
-                                    });
-                                }
-                                else{
-                                    console.error(err);
-                                    res.redirect('/fail');
-                                }
-                            });
+    app.post('/uploadgoodies', isLoggedIn, function(req, res, next) {
+        //if we have at least one file to upload
+        if (req.hasOwnProperty('files') && req.files.hasOwnProperty('files[]')) {
+            var thisFile = req.files['files[]'];
+            bucketBox = '6.470/Boxes/' + req.body.boxname;
+            params = {
+                Bucket: bucketBox + "/items",
+                Key: thisFile.name,
+                Body: thisFile.buffer
+            }
+            console.log("boxname is: " + req.body.boxname); //debug
+            boxConfigModel.findOne({"boxid": req.body.boxname},
+                function(err,data){
+                    if(err){
+                        console.error(err);
                     }
                     else{
-                        res.json({"files": [
-                    {
-                        "name": thisFile.name,
-                        "size": thisFile.size,
-                        "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
-                    }
-                    ]});
-                        console.error("Exceeds box capacity!");
-                    }
 
+                        console.log(data); //debug
+                        var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
+                        //Does not pass upload if number of uploaded items total will exceed box capacity
+                        var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
+                        if(newcount<=data.capacity){
+                                s3.upload(params,function(err,data){
+                                    if (!err) {
+                                        console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
+                                        //create item configuration in the database
+                                        var itemConfig = new itemConfigModel({
+                                            boxid: req.body.boxname,
+                                            key: thisFile.name,
+                                            title: req.body.title,
+                                            author : req.user.local.email,
+                                            description: req.body.description || "",
+                                            filetype: thisFile.mimetype
+                                        });
+                                        itemConfig.save(function(err) {
+                                            if (err) {
+                                                console.error(err);
+                                            }
+                                            else {
+                                                console.log("Successfully registered item configuration in the database."); //debug
+                                                console.log(itemConfig); //debug
+
+                                                //update box configuration
+                                                boxConfigModel.findOneAndUpdate(
+                                                    {boxid: req.body.boxname},
+                                                    {$inc: {itemcount: 1}},
+                                                    function (err, data) {
+                                                        if (err) {
+                                                            console.error(err);
+                                                        }
+                                                        else {
+                                                            //mark our boxes as complete once the number of items has reached the capacity
+                                                            if (data.itemcount == data.capacity){
+                                                                data.completed = "true";
+                                                                data.save();
+                                                                console.log("Setting upload capacity to true"); //debug
+                                                            }
+                                                            console.log("Successfully updated box configuration in the database."); //debug
+                                                            console.log(data); //debug
+
+                                                            res.writeHead(200, {
+                                                                'Content-Type': req.headers.accept
+                                                                    .indexOf('application/json') !== -1 ?
+                                                                            'application/json' : 'text/plain'
+                                                            });
+                                                            response = {
+                                                                "files": [
+                                                                    {
+                                                                        "name": thisFile.name,
+                                                                        "size": thisFile.size,
+                                                                        "url": "http://localhost:3000",
+                                                                        "thumbnailUrl": "http://localhost:3000",
+                                                                        "deleteUrl": "http://localhost:3000",
+                                                                        "deleteType": "DELETE"
+                                                                    }
+                                                                ]
+                                                            };
+                                                            res.end(JSON.stringify(response));
+                                                        }
+                                                    }
+                                                );
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        console.error(err);
+                                        res.redirect('/fail');
+                                    }
+                                });
+                        }
+                        else{
+                            res.json({"files": [
+                        {
+                            "name": thisFile.name,
+                            "size": thisFile.size,
+                            "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                        }
+                        ]});
+                            console.error("Exceeds box capacity!");
+                        }
+
+                    }
                 }
-            }
-        )
-        
+            )
+        }
+        else {
+            next("No files have been set to upload");
+        }
     });
 
     // process the create form
