@@ -9,7 +9,7 @@
 		$scope.userProfile=UserProfile;
 		$scope.box = Box;
 
-		if ($scope.userProfile.isLoggedIn()) {
+		/*if ($scope.userProfile.isLoggedIn()) {
 			if (!$scope.box.isBoxSet()) {
 				//$("#receiveButton :input").prop("disabled", true); //disable button while get request is handled
 				$http.get('/receivebox')
@@ -46,5 +46,6 @@
 				class: "warning"
 			}).open();
 		}
+		*/
 	}]);
 })();
