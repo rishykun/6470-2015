@@ -4300,34 +4300,45 @@
 
 /* Icon Wobble Horizontal */
 @-webkit-keyframes hvr-icon-wobble-horizontal {
-  16.65% {
+/*  16.65% {
     -webkit-transform: translateX(6px);
     transform: translateX(6px);
   }
 
   33.3% {
-    -webkit-transform: translateX(-5px);
-    transform: translateX(-5px);
+    -webkit-transform: translateX(6px);
+    transform: translateX(6px);
+  }*/
+
+  25% {
+    -webkit-transform: translateX(6px);
+    transform: translateX(6px);
   }
+
 
   49.95% {
-    -webkit-transform: translateX(4px);
-    transform: translateX(4px);
+    -webkit-transform: translateX(0px);
+    transform: translateX(0px);
   }
 
-  66.6% {
-    -webkit-transform: translateX(-2px);
-    transform: translateX(-2px);
+ /* 66.6% {
+    -webkit-transform: translateX(-6px);
+    transform: translateX(-6px);
   }
 
   83.25% {
-    -webkit-transform: translateX(1px);
-    transform: translateX(1px);
+    -webkit-transform: translateX(-6px);
+    transform: translateX(-6px);
+  }*/
+
+  75% {
+    -webkit-transform: translateX(-6px);
+    transform: translateX(-6px);
   }
 
   100% {
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
+    -webkit-transform: translateX(0px);
+    transform: translateX(0px);
   }
 }
 
@@ -4374,12 +4385,12 @@
   -moz-osx-font-smoothing: grayscale;
   position: relative;
   padding-right: 2.2em;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+  -webkit-transition-duration: 3s;
+  transition-duration: 3s;
 }
 .hvr-icon-wobble-horizontal:before {
-  content: "\f061";
-  position: absolute;
+  /*content: "\f061";*/
+  position: relative;
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -4393,8 +4404,8 @@
   animation-duration: 1s;
   -webkit-animation-timing-function: ease-in-out;
   animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: 1;
-  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
 }
 
 /* Icon Wobble Vertical */
