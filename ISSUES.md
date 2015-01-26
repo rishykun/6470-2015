@@ -1,10 +1,9 @@
 [VERY IMPORTANT]
 - instead of console.error, we need to return a fail message to the front end so that the server doesn't crash unnecessarily whenever any error occurs (FIX VERY FRAIL SERVER)
 
-[IMPORTANT]
-- OPTIMIZE THE SPEED OF OUR WEBSITE
-LOADING THE HOME PAGE TAKES MUCH LONGER THAN IT SHOULD (TOO MUCH OVERHEAD)
-- can't upload from phone
+Responsive design
+- footer should come below boxes collaborated on mobile
+- modal of upload is weird on mobile portrait
 
 would like to do future features
 - delete boxes
