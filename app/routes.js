@@ -11,6 +11,7 @@ module.exports = function(app, passport, mongoose) {
     //for handling configuration information about the user, boxes, and items in the database
     var userConfigSchema = new mongoose.Schema({
         username: String,
+        email: String,
         boxes_created: [String],
         boxes_collaborated: [String]
     });
@@ -47,7 +48,23 @@ module.exports = function(app, passport, mongoose) {
     //which is the only way for the front-end to know whether the user is logged in or not
     app.get('/profile', function(req, res) {
         if (req.isAuthenticated()) {
-            res.json(req.user);
+            userConfigModel.findOne(
+                {email: req.user.local.email},
+                function (err, data) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    else {
+                        console.log("Successfully retrieved user configuration in the database."); //debug
+                        console.log(data); //debug
+                        newData = {};
+                        newData["local"] = req.user.local;
+                        newData["username"] = data.username; //set username that was just retrieved
+                        console.log(newData); //debug
+                        res.json(newData);
+                    }
+                }
+            );
         }
         else {
             res.json(false);
@@ -85,7 +102,8 @@ module.exports = function(app, passport, mongoose) {
     //creates the user's folder in the server and adds a user configuration file
     app.get('/setupuser', function(req, res) {
         var userConfig = new userConfigModel({
-            username: req.user.local.email,
+            username: '',
+            email: req.user.local.email,
             boxes_created: [],
             boxes_collaborated: []
         });
@@ -99,7 +117,26 @@ module.exports = function(app, passport, mongoose) {
                 res.redirect('/');
             }
         });       
-    })
+    });
+
+    app.post('/setupusername', function(req, res) {
+        //update user configuration to update the username
+        userConfigModel.findOneAndUpdate(
+            {email: req.user.local.email},
+            {username: req.body.username},
+            {upsert: true},
+            function (err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log("Successfully updated user configuration in the database."); //debug
+                    console.log(data); //debug
+                    res.json(data);
+                }
+            }
+        );
+    });
 
     //processes the receive box request
     app.post('/receivebox', isLoggedIn, function (req, res, next) {
@@ -107,7 +144,7 @@ module.exports = function(app, passport, mongoose) {
         var fileFilter = req.body.files;
         var regionFilter = req.body.regions;
         userConfigModel.findOne(
-            {username: req.user.local.email},
+            {email: req.user.local.email},
             function (err, data) {
                 if (err) {
                     console.error(err);
@@ -168,7 +205,7 @@ module.exports = function(app, passport, mongoose) {
 
                                 //update user configuration to add this box as a box collaborated
                                 userConfigModel.findOneAndUpdate(
-                                    {username: req.user.local.email},
+                                    {email: req.user.local.email},
                                     {$push: {boxes_collaborated: boxes_available[j].boxid}},
                                     {upsert: true},
                                     function (err, data) {
@@ -218,20 +255,7 @@ module.exports = function(app, passport, mongoose) {
     app.post('/uploadgoodies', isLoggedIn, function(req, res) {
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
-        params = {
-            Bucket: bucketBox + "/items",
-            Key: thisFile.name,
-            Body: thisFile.buffer
-        }
-        //console.log(req);
-        //console.log(req.files[thisFile.originalname]);
-        //console.log(req.files['thumbnail']);
-        console.log(thisFile);
-        thumbnailParams = {
-            Bucket: bucketBox + "/Thumbnails",
-            Key: thisFile.name+"-t.tbl",
-            Body: req.files[thisFile.originalname].buffer
-        }
+        
 
         console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
@@ -241,6 +265,15 @@ module.exports = function(app, passport, mongoose) {
                 }
                 else{
 
+
+                    params = {
+                        Bucket: bucketBox + "/items",
+                        Key: thisFile.name,
+                        Body: thisFile.buffer
+                    }
+
+
+                    console.log("name: "+thisFile.name);
                     console.log(data); //debug
                     var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
                     //Does not pass upload if number of uploaded items total will exceed box capacity
@@ -248,8 +281,14 @@ module.exports = function(app, passport, mongoose) {
                     if(newcount<=data.capacity){
                             s3.upload(params,function(err,data){
                                 if (!err) {
-                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name); //debug
-                                    s3.upload(thumbnailParams,function(err,data){
+                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
+
+                                           thumbnailParams = {
+                                              Bucket: bucketBox + "/Thumbnails",
+                                             Key: thisFile.name+"-t.tbl",
+                                             Body: req.files[thisFile.originalname].buffer
+                                             }
+                                    s3.upload(thumbnailParams,function(err,data1){
                                     if (!err) {
                                         console.log("Successfully uploaded thumbnail to box "+ req.body.boxname + " with name "+ req.files[thisFile.originalname].name);//debug
                                     }
@@ -376,7 +415,7 @@ module.exports = function(app, passport, mongoose) {
 
                                 //update user configuration to add this box as a box created
                                 userConfigModel.findOneAndUpdate(
-                                    {username: req.user.local.email},
+                                    {email: req.user.local.email},
                                     {$push: {boxes_created: boxId}},
                                     {upsert: true},
                                     function (err, data) {
@@ -438,7 +477,7 @@ module.exports = function(app, passport, mongoose) {
     //retrieve user configuration from the database
     app.get('/getuserconfig', isLoggedIn, function(req, res) {
         userConfigModel.findOne(
-            {username: req.user.local.email},
+            {email: req.user.local.email},
             function (err, data) {
                 if (err) {
                     console.error(err);

@@ -35,6 +35,20 @@ $(function () {
     );
 
     //For Thumbnails
+
+            function getThumbnail(original, scale) {
+              var canvas = document.createElement("canvas");
+
+              canvas.width = original.width * scale;
+              canvas.height = original.height * scale;
+
+              canvas.getContext("2d").drawImage
+                (original, 0, 0, canvas.width, canvas.height);
+             console.log("canvas:");
+             console.log(canvas);
+            return canvas;
+}
+
         function dataURItoBlob(dataURI) {
             // convert base64/URLEncoded data component to raw binary data held in a string
             var byteString;
@@ -78,6 +92,22 @@ $(function () {
                 console.log(data.files[i]);
                 console.log(data.files[i].preview);//debug
                 var canvas = data.files[i].preview;
+                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
+                var dataURI = canvas.toDataURL("image/jpeg",0.5);
+                var blob = dataURItoBlob(dataURI);
+                console.log(blob);//debug
+                //thumbnailArray.push({"blob":blob,"name":data.files[i].name});
+                data.formData = data.formData.concat({name: data.files[i].name, value: blob});
+            }
+            else if(data.files[i].type.indexOf("video")>-1){
+                console.log("Video: ")
+                console.log(data.files[i]);
+                console.log(data.files[i].preview);//debug
+                var video = data.files[i].preview;
+                video.setAttribute("width",'500');
+                video.setAttribute("height",'450');
+                console.log("Width: " + video.width);
+                var canvas = getThumbnail(video,1);
                 console.log(canvas.toDataURL("image/jpeg",0.5));//debug
                 var dataURI = canvas.toDataURL("image/jpeg",0.5);
                 var blob = dataURItoBlob(dataURI);

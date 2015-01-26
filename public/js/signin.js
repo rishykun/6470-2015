@@ -44,7 +44,7 @@
 						$growl.box("Success", "Logged in", {
 							class: "success"
 						}).open();
-						UserProfile.loadProfile(true); //try to load the userprofile
+						UserProfile.loadProfile(true, 'home'); //try to load the userprofile
 					})
 					.error (function() {
 						$("#signinForm :input").prop("disabled", false); //renable form

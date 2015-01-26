@@ -95,12 +95,14 @@
 		var userProfile = {};
 		return {
 			//gets the user profile from the server if properly authenticated already
-			loadProfile: function(alert) {
+			loadProfile: function(alert, toState) {
 				$http.get('/profile')
 				.success (function(data) {
 					if (data !== false) {
 						//if the user is logged in
-						Modal.closeModal(); //close the current modal
+						if (Modal.checkOpenModal()) {
+							Modal.closeModal(); //close the current modal
+						}
 						loggedIn = true; //set our login status to be true
 						userProfile = data; //load data into the user profile
 						//debug note: user/email is data.local.email
@@ -109,7 +111,7 @@
 								class: "primary"
 							}).open();
 						}
-						$state.go('home');
+						$state.go(toState); //redirects to a state after success loading user profile
 					}
 					//don't notify of an empty profile
 					//because this function is called immediately upon loading the website to check if the user is already logged in

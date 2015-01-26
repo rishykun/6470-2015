@@ -44,6 +44,26 @@
 				requireLogout: true
 			}
 		})
+		.state( 'setusername', {
+			url: '/setusername',
+			onEnter: function($modal, Modal) {
+				if (Modal.checkOpenModal()) {
+					Modal.closeModal(); //closes any modal that's already open
+					//this can happen if the state switches directly from signup to signin or vice-versa
+				}
+				Modal.setModal("#signDialog", $modal);
+				Modal.openModal({
+					windowTemplateUrl: "signWindowTemplate",
+					templateUrl: "../tpl/signup/setupuser.tpl.html",
+					backdropClass: "fullsize", //workaround for backdrop display glitch
+					controller: "setupuserController"
+				});
+			},
+			data: {
+				requireLogin: true,
+				requireLogout: false
+			}
+		})
 		//capture state from login or logout
 		.state( 'home', {
 			url: '/',

@@ -4,7 +4,7 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'signupController', function signupController ($scope, $http, $window, $state, $growl, UserProfile) {
+	app.controller ( 'signupController', function signupController ($scope, $http, $window, $state, $modalInstance, $growl, UserProfile) {
 		$scope.formData = {}; //default empty form object to be populated
 		$scope.signModalTitle = "Sign Up"; //sets the title of the signin/signup modal window
 
@@ -44,7 +44,7 @@
 						$growl.box("Success", "Signed up", {
 							class: "success"
 						}).open();
-						$scope.userProfile.loadProfile(true); //try to load the userprofile
+						$scope.userProfile.loadProfile(true, 'setusername'); //try to load the userprofile
 					})
 					.error (function() {
 						$("#signupForm :input").prop("disabled", false); //renable form

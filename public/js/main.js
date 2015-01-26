@@ -2,29 +2,18 @@
 	var app = angular.module( "main", [
 		'main.signin',
 		'main.signup',
+		'main.setupuser',
 		'main.create',
 		'main.receive',
 		'main.upload',
 		'main.profile',
 		'main.gallery',
-		'main.modal',
 		'angular-loading-bar',
 		'ngAnimate',
 		'ui.growl',
 		'ui.router',
 		'ui.bootstrap'
 	]);
-	//TODO DEBUG
-	/*
-	app.directive('resize', function($window) {
-		return {
-			restrict: 'A',
-			link: function(scope, element) {
-				//console.log(element.css('height'));
-				//console.log(element[0].offsetHeight);
-			}
-		};
-	});*/
 
 	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "UserProfile", "Box", "BoxList", "Modal",
 		function($scope, $window, $http, $state, $growl, UserProfile, Box, BoxList, Modal) {
@@ -123,66 +112,7 @@
 			});
 		};
 
-		UserProfile.loadProfile(true); //on page load, check if already logged in on the server
+		UserProfile.loadProfile(true, 'home'); //on page load, check if already logged in on the server
 		//if so, then load the user data into the user profile, which is the userObject object
-
-		
-		//captures the height from $window using jquery
-		var height = $(window).height();
-		var buttonHeight = $('#createBtn').height();
-
-		//vertically aligns the Create and Receive buttons in the center
-		$('#buttonGroup').css("padding-top", (height-buttonHeight)/2);
-
-
-
-		/*
-		//same for create modal
-		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
-		$("#createDialog").css("margin-left", "auto");
-
-		//quick hacky way to find dynamic position
-		$('.modal').css("display","block");
-		var createModalHeight = $('#createDialog').height();
-		var loginModalHeight = $('#loginDialog').height();
-		$('.modal').css("display","none");
-
-		//resize signup/login modal upon click
-		$('#loginButton').click(function() {
-			$scope.signModalInitResize();
-		});
-		$('#signupButton').click(function() {
-			$scope.signModalInitResize();
-		});
-
-		//DEBUG TODO CURRENTLY BROKEN
-		$scope.signModalInitResize = function () {
-			//quick hacky way to find dynamic position
-			var cheight = $(window).height();
-			var cdisplay = $('.modal').css("display");
-			$('#signModal').css("display","block");
-			var signModalHeight = $('#signDialog').height();
-			$('#signModal').css("display",cdisplay);
-
-			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");
-		};
-		*/
-
-
-		//resize function: on resize, always keep elements centered
-		$(window).resize(function() {
-			var newHeight = $(window).height();
-			$('#buttonGroup').css("padding-top", newHeight / 2);
-
-			/*
-			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
-			$("#createDialog").css("margin-left", "auto");
-
-			//resize the login/signup modal
-			var signModalHeight = $('#signDialog').height();
-			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");*/
-		});
 	}]);
 })();
