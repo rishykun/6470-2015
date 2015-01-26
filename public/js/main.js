@@ -115,7 +115,6 @@
 		UserProfile.loadProfile(true); //on page load, check if already logged in on the server
 		//if so, then load the user data into the user profile, which is the userObject object
 
-		
 		//captures the height from $window using jquery
 		var height = $(window).height();
 		var buttonHeight = $('#createBtn').height();
