@@ -106,7 +106,7 @@ $(function () {
                 var video = data.files[i].preview;
                 video.setAttribute("width",'500');
                 video.setAttribute("height",'450');
-                console.log("Width: " + video.width);
+                console.log("Duration: " + video.duration);
                 var canvas = getThumbnail(video,1);
                 console.log(canvas.toDataURL("image/jpeg",0.5));//debug
                 var dataURI = canvas.toDataURL("image/jpeg",0.5);
