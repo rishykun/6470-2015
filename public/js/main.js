@@ -7,7 +7,6 @@
 		'main.upload',
 		'main.profile',
 		'main.gallery',
-		'main.modal',
 		'angular-loading-bar',
 		'ngAnimate',
 		'ui.growl',
@@ -114,17 +113,5 @@
 
 		UserProfile.loadProfile(true); //on page load, check if already logged in on the server
 		//if so, then load the user data into the user profile, which is the userObject object
-
-		//captures the height from $window using jquery
-		var height = $(window).height();
-		var buttonHeight = $('#createBtn').height();
-		//vertically aligns the Create and Receive buttons in the center
-		$('#buttonGroup').css("padding-top", (height-buttonHeight)/2);
-
-		//resize function: on resize, always keep elements centered
-		$(window).resize(function() {
-			var newHeight = $(window).height();
-			$('#buttonGroup').css("padding-top", newHeight / 2);
-		});
 	}]);
 })();
