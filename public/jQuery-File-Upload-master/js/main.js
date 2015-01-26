@@ -45,11 +45,7 @@ $(function () {
         var boxnameobj = $(this).serializeArray().filter(function(obj) {if(obj.name === 'boxname') return true;});
         data.formData = inputs.serializeArray();
         data.formData = data.formData.concat(boxnameobj);
-        console.log("Before custom");
-        console.log(data.formData);
         data.formData = data.formData.concat({name: "numuploads", value: data.originalFiles.length});
-        console.log("After Custom");
-        console.log(data.formData);
     });
 
     if (window.location.hostname === 'blueimp.github.io') {
