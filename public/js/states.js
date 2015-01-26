@@ -99,11 +99,22 @@
 		})
 		.state( 'receive', {
 			url: '/receive',
+			onEnter: function($modal, Modal) {
+				if (Modal.checkOpenModal()) {
+					Modal.closeModal();
+				}
+				Modal.setModal("#signDialog", $modal);
+				Modal.openModal({
+					windowTemplateUrl: "signWindowTemplate", //not a typo, signWindowTemplate works for create modal
+					templateUrl: "../tpl/receive/receive.tpl.html",
+					backdropClass: "fullsize", //workaround for backdrop display glitch
+					controller: "receiveController"
+				});
+			},
 			data: {
 				requireLogin: true,
 				requireLogout: false
-			},
-			controller: "receiveController"
+			}
 		})
 		.state( 'profileview', {
 			url: '/profile',
