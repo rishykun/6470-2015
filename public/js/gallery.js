@@ -33,6 +33,22 @@ var adjustDisplay = function(ratio) {
 	}
 };
 
+var getType = function(s) {
+	if (s.substring(0,5) === "image") {
+		return "Photo";
+	}
+	else if (s.substring(0,5) === "video"){
+		return "Video";
+	}
+	else if (s.substring(s.length-3,s.length) === "pdf"){
+		return "Pdf";
+	}
+	else{
+		return "Audio";
+	}
+
+};
+
 (function() {
 	var app = angular.module( "main.gallery", ['ngSanitize', 
 		'com.2fdevs.videogular', 
@@ -41,8 +57,9 @@ var adjustDisplay = function(ratio) {
 		"com.2fdevs.videogular.plugins.poster",
 		'ui.router']);
 
-	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http){
-		//$scope.box = Box;
+	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http,Box,UserProfile){
+		$scope.box = Box;
+		$scope.UserProfile = UserProfile;
 		//$scope.video_sources=[];
 		//$scope.audio_sources=[];
 		$scope.theme="videogular/videogular-themes/videogular.css";
@@ -62,66 +79,92 @@ var adjustDisplay = function(ratio) {
 		$scope.gallerydata={};
 		$scope.gallery=[];
 
+		console.log($scope.UserProfile.getProfile());
+		
+
 		boxNameObj = {
-			//boxname: $scope.box.getCurrentBoxID()
-			boxname: "6071e388-544d-4861-a877-e5107bed050b"
+			boxname: $scope.box.getCurrentBoxID()
 		};
+
+		console.log("boxname");
 		console.log(boxNameObj.boxname);
 		boxConfig = {boxname: boxNameObj.boxname+"/config"};
-		boxThumb = {boxname: boxNameObj.boxname+"/thumbnails"};
+		boxThumb = {boxname: boxNameObj.boxname+"/Thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/items"};
-		console.log(boxItems.boxname);
-		$http.post('/getbox', boxItems)
-		.success (function(data) {
+
+		$http.post('/getboxconfig', {boxid: boxNameObj.boxname})
+		.success (function(data){
+			console.log(data);
+			$scope.boxComplete = data.completed;
+			console.log($scope.boxComplete);
+			$scope.boxCollabs = data.collaborators;
+			console.log($scope.boxCollabs);
+			$scope.boxOwner = data.owner;
+			console.log($scope.boxOwner);
+			$scope.boxName = data.boxname;
+			console.log($scope.boxName);
+			
+			$http.post('/getbox', boxItems)
+			.success (function(data) {
 			// console.log("This is data");
-			// console.log(data);
-			dlength = data.length;
-			for (i=1; i < data.length; i++){
-				console.log(data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length));
-				$http.post('/getitemconfig', {/*'uri': '6.470',*/ 'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
-				.success (function(data) {
-					// console.log("This is data");
-					// console.log(data);
-					console.log(data);
-					//data = JSON.parse(data);
-					key = data.key;
-					//"num": Object.keys($scope.gallerydata).length+1,
-					$scope.gallerydata[key]={"Type": data.Type, "Title": data.Title, 
-						"Author": data.Author, "Description":data.Description, "Thumbs":data.Thumbs,"Comments":data.Comments};
-					$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
-					.success(function(data){
-						data = JSON.parse(data);
-						key = data.key.substring(0, data.key.lastIndexOf('-t.jpg'));
-						$scope.gallerydata[key].Thumbnail = data.uri;
-						//console.log(Object.keys($scope.gallerydata).length);
-						//console.log(dlength-1);
-						if (Object.keys($scope.gallerydata).length === (dlength-1)) {
-							//console.log("went through");
-							var c = 0;
-							for (var key in $scope.gallerydata) {
-								//console.log("went through through");
-								if ($scope.gallerydata.hasOwnProperty(key)) {
-									//console.log("w t t t t ");
-									$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));
-									c++;
+				//console.log(data);
+				dlength = data.length;
+				for (i=0; i < data.length; i++){
+					//console.log(data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length));
+					//console.log(i);
+					$http.post('/getitemconfig', {/*'uri': '6.470',*/ 'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
+					.success (function(data) {
+						//data = JSON.parse(data);
+						key = data.key;
+						//console.log(key);
+						//console.log(data);
+						//"num": Object.keys($scope.gallerydata).length+1,
+						$scope.gallery[key] = false;
+						if (($scope.boxComplete = false) || ($scope.boxComplete = true && (data.author === $scope.UserProfile.getProfile().local.email))) {
+							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
+							"Author": data.author, "Description":data.description, "Thumbs":0,"Comments":[]};
+							console.log($scope.gallerydata[key]);
+							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
+							.success(function(data){
+								data = JSON.parse(data);
+								key = data.key.substring(0, data.key.lastIndexOf('-t.jpg'));
+								$scope.gallerydata[key].Thumbnail = data.uri;
+								//console.log(Object.keys($scope.gallerydata).length);
+								//console.log(dlength-1);
+								if (Object.keys($scope.gallerydata).length === (dlength)) {
+									//console.log("went through");
+									var c = 0;
+									for (var key in $scope.gallerydata) {
+										//console.log("went through through");
+										if ($scope.gallerydata.hasOwnProperty(key) && $scope.gallerydata[key]!== false) {
+											//console.log("w t t t t ");
+											$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));
+											c++;
+										}
+									}
+									console.log($scope.gallery);
+									
 								}
-							}
-							console.log($scope.gallery);
+								//console.log($scope.gallerydata);
+							})
+							.error (function(){
+								console.log("Error getting thumbnail");
+							});
 						}
-						//console.log($scope.gallerydata);
 					})
-					.error (function(){
-						console.log("Error getting thumbnail");
+					.error (function() {
+						console.log("Error getting config file");
 					});
-				})
-				.error (function() {
-					console.log("Error getting config file");
-				});
-			}
+				}
+			})
+			.error (function() {
+				console.log("Error getting configuration!");
+			});
 		})
-		.error (function() {
-			console.log("Error getting configuration!");
+		.error(function() {
+			console.log("Error getting box config");
 		});
+
 
 		// $http.post('/getbox', boxThumb)
 		// .success(function(data) {
@@ -144,15 +187,15 @@ var adjustDisplay = function(ratio) {
 			// if (num === 0) {
 			// 	num = $scope.gallery.length
 			// }
-			$http.post('/getbox', boxItems)
-			.success(function(data) {
-				console.log('data');
-				console.log(data);
-				console.log('here');
-				console.log('uri');
-				console.log(boxItems.boxname);
-				console.log('key');
-				console.log($scope.gallery[num].key);
+			// $http.post('/getbox', boxItems)
+			// .success(function(data) {
+			// 	console.log('data');
+			// 	console.log(data);
+			// 	console.log('here');
+			// 	console.log('uri');
+			// 	console.log(boxItems.boxname);
+			// 	console.log('key');
+			// 	console.log($scope.gallery[num].key);
 				$http.post('/getitem', {'uri': '6.470/Boxes/'+boxItems.boxname, 'key': $scope.gallery[num].key})
 				.success (function(data) {
 					console.log('more data');
@@ -171,10 +214,10 @@ var adjustDisplay = function(ratio) {
 				.error (function() {
 					console.log("Error getting pic");
 				});
-			})
-			.error (function(){
-				console.log("Error getting box_pic!");
-			});
+			// })
+			// .error (function(){
+			// 	console.log("Error getting box_pic!");
+			// });
 		};
 
 		$scope.num = -1;

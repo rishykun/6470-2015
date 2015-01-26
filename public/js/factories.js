@@ -164,6 +164,7 @@
 						}).open();
 					});
 				}
+
 			},
 			setCurrentBoxContents:function(b){
 				currentBoxContents = b;

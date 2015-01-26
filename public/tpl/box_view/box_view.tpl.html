@@ -1,6 +1,6 @@
 <div class="modal-body" id="boxModalBod">
 	<div class="title" align="center" ng-show="num===-1">
-		<h4> NAME OF BOX </h4>
+		<h4> {{boxName}} </h4>
 	</div>
 	<div class="gallery" ng-show="num===-1">
 		<div class="image-wrapper hvr-glow-blue" ng-repeat="image in gallery track by $index" style="margin:5px">
@@ -61,9 +61,12 @@
 		</div>
 		<div class ="image-text">
 			<div class="buttons">
-				<img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="genUrl((gallery.length+num-2)%(gallery.length));vidCss(gallery[(gallery.length+num-2)%(gallery.length)].Type);genPdf(gallery[(gallery.length+num-2)%(gallery.length)].Type);setType(gallery[(gallery.length+num-2)%(gallery.length)].Type);setNum((num-1)%(gallery.length));pauseVid()"/>
-				<img class = "return hvr-grow" ng-src="./icons/return.png" ng-click="setNum(-1);pauseVid()"/>
-				<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="genUrl((num)%(gallery.length));setType(gallery[(num)%(gallery.length)].Type);vidCss(gallery[(num)%(gallery.length)].Type);genPdf(gallery[(num)%(gallery.length)].Type);setNum((num+1)%(gallery.length));pauseVid()"/>
+				<!-- <img class = "prev-img hvr-grow" ng-src="./icons/left-arrow.png" ng-click="genUrl((gallery.length+num-2)%(gallery.length));vidCss(gallery[(gallery.length+num-2)%(gallery.length)].Type);genPdf(gallery[(gallery.length+num-2)%(gallery.length)].Type);setType(gallery[(gallery.length+num-2)%(gallery.length)].Type);setNum((num-1)%(gallery.length));pauseVid()"/> -->
+				<i class="fa fa-angle-left fa-3x prev-img prev-animate"  ng-click="genUrl((gallery.length+num-2)%(gallery.length));vidCss(gallery[(gallery.length+num-2)%(gallery.length)].Type);genPdf(gallery[(gallery.length+num-2)%(gallery.length)].Type);setType(gallery[(gallery.length+num-2)%(gallery.length)].Type);setNum((num-1)%(gallery.length));pauseVid()"></i>
+				<i class ="fa fa-th-large fa-3x return" ng-click="setNum(-1);pauseVid()"/>
+				<i class="fa fa-angle-right fa-3x next-img next-animate" ng-click="genUrl((num)%(gallery.length));setType(gallery[(num)%(gallery.length)].Type);vidCss(gallery[(num)%(gallery.length)].Type);genPdf(gallery[(num)%(gallery.length)].Type);setNum((num+1)%(gallery.length));pauseVid()"></i>
+				<!-- <img class = "return hvr-grow" ng-src="./icons/return.png" ng-click="setNum(-1);pauseVid()"/>
+				<img class = "next-img hvr-grow" ng-src="./icons/right-arrow.png" ng-click="genUrl((num)%(gallery.length));setType(gallery[(num)%(gallery.length)].Type);vidCss(gallery[(num)%(gallery.length)].Type);genPdf(gallery[(num)%(gallery.length)].Type);setNum((num+1)%(gallery.length));pauseVid()"/> -->
 			</div>
 			<div class="profile-wrapper">
 				<img class="profile" src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p160x160/10353637_1047631608585894_7807827911058557415_n.jpg?oh=df17ffe6942fdb5dbe14412bf894a5ea&oe=552EA325&__gda__=1428938202_8b4c55c17cbd53b4a35a45a5138bcd77"/>
