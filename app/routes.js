@@ -168,7 +168,23 @@ module.exports = function(app, passport, mongoose) {
                                         else {
                                             console.log("Successfully updated user configuration in the database."); //debug
                                             console.log(data); //debug
-                                            res.json(boxes_available[j]);
+
+                                            //update user configuration to add this box as a box collaborated
+                                            boxConfigModel.findOneAndUpdate(
+                                                {boxid: boxes_available[j].boxid},
+                                                {$push: {collaborators: req.user.local.email}},
+                                                {upsert: true},
+                                                function (err, data) {
+                                                    if (err) {
+                                                        console.error(err);
+                                                    }
+                                                    else {
+                                                        console.log("Successfully updated box configuration in the database."); //debug
+                                                        console.log(data); //debug
+                                                        res.json(boxes_available[j]);
+                                                    }
+                                                }
+                                            );
                                         }
                                     }
                                 );
@@ -197,16 +213,19 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
-        console.log("Get box config for: "+ req.body.boxname);
+        console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
             function(err,data){
                 if(err){
                     console.error(err);
                 }
                 else{
-                    var itemsLeft = data.capacity-data.itemcount;
+
+                    console.log(data); //debug
+                    var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
                     //Does not pass upload if number of uploaded items total will exceed box capacity
-                    if((data.itemcount+req.body.numuploads)<data.capacity){
+                    var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
+                    if(newcount<=data.capacity){
                             s3.upload(params,function(err,data){
                                 if (!err) {
                                     console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug

@@ -79,31 +79,31 @@ var getType = function(s) {
 		$scope.gallerydata={};
 		$scope.gallery=[];
 
-		console.log($scope.UserProfile.getProfile());
+		//console.log($scope.UserProfile.getProfile());
 		
 
 		boxNameObj = {
 			boxname: $scope.box.getCurrentBoxID()
 		};
 
-		console.log("boxname");
-		console.log(boxNameObj.boxname);
+		// console.log("boxname");
+		// console.log(boxNameObj.boxname);
 		boxConfig = {boxname: boxNameObj.boxname+"/config"};
 		boxThumb = {boxname: boxNameObj.boxname+"/Thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/items"};
 
 		$http.post('/getboxconfig', {boxid: boxNameObj.boxname})
 		.success (function(data){
-			console.log(data);
+			//console.log(data);
 			$scope.boxComplete = data.completed;
-			console.log($scope.boxComplete);
+			//console.log($scope.boxComplete);
 			$scope.boxCollabs = data.collaborators;
+			console.log("collab");
 			console.log($scope.boxCollabs);
 			$scope.boxOwner = data.owner;
-			console.log($scope.boxOwner);
+			//console.log($scope.boxOwner);
 			$scope.boxName = data.boxname;
-			console.log($scope.boxName);
-			
+			//console.log($scope.boxName);
 			$http.post('/getbox', boxItems)
 			.success (function(data) {
 			// console.log("This is data");
@@ -119,11 +119,21 @@ var getType = function(s) {
 						//console.log(key);
 						//console.log(data);
 						//"num": Object.keys($scope.gallerydata).length+1,
-						$scope.gallery[key] = false;
-						if (($scope.boxComplete = false) || ($scope.boxComplete = true && (data.author === $scope.UserProfile.getProfile().local.email))) {
+						$scope.gallerydata[key] = false;
+						console.log($scope.boxComplete);
+						console.log(data.author);
+						console.log($scope.UserProfile.getProfile().local.email);
+						console.log($scope.boxCollabs);
+						console.log((($scope.boxComplete === "true") || (($scope.boxComplete === "false") && ((data.author === $scope.UserProfile.getProfile().local.email) || 
+							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 ))));
+						debugger;
+						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.author === $scope.UserProfile.getProfile().local.email) /*|| 
+							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 */))) {
+
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Description":data.description, "Thumbs":0,"Comments":[]};
-							console.log($scope.gallerydata[key]);
+							//console.log($scope.gallerydata[key]);
+							debugger;	
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
 							.success(function(data){
 								data = JSON.parse(data);
@@ -142,7 +152,7 @@ var getType = function(s) {
 											c++;
 										}
 									}
-									console.log($scope.gallery);
+									//console.log($scope.gallery);
 									
 								}
 								//console.log($scope.gallerydata);
