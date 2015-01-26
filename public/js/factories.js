@@ -95,7 +95,7 @@
 		var userProfile = {};
 		return {
 			//gets the user profile from the server if properly authenticated already
-			loadProfile: function(alert) {
+			loadProfile: function(alert, toState) {
 				$http.get('/profile')
 				.success (function(data) {
 					if (data !== false) {
@@ -111,7 +111,7 @@
 								class: "primary"
 							}).open();
 						}
-						$state.go('home');
+						$state.go(toState); //redirects to a state after success loading user profile
 					}
 					//don't notify of an empty profile
 					//because this function is called immediately upon loading the website to check if the user is already logged in
