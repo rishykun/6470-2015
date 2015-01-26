@@ -82,38 +82,21 @@ module.exports = function(app, passport, mongoose) {
     //only gets called when a user signs up successfully
     //creates the user's folder in the server and adds a user configuration file
     app.get('/setupuser', function(req, res) {
-        bucketUser = "6.470/Users/" + req.user.local.email + "/";
-        s3.headBucket({Bucket:bucketUser}, function(err,data){
-            if(err){
-                s3.createBucket({Bucket:bucketUser},function(err,data){
-                    if (err) {       
-                        console.error(err);
-                    }
-                    else {
-                        console.log("Successfully created user folder.");
-
-                        //create user configuration in the database
-                        var userConfig = new userConfigModel({
-                            username : req.user.local.email,
-                            boxes_created: [],
-                            boxes_collaborated : []
-                        });
-                        userConfig.save(function(err) {
-                            if (err) {
-                                console.error(err);
-                            }
-                            else {
-                                console.log("Successfully registered user configuration in the database."); //debug
-                                console.log(userConfig); //debug
-                                res.redirect('/');
-                            }
-                        });
-                    }
-                });
-             } else {
-                 console.error("User folder (bucket) already exists!");
-             }
+        var userConfig = new userConfigModel({
+            username: req.user.local.email,
+            boxes_created: [],
+            boxes_collaborated: []
         });
+        userConfig.save(function(err) {
+            if (err) {
+                console.error(err);
+            }
+            else {
+                console.log("Successfully registered user configuration in the database."); //debug
+                console.log(userConfig); //debug
+                res.redirect('/');
+            }
+        });       
     })
 
     //processes the receive box request
@@ -145,19 +128,22 @@ module.exports = function(app, passport, mongoose) {
                             console.log(boxes_list); //debug
 
                             //exclude the boxes that the user has already created/collaborated
+                            //or are already complete
                             function excludeBoxes(value, index, array) {
-                                var found = false;
+                                if (value.completed === "true") {
+                                    return false;
+                                }
                                 for (i in boxes_created) {
                                     if (value.boxid === boxes_created[i]) {
-                                        found = true;
+                                        return false;
                                     }
                                 }
                                 for (i in boxes_collaborated) {
                                     if (value.boxid === boxes_collaborated[i]) {
-                                        found = true;
+                                        return false;
                                     }
                                 }
-                                return !found;
+                                return true; //if box is incomplete and it's not a box that the user has created or collaborated, return true
                             }
                             var boxes_available = boxes_list.filter(excludeBoxes);
                             console.log("\nboxes available"); //debug
@@ -169,7 +155,23 @@ module.exports = function(app, passport, mongoose) {
                                 var j = Math.floor((Math.random() * boxes_available.length));
                                 console.log("box returned, index: " + j); //debug
                                 console.log(boxes_available[j]); //debug
-                                res.json(boxes_available[j]);
+
+                                //update user configuration to add this box as a box collaborated
+                                userConfigModel.findOneAndUpdate(
+                                    {username: req.user.local.email},
+                                    {$push: {boxes_collaborated: boxes_available[j].boxid}},
+                                    {upsert: true},
+                                    function (err, data) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        else {
+                                            console.log("Successfully updated user configuration in the database."); //debug
+                                            console.log(data); //debug
+                                            res.json(boxes_available[j]);
+                                        }
+                                    }
+                                );
                             }
                             else {
                                 next("\nNo available boxes.");
@@ -188,7 +190,6 @@ module.exports = function(app, passport, mongoose) {
 
     // processes the upload
     app.post('/uploadgoodies', isLoggedIn, function(req, res) {
-        console.log(req); //debug
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         params = {
@@ -196,84 +197,104 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
-        console.log("HERE"); //debug
-        console.log(thisFile.size);
-        var maxUploadSize = 10000000;
-
-        if(thisFile.size < maxUploadSize) {
-            s3.upload(params,function(err,data){
-                if(!err){
-                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
-                    //create item configuration in the database
-                    var itemConfig = new itemConfigModel({
-                        boxid: req.body.boxname,
-                        key: thisFile.name,
-                        originalfilename: thisFile.originalfilename,
-                        title: req.body.title,
-                        author : req.user.local.email,
-                        description: req.body.title || "",
-                        filetype: thisFile.mimetype
-                    });
-                    itemConfig.save(function(err) {
-                        if (err) {
-                            console.error(err);
-                        }
-                        else {
-                            console.log("Successfully registered item configuration in the database."); //debug
-                            console.log(itemConfig); //debug
-
-                            //update box configuration
-                            boxConfigModel.findOneAndUpdate(
-                                {boxid: req.body.boxname},
-                                {$inc: {itemcount: 1}},
-                                function (err, data) {
-                                    if (err) {
-                                        console.error(err);
-                                    }
-                                    else {
-                                        if(data.itemcount == data.capacity){
-                                            data.completed = "true";
-                                            data.save();
-                                            console.log("Setting upload capacity to true");
-                                        }
-                                        console.log("Successfully updated box configuration in the database."); //debug
-                                        console.log(data); //debug
-
-                                        res.writeHead(200, {
-                                            'Content-Type': req.headers.accept
-                                                .indexOf('application/json') !== -1 ?
-                                                        'application/json' : 'text/plain'
-                                        });
-                                        response = {
-                                            "files": [
-                                                {
-                                                    "name": thisFile.name,
-                                                    "size": thisFile.size,
-                                                    "url": "http://localhost:3000",
-                                                    "thumbnailUrl": "http://localhost:3000",
-                                                    "deleteUrl": "http://localhost:3000",
-                                                    "deleteType": "DELETE"
-                                                }
-                                            ]
-                                        };
-                                        res.end(JSON.stringify(response));
-                                    }
-                                }
-                            );
-                        }
-                    });
+        boxConfigModel.findOne({"boxid": req.body.boxname},
+            function(err,data){
+                if(err){
+                    console.error(err);
                 }
                 else{
-                    console.error(err);
-                    res.redirect('/fail');
+                    console.log("itemcount " +data.itemcount);
+                    console.log("capacity "+ data.capacity);
+                    console.log("Request");
+                    console.log(req);
+                    console.log("NumUploads");
+                    console.log(req.body.numuploads);
+                    var itemsLeft = data.capacity-data.itemcount;
+                    //Does not pass upload if number of uploaded items total will exceed box capacity
+                    if(data.itemcount+req.body.numuploads<data.capacity){
+                            s3.upload(params,function(err,data){
+                                if (!err) {
+                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
+                                    //create item configuration in the database
+                                    var itemConfig = new itemConfigModel({
+                                        boxid: req.body.boxname,
+                                        key: thisFile.name,
+                                        title: req.body.title,
+                                        author : req.user.local.email,
+                                        description: req.body.description || "",
+                                        filetype: thisFile.mimetype
+                                    });
+                                    itemConfig.save(function(err) {
+                                        if (err) {
+                                            console.error(err);
+                                        }
+                                        else {
+                                            console.log("Successfully registered item configuration in the database."); //debug
+                                            console.log(itemConfig); //debug
+
+                                            //update box configuration
+                                            boxConfigModel.findOneAndUpdate(
+                                                {boxid: req.body.boxname},
+                                                {$inc: {itemcount: 1}},
+                                                function (err, data) {
+                                                    if (err) {
+                                                        console.error(err);
+                                                    }
+                                                    else {
+                                                        //mark our boxes as complete once the number of items has reached the capacity
+                                                        if (data.itemcount == data.capacity){
+                                                            data.completed = "true";
+                                                            data.save();
+                                                            console.log("Setting upload capacity to true"); //debug
+                                                        }
+                                                        console.log("Successfully updated box configuration in the database."); //debug
+                                                        console.log(data); //debug
+
+                                                        res.writeHead(200, {
+                                                            'Content-Type': req.headers.accept
+                                                                .indexOf('application/json') !== -1 ?
+                                                                        'application/json' : 'text/plain'
+                                                        });
+                                                        response = {
+                                                            "files": [
+                                                                {
+                                                                    "name": thisFile.name,
+                                                                    "size": thisFile.size,
+                                                                    "url": "http://localhost:3000",
+                                                                    "thumbnailUrl": "http://localhost:3000",
+                                                                    "deleteUrl": "http://localhost:3000",
+                                                                    "deleteType": "DELETE"
+                                                                }
+                                                            ]
+                                                        };
+                                                        res.end(JSON.stringify(response));
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                                else{
+                                    console.error(err);
+                                    res.redirect('/fail');
+                                }
+                            });
+                    }
+                    else{
+                        res.json({"files": [
+                    {
+                        "name": thisFile.name,
+                        "size": thisFile.size,
+                        "error": "Upload Fail! "+req.body.numuploads+" uploads will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                    }
+                    ]});
+                        console.error("Exceeds box capacity!");
+                    }
+
                 }
-            });
-        }
-        else
-        {
-            //Handle the size to big by notifying front end?
-            res.redirect('/fail');
-        }
+            }
+        )
+        
     });
 
     // process the create form

@@ -18,7 +18,9 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: 'http://localhost:3000/uploadgoodies'
+        url: 'http://localhost:3000/uploadgoodies',
+        maxFileSize: 25000000,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|pdf|mp3)$/i
     });
 
     // Enable iframe cross-domain access via redirect option:
@@ -32,6 +34,7 @@ $(function () {
     );
 
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+        //console.log(data); //debug
         var inputs = data.context.find(':input');
         if (inputs.filter(function () {
                 return !this.value && $(this).prop('required');
@@ -42,6 +45,7 @@ $(function () {
         var boxnameobj = $(this).serializeArray().filter(function(obj) {if(obj.name === 'boxname') return true;});
         data.formData = inputs.serializeArray();
         data.formData = data.formData.concat(boxnameobj);
+        data.formData = data.formData.concat({name: "numuploads", value: data.originalFiles.length});
     });
 
     if (window.location.hostname === 'blueimp.github.io') {

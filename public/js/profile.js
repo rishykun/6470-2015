@@ -34,7 +34,7 @@
 					}).open();
 				});
 		}
-		$scope.openBoxGallery = function(id){
+		$scope.openBoxGallery = function(id,completed){
 			$scope.box.setCurrentBoxID(id, false);
 			$state.go('boxview');
 		};
