@@ -220,6 +220,7 @@ module.exports = function(app, passport, mongoose) {
                     console.error(err);
                 }
                 else{
+
                     console.log(data); //debug
                     var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
                     //Does not pass upload if number of uploaded items total will exceed box capacity
@@ -298,7 +299,7 @@ module.exports = function(app, passport, mongoose) {
                     {
                         "name": thisFile.name,
                         "size": thisFile.size,
-                        "error": "Upload Fail! "+req.body.numuploads+" uploads will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                        "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
                     }
                     ]});
                         console.error("Exceeds box capacity!");
