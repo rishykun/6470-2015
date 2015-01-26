@@ -137,7 +137,7 @@ var getType = function(s) {
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
 							.success(function(data){
 								data = JSON.parse(data);
-								key = data.key.substring(0, data.key.lastIndexOf('-t.jpg'));
+								key = data.key.substring(0, data.key.lastIndexOf('-t.tbl'));
 								$scope.gallerydata[key].Thumbnail = data.uri;
 								//console.log(Object.keys($scope.gallerydata).length);
 								//console.log(dlength-1);

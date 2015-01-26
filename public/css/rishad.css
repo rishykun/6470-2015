@@ -1,3 +1,12 @@
+.file-filter {
+  padding-top: 10px;
+}
+
+.file-filter p {
+  padding-right: 10px;
+  display:inline-block;
+}
+
 #boxModalDialog{
   width: 884px;
 }

@@ -6,7 +6,14 @@
 	<form id="createForm" class="form-create">
     	<label for="inputEmail" class="sr-only">Box Name</label>
     	<input type="text" id="inputEmail" class="form-control" ng-model="formData.boxname" placeholder="Enter the name of the box" required="" autofocus="">
+    	<div class="file-filter">
+    	<input type="checkbox" id="image-check" value="Images" ng-checked="true" ng-model="fileFilter.images"> <p>Images</p>
+    	<input type="checkbox" id="vid-check" value="Videos" ng-model="fileFilter.videos" ng-checked="true"> <p>Videos</p>
+    	<input type="checkbox" id="audio-check" value="Audio" ng-model="fileFilter.audio" ng-checked="true"> <p>Audio</p>
+    	<input type="checkbox" id="text-check" value="Text" ng-model="fileFilter.text" ng-checked="true"> <p>Text </p>
+    	</div>
+    	<div class="myDropdownCheckbox" ng-show="createDrop()"></div>
     	<label></label>
-    	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!userProfile.isLoggedIn()" ng-click="createBox()">Create box</button>
+    	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!userProfile.isLoggedIn()" ng-click="setFilter();createBox()">Create box</button>
   	</form>
 </div>
