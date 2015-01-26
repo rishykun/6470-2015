@@ -2,6 +2,7 @@
 	var app = angular.module( "main", [
 		'main.signin',
 		'main.signup',
+		'main.setupuser',
 		'main.create',
 		'main.receive',
 		'main.upload',
@@ -111,7 +112,7 @@
 			});
 		};
 
-		UserProfile.loadProfile(true); //on page load, check if already logged in on the server
+		UserProfile.loadProfile(true, 'home'); //on page load, check if already logged in on the server
 		//if so, then load the user data into the user profile, which is the userObject object
 	}]);
 })();

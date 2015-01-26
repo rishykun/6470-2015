@@ -10,6 +10,10 @@ would like to do future features
 - message system/ contact users
 - remember me
 
+SETUPUSER CONTROLLER
+closing modal should redirect to help if this is the first time
+	or settings if this isnt the first time
+
 PROFILE CONTROLLER
 have profile specially mark complete boxes to distinguish them from incomplete boxes
 

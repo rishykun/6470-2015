@@ -26,11 +26,11 @@
 		    	return;
 		    }
 		    //prevent user from getting to the upload page without a box id set (meaning user did not set a box to upload to)
-		    // else if (toState.url === '/upload' && Box.getCurrentBoxID() === '') {
-		    // 	$state.go('home');
-		    // 	e.preventDefault();
-		    // 	return;
-		    //}
+		    else if (toState.url === '/upload' && Box.getCurrentBoxID() === '') {
+		     	$state.go('home');
+		     	e.preventDefault();
+		     	return;
+		    }
 		});
 	});
 })();

@@ -44,7 +44,7 @@
 						$growl.box("Success", "Signed up", {
 							class: "success"
 						}).open();
-						$scope.userProfile.loadProfile(true); //try to load the userprofile
+						$scope.userProfile.loadProfile(true, 'setusername'); //try to load the userprofile
 					})
 					.error (function() {
 						$("#signupForm :input").prop("disabled", false); //renable form
