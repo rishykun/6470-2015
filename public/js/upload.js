@@ -16,7 +16,7 @@
 				|| s.currentTarget.className === "close") {
 				console.log($scope.box.getCurrentBoxID()); //debug
 				$scope.box.clearCurrentBox(); //reset current box
-				//$state.go('profileview');
+				$state.go('profileview');
 			}
 		};
 	});
