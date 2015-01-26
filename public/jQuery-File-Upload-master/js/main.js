@@ -20,7 +20,8 @@ $(function () {
         //xhrFields: {withCredentials: true},
         url: 'http://localhost:3000/uploadgoodies',
         maxFileSize: 25000000,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|pdf|mp3)$/i
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|pdf|mp3)$/i//,
+        //previewThumbnail: true
     });
 
     // Enable iframe cross-domain access via redirect option:
@@ -33,12 +34,30 @@ $(function () {
         )
     );
 
+    //For Thumbnails
+        function dataURItoBlob(dataURI) {
+            // convert base64/URLEncoded data component to raw binary data held in a string
+            var byteString;
+            if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                byteString = atob(dataURI.split(',')[1]);
+            else
+                byteString = unescape(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            // write the bytes of the string to a typed array
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ia], {type:mimeString});
+        }
+  
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
         console.log(data); //debug
-        console.log(data.files);
-        for(i in data.files){
-            if()
-        }
+
         var inputs = data.context.find(':input');
         if (inputs.filter(function () {
                 return !this.value && $(this).prop('required');
@@ -50,6 +69,26 @@ $(function () {
         data.formData = inputs.serializeArray();
         data.formData = data.formData.concat(boxnameobj);
         data.formData = data.formData.concat({name: "numuploads", value: data.originalFiles.length});
+        var thumbnailArray = new Array();
+        for(var i = 0; i< data.files.length;i++){
+            if(data.files[i].type.indexOf("image")>-1)
+            {
+                console.log("Image: ")
+                console.log(data.files[i]);
+                console.log(data.files[i].preview);//debug
+                var canvas = data.files[i].preview;
+                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
+                var dataURI = canvas.toDataURL("image/jpeg",0.5);
+                var blob = dataURItoBlob(dataURI);
+                console.log(blob);//debug
+                //thumbnailArray.push({"blob":blob,"name":data.files[i].name});
+                data.formData = data.formData.concat({name: data.files[i].name, value: blob});
+            }
+            //handle videos capture specific frame
+        }
+        //data.formData = data.formData.concat({name: "fileName", value: data.files[i].name});
+        //data.formData = data.formData.concat({name: "thumbnail", value: thumbnailArray});
+
     });
 
     if (window.location.hostname === 'blueimp.github.io') {

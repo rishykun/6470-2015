@@ -213,6 +213,16 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
+        //console.log(req);
+        //console.log(req.files[thisFile.originalname]);
+        //console.log(req.files['thumbnail']);
+        console.log(thisFile);
+        thumbnailParams = {
+            Bucket: bucketBox + "/Thumbnails",
+            Key: thisFile.name+"-t.tbl",
+            Body: req.files[thisFile.originalname].buffer
+        }
+
         console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
             function(err,data){
@@ -228,7 +238,17 @@ module.exports = function(app, passport, mongoose) {
                     if(newcount<=data.capacity){
                             s3.upload(params,function(err,data){
                                 if (!err) {
-                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
+                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name); //debug
+                                    s3.upload(thumbnailParams,function(err,data){
+                                    if (!err) {
+                                        console.log("Successfully uploaded thumbnail to box "+ req.body.boxname + " with name "+ req.files[thisFile.originalname].name);//debug
+                                    }
+                                    else
+                                    {
+                                        //upload default thumbnail?
+                                        console.log(err);
+                                    }
+                                    });
                                     //create item configuration in the database
                                     var itemConfig = new itemConfigModel({
                                         boxid: req.body.boxname,
@@ -244,7 +264,7 @@ module.exports = function(app, passport, mongoose) {
                                         }
                                         else {
                                             console.log("Successfully registered item configuration in the database."); //debug
-                                            console.log(itemConfig); //debug
+                                           // console.log(itemConfig); //debug
 
                                             //update box configuration
                                             boxConfigModel.findOneAndUpdate(
@@ -262,7 +282,7 @@ module.exports = function(app, passport, mongoose) {
                                                             console.log("Setting upload capacity to true"); //debug
                                                         }
                                                         console.log("Successfully updated box configuration in the database."); //debug
-                                                        console.log(data); //debug
+                                                        //console.log(data); //debug
 
                                                         res.writeHead(200, {
                                                             'Content-Type': req.headers.accept
