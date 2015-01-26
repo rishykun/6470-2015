@@ -18,7 +18,7 @@
 					$scope.boxid = data.boxid;
 					console.log($scope.boxid); //debug
 					
-					$scope.box.setCurrentBoxID($scope.box.id, true);
+					$scope.box.setCurrentBoxID($scope.boxid, true);
 					
 					//TODO DEBUG do check at this point to make sure we can upload to box before going to uploads
 					//$("#receiveButton :input").prop("disabled", false); //renable button

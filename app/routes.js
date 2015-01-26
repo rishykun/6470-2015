@@ -197,18 +197,14 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
+        console.log("Get box config for: "+ req.body.boxname);
         boxConfigModel.findOne({"boxid": req.body.boxname},
             function(err,data){
                 if(err){
                     console.error(err);
                 }
                 else{
-                    console.log("itemcount " +data.itemcount);
-                    console.log("capacity "+ data.capacity);
-                    console.log("Request");
-                    console.log(req);
-                    console.log("NumUploads");
-                    console.log(req.body.numuploads);
+                    console.log("itemcount " +data.data);
                     var itemsLeft = data.capacity-data.itemcount;
                     //Does not pass upload if number of uploaded items total will exceed box capacity
                     if(data.itemcount+req.body.numuploads<data.capacity){
