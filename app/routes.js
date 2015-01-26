@@ -210,20 +210,7 @@ module.exports = function(app, passport, mongoose) {
     app.post('/uploadgoodies', isLoggedIn, function(req, res) {
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
-        params = {
-            Bucket: bucketBox + "/items",
-            Key: thisFile.name,
-            Body: thisFile.buffer
-        }
-        //console.log(req);
-        //console.log(req.files[thisFile.originalname]);
-        //console.log(req.files['thumbnail']);
-        console.log(thisFile);
-        thumbnailParams = {
-            Bucket: bucketBox + "/Thumbnails",
-            Key: thisFile.name+"-t.tbl",
-            Body: req.files[thisFile.originalname].buffer
-        }
+        
 
         console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
@@ -233,15 +220,34 @@ module.exports = function(app, passport, mongoose) {
                 }
                 else{
 
+
+                    params = {
+                        Bucket: bucketBox + "/items",
+                        Key: thisFile.name,
+                        Body: thisFile.buffer
+                    }
+        //console.log(req);
+        //console.log(req.files[thisFile.originalname]);
+        //console.log(req.files['thumbnail']);
+
+                    console.log("name: "+thisFile.name);
                     console.log(data); //debug
                     var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
                     //Does not pass upload if number of uploaded items total will exceed box capacity
                     var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
                     if(newcount<=data.capacity){
+                        console.log(params);
                             s3.upload(params,function(err,data){
                                 if (!err) {
-                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name); //debug
-                                    s3.upload(thumbnailParams,function(err,data){
+                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
+
+                                           thumbnailParams = {
+                                              Bucket: bucketBox + "/Thumbnails",
+                                             Key: thisFile.name+"-t.tbl",
+                                             Body: req.files[thisFile.originalname].buffer
+                                             }
+                                    console.log(thumbnailParams);
+                                    s3.upload(thumbnailParams,function(err,data1){
                                     if (!err) {
                                         console.log("Successfully uploaded thumbnail to box "+ req.body.boxname + " with name "+ req.files[thisFile.originalname].name);//debug
                                     }
