@@ -1,6 +1,6 @@
-todo:
-- add user field for signup/signin [UNRESOLVED]
-- modal resize
+[IMPORTANT]
+- OPTIMIZE THE SPEED OF OUR WEBSITE
+	LOADING THE HOME PAGE TAKES MUCH LONGER THAN IT SHOULD (TOO MUCH OVERHEAD)
 
 would like to do future features
 - delete boxes

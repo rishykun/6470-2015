@@ -317,3 +317,23 @@ fixes the glitch that gives the backdrop 0 width and/or height*/
   left: 0;
   right: 0;
 }
+
+/* responsive design */
+.mobile {
+  display: none;
+}
+
+@media (max-width: 800px) {
+    .mobile {
+      display: block;
+    }
+    .desktop {
+      display: none;
+    }
+}
+
+@media (max-width: 600px) {
+  .modal-dialog {
+    max-width: 90%;
+  }
+}
