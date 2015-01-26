@@ -14,17 +14,6 @@
 		'ui.router',
 		'ui.bootstrap'
 	]);
-	//TODO DEBUG
-	/*
-	app.directive('resize', function($window) {
-		return {
-			restrict: 'A',
-			link: function(scope, element) {
-				//console.log(element.css('height'));
-				//console.log(element[0].offsetHeight);
-			}
-		};
-	});*/
 
 	app.controller("MainController", ["$scope", "$window", "$http", "$state", "$growl", "UserProfile", "Box", "BoxList", "Modal",
 		function($scope, $window, $http, $state, $growl, UserProfile, Box, BoxList, Modal) {
