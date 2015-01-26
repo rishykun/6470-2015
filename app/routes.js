@@ -170,7 +170,23 @@ module.exports = function(app, passport, mongoose) {
                                         else {
                                             console.log("Successfully updated user configuration in the database."); //debug
                                             console.log(data); //debug
-                                            res.json(boxes_available[j]);
+
+                                            //update user configuration to add this box as a box collaborated
+                                            boxConfigModel.findOneAndUpdate(
+                                                {boxid: boxes_available[j].boxid},
+                                                {$push: {collaborators: req.user.local.email}},
+                                                {upsert: true},
+                                                function (err, data) {
+                                                    if (err) {
+                                                        console.error(err);
+                                                    }
+                                                    else {
+                                                        console.log("Successfully updated box configuration in the database."); //debug
+                                                        console.log(data); //debug
+                                                        res.json(boxes_available[j]);
+                                                    }
+                                                }
+                                            );
                                         }
                                     }
                                 );
@@ -199,24 +215,42 @@ module.exports = function(app, passport, mongoose) {
             Key: thisFile.name,
             Body: thisFile.buffer
         }
+        //console.log(req);
+        //console.log(req.files[thisFile.originalname]);
+        //console.log(req.files['thumbnail']);
+        console.log(thisFile);
+        thumbnailParams = {
+            Bucket: bucketBox + "/Thumbnails",
+            Key: thisFile.name+"-t.tbl",
+            Body: req.files[thisFile.originalname].buffer
+        }
+
+        console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
             function(err,data){
                 if(err){
                     console.error(err);
                 }
                 else{
-                    console.log("itemcount " +data.itemcount);
-                    console.log("capacity "+ data.capacity);
-                    console.log("Request");
-                    console.log(req);
-                    console.log("NumUploads");
-                    console.log(req.body.numuploads);
-                    var itemsLeft = data.capacity-data.itemcount;
+
+                    console.log(data); //debug
+                    var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
                     //Does not pass upload if number of uploaded items total will exceed box capacity
-                    if(data.itemcount+req.body.numuploads<data.capacity){
+                    var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
+                    if(newcount<=data.capacity){
                             s3.upload(params,function(err,data){
                                 if (!err) {
-                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
+                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name); //debug
+                                    s3.upload(thumbnailParams,function(err,data){
+                                    if (!err) {
+                                        console.log("Successfully uploaded thumbnail to box "+ req.body.boxname + " with name "+ req.files[thisFile.originalname].name);//debug
+                                    }
+                                    else
+                                    {
+                                        //upload default thumbnail?
+                                        console.log(err);
+                                    }
+                                    });
                                     //create item configuration in the database
                                     var itemConfig = new itemConfigModel({
                                         boxid: req.body.boxname,
@@ -232,7 +266,7 @@ module.exports = function(app, passport, mongoose) {
                                         }
                                         else {
                                             console.log("Successfully registered item configuration in the database."); //debug
-                                            console.log(itemConfig); //debug
+                                           // console.log(itemConfig); //debug
 
                                             //update box configuration
                                             boxConfigModel.findOneAndUpdate(
@@ -250,7 +284,7 @@ module.exports = function(app, passport, mongoose) {
                                                             console.log("Setting upload capacity to true"); //debug
                                                         }
                                                         console.log("Successfully updated box configuration in the database."); //debug
-                                                        console.log(data); //debug
+                                                        //console.log(data); //debug
 
                                                         res.writeHead(200, {
                                                             'Content-Type': req.headers.accept
@@ -287,7 +321,7 @@ module.exports = function(app, passport, mongoose) {
                     {
                         "name": thisFile.name,
                         "size": thisFile.size,
-                        "error": "Upload Fail! "+req.body.numuploads+" uploads will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                        "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
                     }
                     ]});
                         console.error("Exceeds box capacity!");
