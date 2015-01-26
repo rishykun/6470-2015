@@ -336,4 +336,11 @@ fixes the glitch that gives the backdrop 0 width and/or height*/
   .modal-dialog {
     max-width: 90%;
   }
+  .space-divider {
+    margin-left: 0px;
+    display: none;
+  }
+  #createBtn {
+    margin-bottom: 10px;
+  }
 }

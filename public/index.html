@@ -6,26 +6,28 @@
 	<title>Shrödinger's Black Box</title>
 
 	<!-- modern font -->
-	<link type='text/css' rel='stylesheet' href='/css/font_open_sans.css'>
+	<link async type='text/css' rel='stylesheet' href='/css/font_open_sans.css'>
 
 	<!-- stylesheets -->
+	<link async type='text/css' rel="stylesheet" href="/jquery/jquery-ui.min.css"> <!-- used for custom tooltip -->
 	<link type='text/css' rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	<link type='text/css' rel="stylesheet" href="/font-awesome-4.2.0/css/font-awesome.min.css">
+	<link async type='text/css' rel="stylesheet" href="/font-awesome-4.2.0/css/font-awesome.min.css">
 	<link type='text/css' rel="stylesheet" href="/angular-ui-growl-master/css/growl.css">
 	<link type='text/css' rel="stylesheet" href="/angular-loading-bar-master/build/loading-bar.min.css">
-	<link type='text/css' rel="stylesheet" href="/drop-check/css/bootstrap-dropdown-checkbox.css">
-	<link type='text/css' rel="stylesheet" href="/css/hover-min.css">
-	<link type='text/css' rel="stylesheet" href="/css/animate.min.css">
-	<link type='text/css' rel="stylesheet" href="/css/custom.css">
-	<link type='text/css' rel="stylesheet" href="/css/navbardesktop.css">
-	<link type='text/css' rel="stylesheet" href="/css/signin.css">
-	<link type='text/css' rel="stylesheet" href="/css/signup.css">
-	<link type='text/css' rel="stylesheet" href="/css/rishad.css">
-	<link type='text/css' rel="stylesheet" href="/css/profile.css">
+	<link async type='text/css' rel="stylesheet" href="/drop-check/css/bootstrap-dropdown-checkbox.css">
+	<link async type='text/css' rel="stylesheet" href="/css/hover-min.css">
+	<link async type='text/css' rel="stylesheet" href="/css/animate.min.css">
+	<link async type='text/css' rel="stylesheet" href="/css/custom.css">
+	<link async type='text/css' rel="stylesheet" href="/css/navbardesktop.css">
+	<link async type='text/css' rel="stylesheet" href="/css/signin.css">
+	<link async type='text/css' rel="stylesheet" href="/css/signup.css">
+	<link async type='text/css' rel="stylesheet" href="/css/rishad.css">
+	<link async type='text/css' rel="stylesheet" href="/css/profile.css">
 
 	<!-- external javascript -->
-	<script async type="text/javascript" src="/jquery/jquery-2.1.3.min.js"></script>
-	<script async type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/jquery/jquery-2.1.3.min.js"></script> <!-- can't async because we need it immediately for bootstrap -->
+	<script async type='text/javascript' src="/jquery/jquery-ui.min.js"></script> <!-- used for custom tooltip -->
+	<script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/angular-1.3.8/angular.min.js"></script>
 	<script type="text/javascript" src="/angular-animate/angular-animate.min.js"></script>
 	<script type="text/javascript" src="/angular-ui-router/release/angular-ui-router.min.js"></script>
@@ -34,6 +36,7 @@
 	<script type="text/javascript" src="/ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
 	<script async type="text/javascript" src="/PDFObject/pdfobject.js"></script>
 	<script async type="text/javascript" src="/drop-check/js/bootstrap-dropdown-checkbox.min.js"></script>
+	<script async type='text/javascript' src="/js/tooltip.js"></script> <!-- used for custom tooltip -->
 
 	<!-- internal source javascript -->
 	<script type='text/javascript' src="/js/main.js"></script>
@@ -57,15 +60,10 @@
 	<script type='text/javascript' src="videogular/videogular-poster/poster.min.js"></script>
 	<script type='text/javascript' src="videogular/videogular-buffering/buffering.min.js"></script>
 
-	<!-- custom tooltip -->
-	<link type='text/css' rel="stylesheet" href="/jquery/jquery-ui.min.css">
-  	<script async type='text/javascript' src="/jquery/jquery-ui.min.js"></script>
-	<script async type='text/javascript' src="/js/tooltip.js"></script>
-
 	<!-- custom modal window templates -->
-	<div ng-include="'/tpl/modalwindow/signwindow.tpl.html'"></div>
-	<div ng-include="'/tpl/modalwindow/gallerywindow.tpl.html'"></div>
-	<div ng-include="'/tpl/modalwindow/uploadwindow.tpl.html'"></div>
+	<div async ng-include="'/tpl/modalwindow/signwindow.tpl.html'"></div>
+	<div async ng-include="'/tpl/modalwindow/gallerywindow.tpl.html'"></div>
+	<div async ng-include="'/tpl/modalwindow/uploadwindow.tpl.html'"></div>
 
 
 	<!-- jasmine testing -->
@@ -101,7 +99,7 @@
 		<div ng-show="compareState(['home', 'signin', 'signup', 'create', 'boxview', 'upload', 'receive'])">
 			<div id="buttonGroup" class="text-center modal-center">
 				<button id="createBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-tooltip custom-entire-fade custom-text-space-med" type="button" title="Start a new box!" ng-click="goCreate()">CREATE</button>
-				<div class="space-divider"/>
+				<div class="space-divider"></div>
 				<button id="receiveBtn" class="custom-btn custom-btn-large custom-btn-transparent custom-entire-fade custom-text-space-med" type="button" title="Receive a random box!" ng-click="goReceive()">RECEIVE</button>
 			</div>
 	</div>
