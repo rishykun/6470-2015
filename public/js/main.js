@@ -119,59 +119,13 @@
 		//captures the height from $window using jquery
 		var height = $(window).height();
 		var buttonHeight = $('#createBtn').height();
-
 		//vertically aligns the Create and Receive buttons in the center
 		$('#buttonGroup').css("padding-top", (height-buttonHeight)/2);
-
-
-
-		/*
-		//same for create modal
-		$("#createDialog").css("margin-top", (height-createModalHeight)/2);
-		$("#createDialog").css("margin-left", "auto");
-
-		//quick hacky way to find dynamic position
-		$('.modal').css("display","block");
-		var createModalHeight = $('#createDialog').height();
-		var loginModalHeight = $('#loginDialog').height();
-		$('.modal').css("display","none");
-
-		//resize signup/login modal upon click
-		$('#loginButton').click(function() {
-			$scope.signModalInitResize();
-		});
-		$('#signupButton').click(function() {
-			$scope.signModalInitResize();
-		});
-
-		//DEBUG TODO CURRENTLY BROKEN
-		$scope.signModalInitResize = function () {
-			//quick hacky way to find dynamic position
-			var cheight = $(window).height();
-			var cdisplay = $('.modal').css("display");
-			$('#signModal').css("display","block");
-			var signModalHeight = $('#signDialog').height();
-			$('#signModal').css("display",cdisplay);
-
-			$("#signDialog").css("margin-top", (cheight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");
-		};
-		*/
-
 
 		//resize function: on resize, always keep elements centered
 		$(window).resize(function() {
 			var newHeight = $(window).height();
 			$('#buttonGroup').css("padding-top", newHeight / 2);
-
-			/*
-			$("#createDialog").css("margin-top", (newHeight-createModalHeight)/2);
-			$("#createDialog").css("margin-left", "auto");
-
-			//resize the login/signup modal
-			var signModalHeight = $('#signDialog').height();
-			$("#signDialog").css("margin-top", (newHeight-signModalHeight)/2);
-			$("#signDialog").css("margin-left", "auto");*/
 		});
 	}]);
 })();

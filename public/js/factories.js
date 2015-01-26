@@ -100,7 +100,9 @@
 				.success (function(data) {
 					if (data !== false) {
 						//if the user is logged in
-						Modal.closeModal(); //close the current modal
+						if (Modal.checkOpenModal()) {
+							Modal.closeModal(); //close the current modal
+						}
 						loggedIn = true; //set our login status to be true
 						userProfile = data; //load data into the user profile
 						//debug note: user/email is data.local.email
