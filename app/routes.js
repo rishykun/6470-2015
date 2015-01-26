@@ -23,8 +23,8 @@ module.exports = function(app, passport, mongoose) {
         owner: String,
         collaborators: [String],
         completed: String,
-        filefilter: [String],
-        regionfilter: [String]
+        fileFilter: [String],
+        regionFilter: [String]
     });
 
     var itemConfigSchema = new mongoose.Schema({
@@ -102,8 +102,10 @@ module.exports = function(app, passport, mongoose) {
     })
 
     //processes the receive box request
-    app.get('/receivebox', isLoggedIn, function (req, res, next) {
+    app.post('/receivebox', isLoggedIn, function (req, res, next) {
         //get the user config file to see what boxes we've created and collaborated on
+        var fileFilter = req.body.files;
+        var regionFilter = req.body.regions;
         userConfigModel.findOne(
             {username: req.user.local.email},
             function (err, data) {
@@ -144,6 +146,12 @@ module.exports = function(app, passport, mongoose) {
                                     if (value.boxid === boxes_collaborated[i]) {
                                         return false;
                                     }
+                                }
+                                if (!(value.fileFilter.every(function (val) { return fileFilter.indexOf(val) >= 0; })) || 
+                                	!(value.regionFilter.every(function (val) { return regionFilter.indexOf(val) >= 0; })) ||
+                                    (value.regionFilter === [] && value.regionFilter !== [])
+                                    ) {
+                                	return false;
                                 }
                                 return true; //if box is incomplete and it's not a box that the user has created or collaborated, return true
                             }
@@ -355,8 +363,8 @@ module.exports = function(app, passport, mongoose) {
                             owner: req.user.local.email,
                             collaborators: [],
                             completed: "false",
-                            filefilter: req.body.filters.files,
-                            regionfilter: req.body.filters.regions
+                            fileFilter: req.body.filters.files,
+                            regionFilter: req.body.filters.regions
                         });
                         boxConfig.save(function(err) {
                             if (err) {
