@@ -46,7 +46,7 @@ module.exports = function(app, passport, mongoose) {
     //instead, the result should always be a success, but a success returning 'false' indicates to the front end that there is no profile to be loaded
     //this is so that the front-end doesn't encounter an error in the beginning when it always checks for the profile
     //which is the only way for the front-end to know whether the user is logged in or not
-    app.get('/profile', function(req, res) {
+    app.get('/profile', function (req, res) {
         if (req.isAuthenticated()) {
             userConfigModel.findOne(
                 {email: req.user.local.email},
@@ -71,13 +71,13 @@ module.exports = function(app, passport, mongoose) {
         }
     });
     
-    app.get('/logout', function(req, res) {
+    app.get('/logout', function (req, res) {
         console.log("Logged out of the server.");
         req.logout();
         res.redirect('/');
     });
 
-    app.get('/fail', function(req, res, next) {
+    app.get('/fail', function (req, res, next) {
         next("Fail route reached.");
     })
 
@@ -100,7 +100,7 @@ module.exports = function(app, passport, mongoose) {
 
     //only gets called when a user signs up successfully
     //creates the user's folder in the server and adds a user configuration file
-    app.get('/setupuser', function(req, res) {
+    app.get('/setupuser', isLoggedIn, function (req, res) {
         var userConfig = new userConfigModel({
             username: '',
             email: req.user.local.email,
@@ -119,7 +119,7 @@ module.exports = function(app, passport, mongoose) {
         });       
     });
 
-    app.post('/setupusername', function(req, res) {
+    app.post('/setupusername', isLoggedIn, function (req, res) {
         //update user configuration to update the username
         userConfigModel.findOneAndUpdate(
             {email: req.user.local.email},
@@ -245,14 +245,38 @@ module.exports = function(app, passport, mongoose) {
             }
         );
     });
+
+    app.post('/getusernumuploads', isLoggedIn, function (req, res, next) {
+        itemConfigModel.find(
+            {
+                email: req.user.local.email,
+                boxid: req.body.boxid
+            },
+            function (err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log("Successfully retrieved user uploads from the database."); //debug
+                    console.log(data.length); //debug
+                    numuploadsLeft = 4 - data.length; //max upload per user
+                    uploadsLeftObj = {
+                        uploadsLeft: numuploadsLeft
+                    }
+                    res.json(uploadsLeftObj);
+                }
+            }
+        );
+    });
+
     //this is required for upload.tpl.html
-    app.get('/uploadgoodies', function(req, res, next) {
+    app.get('/uploadgoodies', isLoggedIn, function (req, res, next) {
         console.log(req.files);
         res.json({});
     });
 
     // processes the upload
-    app.post('/uploadgoodies', isLoggedIn, function(req, res) {
+    app.post('/uploadgoodies', isLoggedIn, function (req, res) {
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         
@@ -264,8 +288,6 @@ module.exports = function(app, passport, mongoose) {
                     console.error(err);
                 }
                 else{
-
-
                     params = {
                         Bucket: bucketBox + "/items",
                         Key: thisFile.name,
@@ -381,7 +403,7 @@ module.exports = function(app, passport, mongoose) {
     });
 
     // process the create form
-    app.post('/create', isLoggedIn, function(req, res) {
+    app.post('/create', isLoggedIn, function (req, res) {
         var boxId = uuid.v4(); //generate a unique uuid for the box
         bucketBox = "6.470/Boxes/" + boxId + "/";
         s3.headBucket({Bucket:bucketBox}, function(err,data){
@@ -397,7 +419,7 @@ module.exports = function(app, passport, mongoose) {
                         var boxConfig = new boxConfigModel({
                             boxid: boxId,
                             boxname: req.body.boxname,
-                            capacity: 3, //default
+                            capacity: 20,
                             itemcount: 0,
                             owner: req.user.local.email,
                             collaborators: [],
@@ -456,7 +478,7 @@ module.exports = function(app, passport, mongoose) {
     });
 
     // get contents of the form
-    app.post('/getbox', isLoggedIn, function(req, res) {
+    app.post('/getbox', isLoggedIn, function (req, res) {
 
         var boxParams = {
             Bucket: '6.470/',
@@ -475,7 +497,7 @@ module.exports = function(app, passport, mongoose) {
     });
     
     //retrieve user configuration from the database
-    app.get('/getuserconfig', isLoggedIn, function(req, res) {
+    app.get('/getuserconfig', isLoggedIn, function (req, res) {
         userConfigModel.findOne(
             {email: req.user.local.email},
             function (err, data) {
@@ -492,7 +514,7 @@ module.exports = function(app, passport, mongoose) {
     });
 
     //retrieve box configuration from the database
-    app.post('/getboxconfig', isLoggedIn, function(req, res) {
+    app.post('/getboxconfig', isLoggedIn, function (req, res) {
         boxConfigModel.findOne(
             {boxid: req.body.boxid},
             function (err, data) {
@@ -508,7 +530,7 @@ module.exports = function(app, passport, mongoose) {
         );
     });
 
-    app.post('/getitemconfig', isLoggedIn, function(req, res) {
+    app.post('/getitemconfig', isLoggedIn, function (req, res) {
         itemConfigModel.findOne(
             {key: req.body.key},
             function (err, data) {
@@ -545,7 +567,7 @@ module.exports = function(app, passport, mongoose) {
 };
 
 // route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
+function isLoggedIn (req, res, next) {
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated()) {
         console.log("User authenticated.");
