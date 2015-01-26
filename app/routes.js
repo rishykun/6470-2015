@@ -168,7 +168,23 @@ module.exports = function(app, passport, mongoose) {
                                         else {
                                             console.log("Successfully updated user configuration in the database."); //debug
                                             console.log(data); //debug
-                                            res.json(boxes_available[j]);
+
+                                            //update user configuration to add this box as a box collaborated
+                                            boxConfigModel.findOneAndUpdate(
+                                                {boxid: boxes_available[j].boxid},
+                                                {$push: {collaborators: req.user.local.email}},
+                                                {upsert: true},
+                                                function (err, data) {
+                                                    if (err) {
+                                                        console.error(err);
+                                                    }
+                                                    else {
+                                                        console.log("Successfully updated box configuration in the database."); //debug
+                                                        console.log(data); //debug
+                                                        res.json(boxes_available[j]);
+                                                    }
+                                                }
+                                            );
                                         }
                                     }
                                 );
