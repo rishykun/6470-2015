@@ -82,38 +82,21 @@ module.exports = function(app, passport, mongoose) {
     //only gets called when a user signs up successfully
     //creates the user's folder in the server and adds a user configuration file
     app.get('/setupuser', function(req, res) {
-        bucketUser = "6.470/Users/" + req.user.local.email + "/";
-        s3.headBucket({Bucket:bucketUser}, function(err,data){
-            if(err){
-                s3.createBucket({Bucket:bucketUser},function(err,data){
-                    if (err) {       
-                        console.error(err);
-                    }
-                    else {
-                        console.log("Successfully created user folder.");
-
-                        //create user configuration in the database
-                        var userConfig = new userConfigModel({
-                            username: req.user.local.email,
-                            boxes_created: [],
-                            boxes_collaborated : []
-                        });
-                        userConfig.save(function(err) {
-                            if (err) {
-                                console.error(err);
-                            }
-                            else {
-                                console.log("Successfully registered user configuration in the database."); //debug
-                                console.log(userConfig); //debug
-                                res.redirect('/');
-                            }
-                        });
-                    }
-                });
-             } else {
-                 console.error("User folder (bucket) already exists!");
-             }
+        var userConfig = new userConfigModel({
+            username: req.user.local.email,
+            boxes_created: [],
+            boxes_collaborated: []
         });
+        userConfig.save(function(err) {
+            if (err) {
+                console.error(err);
+            }
+            else {
+                console.log("Successfully registered user configuration in the database."); //debug
+                console.log(userConfig); //debug
+                res.redirect('/');
+            }
+        });       
     })
 
     //processes the receive box request
@@ -424,7 +407,7 @@ module.exports = function(app, passport, mongoose) {
     });
 
     //retrieve box configuration from the database
-    app.get('/getboxconfig', isLoggedIn, function(req, res) {
+    app.post('/getboxconfig', isLoggedIn, function(req, res) {
         boxConfigModel.findOne(
             {boxid: req.body.boxid},
             function (err, data) {
@@ -440,7 +423,7 @@ module.exports = function(app, passport, mongoose) {
         );
     });
 
-    app.get('/getitemconfig', isLoggedIn, function(req, res) {
+    app.post('/getitemconfig', isLoggedIn, function(req, res) {
         itemConfigModel.findOne(
             {key: req.body.key},
             function (err, data) {
