@@ -57,11 +57,8 @@ $(function () {
   
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
         console.log(data); //debug
-<<<<<<< HEAD
-
-=======
         console.log(data.files);
->>>>>>> 9d431ed94618f30e9c0b551540aa46251438c8ab
+
         var inputs = data.context.find(':input');
         if (inputs.filter(function () {
                 return !this.value && $(this).prop('required');
