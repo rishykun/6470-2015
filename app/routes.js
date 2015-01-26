@@ -22,7 +22,9 @@ module.exports = function(app, passport, mongoose) {
         itemcount: Number,
         owner: String,
         collaborators: [String],
-        completed: String
+        completed: String,
+        filefilter: [String],
+        regionfilter: [String]
     });
 
     var itemConfigSchema = new mongoose.Schema({
@@ -318,7 +320,9 @@ module.exports = function(app, passport, mongoose) {
                             itemcount: 0,
                             owner: req.user.local.email,
                             collaborators: [],
-                            completed: "false"
+                            completed: "false",
+                            filefilter: req.body.filters.files,
+                            regionfilter: req.body.filters.regions
                         });
                         boxConfig.save(function(err) {
                             if (err) {

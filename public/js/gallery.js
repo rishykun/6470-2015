@@ -124,10 +124,10 @@ var getType = function(s) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Description":data.description, "Thumbs":0,"Comments":[]};
 							console.log($scope.gallerydata[key]);
-							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
+							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.tbl'})
 							.success(function(data){
 								data = JSON.parse(data);
-								key = data.key.substring(0, data.key.lastIndexOf('-t.jpg'));
+								key = data.key.substring(0, data.key.lastIndexOf('-t.tbl'));
 								$scope.gallerydata[key].Thumbnail = data.uri;
 								//console.log(Object.keys($scope.gallerydata).length);
 								//console.log(dlength-1);
