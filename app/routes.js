@@ -204,10 +204,9 @@ module.exports = function(app, passport, mongoose) {
                     console.error(err);
                 }
                 else{
-                    console.log("itemcount " +data.data);
                     var itemsLeft = data.capacity-data.itemcount;
                     //Does not pass upload if number of uploaded items total will exceed box capacity
-                    if(data.itemcount+req.body.numuploads<data.capacity){
+                    if((data.itemcount+req.body.numuploads)<data.capacity){
                             s3.upload(params,function(err,data){
                                 if (!err) {
                                     console.log('Successfully uploaded item to box: ' + req.body.boxname + "."); //debug
@@ -281,7 +280,7 @@ module.exports = function(app, passport, mongoose) {
                     {
                         "name": thisFile.name,
                         "size": thisFile.size,
-                        "error": "Upload Fail! "+req.body.numuploads+" uploads will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                        "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
                     }
                     ]});
                         console.error("Exceeds box capacity!");
