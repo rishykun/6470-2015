@@ -1,7 +1,58 @@
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-label="Close" data-ng-click="closeModal(); resetState($event)"><span aria-hidden="true">&times;</span></button>
-	<h4 class="modal-title no-text-sel default-cursor">Blah</h4>
+	<h4 class="modal-title no-text-sel default-cursor">Help</h4>
 </div>
 <div id="helpBody" class="modal-body">
-	<img src= "../img/helpPictures/createBoxZoom.jpg" style="width:304px;height:228px">
+	<p> Shrödinger's Black Box allows you to share multimedia with complete strangers around the world. Stories, videos, music and photos can be stored inside the boxes for others to see.</p>
+	
+	<div id = "createInstructions">
+		<h4 class = "createHeader">Create A Box!</h4>
+
+		<div id = "createImages">
+		<img src = "../img/helpPictures/createABoxHover.jpg">
+		<img src= "../img/helpPictures/createBoxZoom.jpg" >
+		</div>
+		<p>Click the Create button to create a new box!</p>
+		<p>First, give a name to your box.</p>
+		<p>Add restrictions to the items you that the box will contain.</p>
+		<p>You can specify the capacity of your box, the types of files your box will accept, and the regions of the world that the files in the box will relate to.</p>
+		<p>Once you have created a box, you can view the progress of your box in your profile</p>
+	</div>
+
+	<div id = "receiveInstructions">
+		<h4 class = "receiveHeader">Receive A Box!</h4>
+
+		<div id = "receiveImages">
+		<img src = "../img/helpPictures/receiveHover.jpg">
+		<img src= "../img/helpPictures/receiveExample.jpg" >
+		</div>
+		<p>Click the Receive button to receive a box from someone else!</p>
+		<p>Filter the boxe you will receive based on what you are looking for.</p>
+		<p>You can choose to only receive boxes for specific file types or related to certain regions of the world.</p>
+		<p>Once you have received a box, you will be considered a collaborator of that box and can view the progress of that box in your profile.</p>
+		<!-- capped to 4 uploads -->
+	</div>
+
+	<div id "profileInstructions">
+		<h4 class = "profileInstructHeader">Your Profile.</h4>
+		<div id = "profileImages">
+		<img src = "../img/helpPictures/profilePage.jpg">
+		</div>
+		<p>Your profile page displays all boxes you have been a part of along with how complete each one is.</p>
+		<p>Clicking on the icon of a box will open it.</p>
+		<p>Opening an incomplete box will only show you what you have contributed to the box so far. If you still have uploads left it will also allow you to upload to the box.</p>
+		<img src= "../img/helpPictures/incompleteGallery.jpg" >
+		<p>Opening a complete box will allow you to view all submissions to the box.</p>
+
+	</div>
+	
+
+	<div id = "uploadInstructions">
+		<h4 class = "createHeader">Upload to a Box!</h4>
+		<img src = "../img/helpPictures/uploadExample.jpg">
+		<p>You can upload to a box immediately after creating or receiving a box or you can upload to an incomplete box by opening it in your profile page</p>
+		<p>Each person is limited to 4 uploads per box as long as the box is not full.</p>
+		<p>You can upload by either using the add files button or dragging and dropping files beneath the buttons.</p>
+		<p>Uploads are capped to a maximum size of 25mb per item and the accepted file formats are .jpg/.png/.gif/.mp4/.pdf/.mp3</p>
+	</div>
 </div>
