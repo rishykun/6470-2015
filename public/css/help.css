@@ -20,6 +20,8 @@
 }
 .helpInstructHeaders{
 	text-align:center;
+	font: 2.5em "Verdana";
+	font-weight:400;
 }
 .helpInstructions{
 	padding-bottom:10px;

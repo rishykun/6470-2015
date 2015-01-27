@@ -22,7 +22,8 @@ module.exports = function(app, passport, mongoose) {
         username: String,
         email: String,
         boxes_created: [String],
-        boxes_collaborated: [String]
+        boxes_collaborated: [String],
+        showEmail: Boolean
     });
 
     var boxConfigSchema = new mongoose.Schema({
@@ -35,7 +36,8 @@ module.exports = function(app, passport, mongoose) {
         collaborators: [String],
         completed: String,
         fileFilter: [String],
-        regionFilter: [String]
+        regionFilter: [String],
+        showEmail: Boolean
     });
 
     var itemConfigSchema = new mongoose.Schema({
@@ -45,7 +47,8 @@ module.exports = function(app, passport, mongoose) {
         author: String,
         authoremail: String,
         description: String,
-        filetype: String
+        filetype: String,
+        showEmail: Boolean
     });
 
     var userConfigModel = mongoose.model('UserConfig', userConfigSchema);
@@ -72,6 +75,7 @@ module.exports = function(app, passport, mongoose) {
                         newData = {};
                         newData["local"] = req.user.local;
                         newData["username"] = data.username; //set username that was just retrieved
+                        newData["showEmail"] = data.showEmail;
                         console.log(newData); //debug
                         res.json(newData);
                     }
@@ -90,7 +94,8 @@ module.exports = function(app, passport, mongoose) {
     });
 
     app.get('/fail', function (req, res, next) {
-        next("Fail route reached.");
+        res.statusCode = 500;
+        res.json({});
     })
 
     // process the signup form
@@ -117,7 +122,8 @@ module.exports = function(app, passport, mongoose) {
             username: '',
             email: req.user.local.email,
             boxes_created: [],
-            boxes_collaborated: []
+            boxes_collaborated: [],
+            showEmail: true
         });
         userConfig.save(function(err) {
             if (err) {
@@ -129,7 +135,7 @@ module.exports = function(app, passport, mongoose) {
                 console.log(userConfig); //debug
                 res.redirect('/');
             }
-        });       
+        });
     });
 
     app.post('/setupusername', isLoggedIn, function (req, res) {
@@ -187,6 +193,61 @@ module.exports = function(app, passport, mongoose) {
                 }
             }
         );
+    });
+
+    app.post('/toggleshowemail', isLoggedIn, function (req, res) {
+        //update user configuration to add this box as a box collaborated
+        userConfigModel.findOneAndUpdate(
+        {email: req.user.local.email},
+        {$set: {showEmail: req.body.showemail}},
+        {upsert: false},
+        function (err, data) {
+            if (err) {
+                console.error(err);
+                redirect('/fail');
+            }
+            else {
+                console.log("Successfully updated user configuration in the database."); //debug
+                console.log(data); //debug
+
+                boxConfigModel.update(
+                {owner: req.user.local.email},
+                {showEmail: req.body.showemail},
+                {
+                    upsert: false,
+                    multi: true
+                },
+                function (err, data2) {
+                    if (err) {
+                        console.error(err);
+                        redirect('/fail');
+                    }
+                    else {
+                        console.log("Successfully updated box configuration in the database."); //debug
+                        console.log(data2); //debug
+
+                        itemConfigModel.update(
+                        {authoremail: req.user.local.email},
+                        {showEmail: req.body.showemail},
+                        {
+                            upsert: false,
+                            multi: true
+                        },
+                        function (err, data3) {
+                            if (err) {
+                                console.error(err);
+                                redirect('/fail');
+                            }
+                            else {
+                                console.log("Successfully updated item configuration in the database."); //debug
+                                console.log(data3); //debug
+                                res.json(data);
+                            }
+                        });
+                    }
+                });
+            }
+        });
     });
 
     //processes the receive box request
@@ -486,7 +547,8 @@ module.exports = function(app, passport, mongoose) {
                                                     author: req.body.username,
                                                     authoremail: req.user.local.email,
                                                     description: req.body.description || "",
-                                                    filetype: thisFile.mimetype
+                                                    filetype: thisFile.mimetype,
+                                                    showEmail: true
                                                 });
                                                 itemConfig.save(function(err) {
                                                     if (err) {
@@ -641,7 +703,8 @@ module.exports = function(app, passport, mongoose) {
                             collaborators: [],
                             completed: "false",
                             fileFilter: req.body.filters.files,
-                            regionFilter: req.body.filters.regions
+                            regionFilter: req.body.filters.regions,
+                            showEmail: true
                         });
                         boxConfig.save(function(err) {
                             if (err) {

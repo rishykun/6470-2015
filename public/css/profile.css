@@ -1,10 +1,17 @@
 #boxdisplay{
 	padding-top: 100px;
 }
+#collaboratedDiv{
+	text-align: center;
+}
+#createdDiv{
+	text-align: center;
+	padding-bottom: 3em;
+}
 .box-wrapper{
 	display: inline-block !important;
-	padding-left: 20px;
+	padding-right: 20px;
 }
 .profileHeader{
-	font-size: 22px; line-height: 1.2em; font-weight: 600; font-family: 'Raleway'; letter-spacing: 2px; text-transform: uppercase; margin: 0px; text-align: center; padding-bottom: 20px;
+	font-size: 22px; line-height: 1.2em; font-weight: 600; font-family: 'Segoe Ui','Open Sans'; letter-spacing: 2px;  margin: 0px; text-align: center; padding-bottom: 20px;
 }
