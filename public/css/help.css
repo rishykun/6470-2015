@@ -1,0 +1,37 @@
+#helpPage{
+	padding-top:80px;
+	margin-left: auto;
+    margin-right: auto;
+}
+#helpSiteDescription{
+	font: 1.1em "Verdana";
+	font-weight:300;
+	padding-bottom:3em;
+	text-align:center;
+}
+#createHeader{
+	padding-bottom:1em;
+}
+#createImages{
+	padding-bottom:1em;
+}
+#uploadExampleImage{
+	padding-bottom:1em;
+}
+.helpInstructHeaders{
+	text-align:center;
+}
+.helpInstructions{
+	padding-bottom:10px;
+}
+.instructionText{
+	margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+.helpImages{
+	margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    text-align:center;
+}
