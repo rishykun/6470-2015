@@ -12,10 +12,15 @@
 
 		$scope.catState=function (index, section) {
 			if ((!$scope.mouseIndex && $scope.mouseIndex !== 0) || (!$scope.section && $scope.section !== 0)) {
-				console.log("here");
+				//console.log("here");
 				return "img/box.png";
 			}
 			else if ((index === $scope.mouseIndex) && (section === $scope.section)) {
+				console.log(index);
+				console.log(section);
+				console.log($scope.mouseIndex);
+				console.log($scope.section);
+				console.log("random");
 				n = parseInt(Math.random()*2);
 				switch(n) {
 					case 0:
