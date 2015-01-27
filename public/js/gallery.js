@@ -94,6 +94,8 @@ var getType = function(s) {
 
 		$http.post('/getboxconfig', {boxid: boxNameObj.boxname})
 		.success (function(data){
+			debugger;
+			console.log(data);
 			//console.log(data);
 			$scope.boxComplete = data.completed;
 			//console.log($scope.boxComplete);
