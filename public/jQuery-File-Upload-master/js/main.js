@@ -21,7 +21,7 @@ $(function () {
         url: 'http://localhost:3000/uploadgoodies',
         maxFileSize: 25000000,
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|pdf|mp3)$/i,
-        limitMultiFileUploads: 3,
+        limitMultiFileUploads: 4,
         previewMaxHeight:200,
         previewMaxWidth:200
         //previewThumbnail: true
@@ -47,8 +47,6 @@ $(function () {
 
               canvas.getContext("2d").drawImage
                 (original, 0, 0, canvas.width, canvas.height);
-             console.log("canvas:");
-             console.log(canvas);
             return canvas;
 }
 
@@ -73,8 +71,6 @@ $(function () {
         }
   
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
-        console.log(data); //debug
-        console.log(data.files);
 
         var inputs = data.context.find(':input');
         if (inputs.filter(function () {
@@ -96,22 +92,19 @@ $(function () {
                 var canvas = getThumbnail(data.files[i].preview,1);
                 var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
-                console.log(blob);//debug
-                //thumbnailArray.push({"blob":blob,"name":data.files[i].name});
+
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
             else if(data.files[i].type.indexOf("video")>-1){
                 var video = data.files[i].preview;
                 video.setAttribute("width",'500');
                 video.setAttribute("height",'450');
-                console.log("Duration: " + video.duration);
                 video.addEventListener("loadedmetadata", function() {
                     this.currentTime = this.duration/2;
                 }, false);
                 var canvas = getThumbnail(video,1);
                 var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
-                console.log(blob);//debug
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
          

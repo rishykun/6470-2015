@@ -27,7 +27,6 @@
 		$scope.setFilter = function() {
 			for (i=0; i<$('.myDropdownCheckbox').dropdownCheckbox("checked").length; i++)
 			$scope.formData.filters.regions.push($('.myDropdownCheckbox').dropdownCheckbox("checked")[i].label);
-			console.log($scope.fileFilter);
 			for (var key in $scope.fileFilter) {
 				if ($scope.fileFilter[key] === true) {
 					$scope.formData.filters.files.push(key);
