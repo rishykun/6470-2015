@@ -414,7 +414,7 @@ module.exports = function(app, passport, mongoose) {
                                                     }
                                                 else if(thisFile.mimetype.indexOf("audio")>-1)
                                                 {                                        
-                                                    fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
+                                                    fs.readFile('./public/img/mp3icon.png', function(err, data) {
                                                         if(err){
                                                             console.error(err);
                                                             res.redirect('/fail');
@@ -440,7 +440,7 @@ module.exports = function(app, passport, mongoose) {
                                                 }
                                                 else if(thisFile.mimetype.indexOf("pdf")>-1)
                                                 {
-                                                    fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
+                                                    fs.readFile('./public/img/pdficon.png', function(err, data) {
                                                         if(err){
                                                             console.error(err);
                                                             res.redirect('/fail');
@@ -466,7 +466,7 @@ module.exports = function(app, passport, mongoose) {
                                                 }
                                                 else
                                                 {
-                                                    fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
+                                                    fs.readFile('./public/img/unknownicon.png', function(err, data) {
                                                         if(err){
                                                             console.error(err);
                                                             res.redirect('/fail');

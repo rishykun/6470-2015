@@ -110,7 +110,9 @@ var getType = function(s) {
 						};
 						key = data.key;
 						$scope.gallerydata[key] = false;
-
+						if (Object.keys($scope.gallerydata).length === (dlength)) {
+							$scope.thumbComplete = true;
+						}
 						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email)))) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Email": data.authoremail, "Description":data.description, "showEmail": data.showEmail};
@@ -121,7 +123,7 @@ var getType = function(s) {
 								$scope.gallerydata[key].Thumbnail = data.uri;
 								if (Object.keys($scope.gallerydata).length === (dlength)) {
 									var c = 0;
-									$scope.thumbComplete = true;
+									//$scope.thumbComplete = true;
 									for (var key in $scope.gallerydata) {
 										if ($scope.gallerydata.hasOwnProperty(key) && $scope.gallerydata[key]!== false) {
 											$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));

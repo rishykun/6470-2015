@@ -26,7 +26,7 @@ hover.css (http://ianlunn.github.io/Hover/)
 normalize.css (http://necolas.github.io/normalize.css/)
 videogular (http://www.videogular.com/)
 
-And the back-end node.js dependences:
+And the back-end node.js dependences (through npm install):
 express
 ejs
 mongoose
