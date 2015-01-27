@@ -420,13 +420,17 @@ module.exports = function(app, passport, mongoose) {
                         console.log("Successfully created box.");
 
                         //create box configuration in the database
+                        var ownername = "";
+                        if (req.body.username !== '') {
+                            var ownername = req.body.username + " (" + req.user.local.email + ")";
+                        }
                         var boxConfig = new boxConfigModel({
                             boxid: boxId,
                             boxname: req.body.boxname,
                             capacity: 20,
                             itemcount: 0,
                             owner: req.user.local.email,
-                            ownerusername: req.body.username,
+                            ownerusername: ownername,
                             collaborators: [],
                             completed: "false",
                             fileFilter: req.body.filters.files,
