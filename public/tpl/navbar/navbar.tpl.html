@@ -13,7 +13,7 @@
 	  	<li class="divider"></li>
 	  	<li><a ui-sref="profileview" href="#/">Profile</a></li>
 	  	<li><a ui-sref="settings" href="#/">Settings</a></li>
-	  	<li><a href="#/">Help</a></li>
+	  	<li><a ui-sref = "help" href="#/">Help</a></li>
 	  	<li><a href="#" ng-click="logout()">Logout</a></li>
 	</ul>
 </div>
@@ -33,7 +33,7 @@
 			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="settings"
 			 style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px; margin-right:5px" href="#">Settings</a>
 			 <a class="font-white no-text-dec no-text-sel custom-underline-from-center"
-			 style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px; margin-right:5px" href="#">Help</a>
+			 style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px; margin-right:5px" href="#" ui-sref="help">Help</a>
     	</div>
         <button id="loginBtn" class="btn btn-success custom-fade custom-btn-wide custom-text-space-med" href="#" ng-click="logout()">Logout
     </div>
