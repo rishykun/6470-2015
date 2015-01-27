@@ -5,7 +5,7 @@
 <div class="modal-body">
 	<form id="usernameForm" class="form-setusername">
     	<label for="inputUsername" class="sr-only">Username</label>
-    	<input type="text" id="inputUsername" class="form-control" ng-model="formData.username" placeholder="Enter the new username" required="" autofocus="">
+    	<input type="text" id="inputUsername" class="form-control" ng-model="formData.username" placeholder="Enter a username" required="" autofocus="" style="text-align: center">
     	<label></label>
     	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!userProfile.isLoggedIn()" ng-click="setUsername()">Set username</button>
   	</form>

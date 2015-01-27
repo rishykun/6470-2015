@@ -7,6 +7,7 @@
 		'main.receive',
 		'main.upload',
 		'main.profile',
+		'main.settings',
 		'main.gallery',
 		'angular-loading-bar',
 		'ngAnimate',
@@ -112,7 +113,7 @@
 			});
 		};
 
-		UserProfile.loadProfile(true, 'home'); //on page load, check if already logged in on the server
+		UserProfile.loadProfile(false, 'home'); //on page load, check if already logged in on the server
 		//if so, then load the user data into the user profile, which is the userObject object
 	}]);
 })();

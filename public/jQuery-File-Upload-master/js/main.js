@@ -82,8 +82,10 @@ $(function () {
             return false;
         }
         var boxnameobj = $(this).serializeArray().filter(function(obj) {if(obj.name === 'boxname') return true;});
+        var usernameobj = $(this).serializeArray().filter(function(obj) {if(obj.name === 'username') return true;});
         data.formData = inputs.serializeArray();
         data.formData = data.formData.concat(boxnameobj);
+        data.formData = data.formData.concat(usernameobj);
         data.formData = data.formData.concat({name: "numuploads", value: data.originalFiles.length});
         var thumbnailArray = new Array();
         for(var i = 0; i< data.files.length;i++){

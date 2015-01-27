@@ -130,6 +130,20 @@
 				requireLogout: false
 			}
 		})
+		.state( 'settings', {
+			url: '/settings',
+			onEnter: function(Modal) {
+				if (Modal.checkOpenModal()) {
+					Modal.closeModal(); //closes any modal that's already open
+				}
+			},
+			templateUrl: "../tpl/settings/settings.tpl.html",
+			controller: "settingsController",
+			data: {
+				requireLogin: true,
+				requireLogout: false
+			}
+		})
 		.state( 'boxview', {
 			url: '/boxview',
 			onEnter: function(Modal, $modal) {

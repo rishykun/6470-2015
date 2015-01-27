@@ -7,6 +7,7 @@ Responsive design
 
 would like to do future features
 - delete boxes
+- email users of completed boxes
 - message system/ contact users
 - remember me
 
@@ -29,5 +30,5 @@ automatic filetype check and automatic conversion to one standard multimedia for
 thumbnails generator
 
 minor issues/css
-fix the scrollbar for upload modal
+fix the scrollba for upload modal
 make css of profile pretty
