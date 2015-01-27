@@ -12,6 +12,7 @@
 		'main.gallery',
 		'angular-loading-bar',
 		'ngAnimate',
+		'ngSanitize',
 		'ui.growl',
 		'ui.router',
 		'ui.bootstrap'
