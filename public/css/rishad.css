@@ -530,3 +530,7 @@
   .hvr-glow-blue:hover, .hvr-glow-blue:focus, .hvr-glow-blue:active {
     box-shadow: 0 0 20px 6px rgba(175, 238, 238, 0.8);
   }
+
+  .boxSizeOption{
+    padding-bottom:12px;
+  }

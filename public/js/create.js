@@ -21,6 +21,9 @@
 			return true;
 		}
 
+		
+
+
 		$scope.setFilter = function() {
 			for (i=0; i<$('.myDropdownCheckbox').dropdownCheckbox("checked").length; i++)
 			$scope.formData.filters.regions.push($('.myDropdownCheckbox').dropdownCheckbox("checked")[i].label);
@@ -30,6 +33,11 @@
 					$scope.formData.filters.files.push(key);
 				}
 			}
+		}
+
+		$scope.setBoxSize= function(){
+			$scope.selection = document.getElementById("boxSizeSelection");
+			$scope.formData.boxSize = $scope.selection.options[$scope.selection.selectedIndex].value;
 		}
 
 		//redirects to the home page

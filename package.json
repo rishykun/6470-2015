@@ -26,7 +26,8 @@
     "debug": "~2.1.1",
     "aws-sdk": "latest",
     "multer": "latest",
-    "node-uuid": "latest"
+    "node-uuid": "latest",
+    "nodemailer": "latest"
   },
   "scripts": {
     "start": "node server.js"
