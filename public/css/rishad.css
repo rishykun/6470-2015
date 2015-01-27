@@ -125,16 +125,6 @@
   display: none;
 }
 
-/* Place The scroll down button at the bottom */
-#boxModalCont::-webkit-scrollbar-button:end:increment {
-  background-image: url(images/scroll_cntrl_dwn.png);
-}
-
-/* Place The scroll up button at the up */
-#boxModalCont::-webkit-scrollbar-button:start:decrement {
-  background-image: url(images/scroll_cntrl_up.png);
-}
-
 #gallery-text, #gallery-author, #gallery-comments, #gallery-likes, .lineClass{
   display:none;
 }

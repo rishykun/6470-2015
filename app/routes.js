@@ -85,7 +85,6 @@ module.exports = function(app, passport, mongoose) {
     });
     
     app.get('/logout', function (req, res) {
-        console.log("Logged out of the server.");
         req.logout();
         res.redirect('/');
     });
@@ -784,10 +783,8 @@ module.exports = function(app, passport, mongoose) {
 function isLoggedIn (req, res, next) {
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated()) {
-        console.log("User authenticated.");
         return next();
     }
 
-    console.log("User not authenticated.");
     return next("User not authenticated."); //causes http request to fail with an error
 }

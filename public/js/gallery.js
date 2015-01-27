@@ -67,11 +67,8 @@ var getType = function(s) {
 		$scope.UserCount = 0;
 		$scope.thumbComplete = false;
 	
-		//$scope.video_sources=[];
-		//$scope.audio_sources=[];
 		$scope.theme="videogular/videogular-themes/videogular.css";
 		$scope.plugins= {
-			/*poster: "http://www.videogular.com/assets/images/videogular.png",*/
 			controls: {
 				autohide: true,
 				autoHideTime: 3000
@@ -106,21 +103,19 @@ var getType = function(s) {
 			.success (function(data) {
 				dlength = data.length;
 				for (i=0; i < data.length; i++){
-					$http.post('/getitemconfig', {/*'uri': '6.470',*/ 'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
+					$http.post('/getitemconfig', {'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
 					.success (function(data) {
 						if (data.authoremail === $scope.UserProfile.getProfile().local.email) {
 							$scope.UserCount++;
 						};
 						key = data.key;
 						$scope.gallerydata[key] = false;
-						
-						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email) /*|| 
-							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 */))) {
+
+						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email)))) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Email": data.authoremail, "Description":data.description, "showEmail": data.showEmail};
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.tbl'})
 							.success(function(data){
-								
 								data = JSON.parse(data);
 								key = data.key.substring(0, data.key.lastIndexOf('-t.tbl'));
 								$scope.gallerydata[key].Thumbnail = data.uri;
@@ -212,9 +207,7 @@ var getType = function(s) {
 			if (num === 0){
 				$scope.num = $scope.gallery.length;
 			}
-			//$scope.curLink = "";
 			if (num !== -1){
-				//$scope.curLink = $scope.gallery[$scope.num-1].url;
 			}
 		};
 
