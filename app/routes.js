@@ -294,228 +294,260 @@ module.exports = function(app, passport, mongoose) {
         console.log(req.body); //debug
         console.log("username is: " + req.body.username); //debug
         console.log("boxname is: " + req.body.boxname); //debug
-        boxConfigModel.findOne({"boxid": req.body.boxname},
-            function(err,data){
-                if(err){
+
+
+        itemConfigModel.find(
+            {
+                authoremail: req.user.local.email,
+                boxid: req.body.boxname
+            },
+            function (err, data) {
+                if (err) {
                     console.error(err);
                 }
-                else{
-                    params = {
-                        Bucket: bucketBox + "/items",
-                        Key: thisFile.name,
-                        Body: thisFile.buffer
-                    }
+                else {
+                    console.log("Successfully retrieved user uploads from the database."); //debug
+                    console.log(data.length); //debug
+                    var numuploadsLeft = 4 - data.length; //max upload per user
+                    numuploadsLeft = parseInt(numuploadsLeft);
+                    //Does not pass upload if number of uploaded items total will exceed user upload capacity for this box
+                    var trycount = parseInt(req.body.numuploads);
+                    if (trycount <= numuploadsLeft) {
+                        boxConfigModel.findOne({"boxid": req.body.boxname},
+                        function(err,data){
+                            if (err) {
+                                console.error(err);
+                            }
+                            else {
+                                params = {
+                                    Bucket: bucketBox + "/items",
+                                    Key: thisFile.name,
+                                    Body: thisFile.buffer
+                                }
 
-                    console.log(thisFile);
-                    console.log("name: "+thisFile.name);
-                    console.log(data); //debug
-                    var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
-                    //Does not pass upload if number of uploaded items total will exceed box capacity
-                    var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
-                    if(newcount<=data.capacity){
-                            s3.upload(params,function(err,data){
-                                if (!err) {
-                                    console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
-                                    if(thisFile.mimetype.indexOf("video")>-1||thisFile.mimetype.indexOf("image")>-1){
-                                           thumbnailParams = {
-                                              Bucket: bucketBox + "/Thumbnails",
-                                             Key: thisFile.name+"-t.tbl",
-                                             Body: req.files[thisFile.originalname].buffer
-                                             }
-                                         }
-                                    else if(thisFile.mimetype.indexOf("audio")>-1)
-                                    {                                        fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
-                                            if(err){
-                                                console.log(err);
-                                            }
-                                            else{
-                                                console.log("MP3 ICON DATA");
-                                                console.log(data);
-                                        thumbnailParams = {
-                                             Bucket: bucketBox + "/Thumbnails",
-                                             Key: thisFile.name+"-t.tbl",
-                                             Body: data
-                                             }
-                                             s3.upload(thumbnailParams,function(err,data1){
-                                                if (!err) {
-                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                console.log(thisFile);
+                                console.log("name: "+thisFile.name);
+                                console.log(data); //debug
+                                var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
+                                //Does not pass upload if number of uploaded items total will exceed box capacity
+                                var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
+                                if(newcount<=data.capacity){
+                                        s3.upload(params,function(err,data){
+                                            if (!err) {
+                                                console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
+                                                if(thisFile.mimetype.indexOf("video")>-1||thisFile.mimetype.indexOf("image")>-1){
+                                                       thumbnailParams = {
+                                                          Bucket: bucketBox + "/Thumbnails",
+                                                         Key: thisFile.name+"-t.tbl",
+                                                         Body: req.files[thisFile.originalname].buffer
+                                                         }
+                                                     }
+                                                else if(thisFile.mimetype.indexOf("audio")>-1)
+                                                {                                        fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
+                                                        if(err){
+                                                            console.log(err);
+                                                        }
+                                                        else{
+                                                            console.log("MP3 ICON DATA");
+                                                            console.log(data);
+                                                    thumbnailParams = {
+                                                         Bucket: bucketBox + "/Thumbnails",
+                                                         Key: thisFile.name+"-t.tbl",
+                                                         Body: data
+                                                         }
+                                                         s3.upload(thumbnailParams,function(err,data1){
+                                                            if (!err) {
+                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                            }
+                                                            else
+                                                            {
+                                                                //upload default thumbnail?
+                                                                console.log(err);
+                                                            }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                                else if(thisFile.mimetype.indexOf("pdf")>-1)
+                                                {
+                                                    fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
+                                                        if(err){
+                                                            console.log(err);
+                                                        }
+                                                        else{
+                                                            console.log(data);
+                                                            thumbnailParams = {
+                                                            Bucket: bucketBox + "/Thumbnails",
+                                                            Key: thisFile.name+"-t.tbl",
+                                                            Body: data
+                                                             }
+                                                            s3.upload(thumbnailParams,function(err,data1){
+                                                            if (!err) {
+                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                            }
+                                                            else
+                                                            {
+                                                                //upload default thumbnail?
+                                                                console.log(err);
+                                                            }
+                                                            });
+                                                        }
+                                                    });
                                                 }
                                                 else
                                                 {
-                                                    //upload default thumbnail?
-                                                    console.log(err);
+                                                    fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
+                                                        if(err){
+                                                            console.log(err);
+                                                        }
+                                                        else{
+                                                            console.log(data);
+                                                            thumbnailParams = {
+                                                             Bucket: bucketBox + "/Thumbnails",
+                                                             Key: thisFile.name+"-t.tbl",
+                                                             Body: data
+                                                          }
+                                                            s3.upload(thumbnailParams,function(err,data1){
+                                                            if (!err) {
+                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname);//debug
+                                                            }
+                                                            else
+                                                            {
+                                                                //upload default thumbnail?
+                                                                console.log(err);
+                                                            }
+                                                            });
+                                                        }
+                                                    });
                                                 }
+                                                
+                                                //create item configuration in the database
+                                                var itemConfig = new itemConfigModel({
+                                                    boxid: req.body.boxname,
+                                                    key: thisFile.name,
+                                                    title: req.body.title,
+                                                    author: req.body.username,
+                                                    authoremail: req.user.local.email,
+                                                    description: req.body.description || "",
+                                                    filetype: thisFile.mimetype
                                                 });
-                                            }
-                                        });
-                                    }
-                                    else if(thisFile.mimetype.indexOf("pdf")>-1)
-                                    {
-                                        fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
-                                            if(err){
-                                                console.log(err);
-                                            }
-                                            else{
-                                                console.log(data);
-                                                thumbnailParams = {
-                                                Bucket: bucketBox + "/Thumbnails",
-                                                Key: thisFile.name+"-t.tbl",
-                                                Body: data
-                                                 }
-                                                s3.upload(thumbnailParams,function(err,data1){
-                                                if (!err) {
-                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
-                                                }
-                                                else
-                                                {
-                                                    //upload default thumbnail?
-                                                    console.log(err);
-                                                }
-                                                });
-                                            }
-                                        });
-                                    }
-                                    else
-                                    {
-                                        fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
-                                            if(err){
-                                                console.log(err);
-                                            }
-                                            else{
-                                                console.log(data);
-                                                thumbnailParams = {
-                                                 Bucket: bucketBox + "/Thumbnails",
-                                                 Key: thisFile.name+"-t.tbl",
-                                                 Body: data
-                                              }
-                                                s3.upload(thumbnailParams,function(err,data1){
-                                                if (!err) {
-                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname);//debug
-                                                }
-                                                else
-                                                {
-                                                    //upload default thumbnail?
-                                                    console.log(err);
-                                                }
-                                                });
-                                            }
-                                        });
-                                    }
-                                    
-                                    //create item configuration in the database
-                                    var itemConfig = new itemConfigModel({
-                                        boxid: req.body.boxname,
-                                        key: thisFile.name,
-                                        title: req.body.title,
-                                        author: req.body.username,
-                                        authoremail: req.user.local.email,
-                                        description: req.body.description || "",
-                                        filetype: thisFile.mimetype
-                                    });
-                                    itemConfig.save(function(err) {
-                                        if (err) {
-                                            console.error(err);
-                                        }
-                                        else {
-                                            console.log("Successfully registered item configuration in the database."); //debug
-                                           // console.log(itemConfig); //debug
-
-                                            //update box configuration
-                                            boxConfigModel.findOneAndUpdate(
-                                                {boxid: req.body.boxname},
-                                                {$inc: {itemcount: 1}},
-                                                function (err, data) {
+                                                itemConfig.save(function(err) {
                                                     if (err) {
                                                         console.error(err);
                                                     }
                                                     else {
-                                                        //mark our boxes as complete once the number of items has reached the capacity
-                                                        if (parseInt(data.itemcount) === parseInt(data.capacity)){
-                                                            data.completed = "true";
-                                                            data.save();
-                                                            //send email notifying the owner and collaborators that their box is complete
-                                                            for (var k in data.collaborators) {
-                                                                console.log("to: " + data.collaborators[k]); //debug
-                                                                transporter.sendMail({
-                                                                    from: 'schrodingersblackbox@yahoo.com',
-                                                                    to: data.collaborators[k],
-                                                                    subject: "[Shrödinger's Black Box] Created Box Complete!",
-                                                                    text: 'Hello,\n\n\tOne of your created boxes is complete. Please visit atwexpress.nodejitsu.com to view the box.\n\nSincerely,\nThe Shrödinger\'s Black Box Team'
-                                                                }, function (err, res) {
-                                                                    if (err) {
-                                                                        console.error(err);
-                                                                    }
-                                                                    else {
-                                                                        console.log("Email sent"); //debug
-                                                                        console.log(res); //debug
-                                                                    }
-                                                                });
-                                                            }
-                                                            console.log("to: " + data.owner); //debug
-                                                            transporter.sendMail({
-                                                                from: "schrodingersblackbox@yahoo.com",
-                                                                to: data.owner,
-                                                                subject: "[Shrödinger's Black Box] Collaborated Box Complete!",
-                                                                text: 'Hello,\n\n\tOne of your collaborated boxes is complete. Please visit atwexpress.nodejitsu.com to view the box.\n\nSincerely,\nThe Shrödinger\'s Black Box Team'
-                                                            }, function (err, res) {
+                                                        console.log("Successfully registered item configuration in the database."); //debug
+                                                       // console.log(itemConfig); //debug
+
+                                                        //update box configuration
+                                                        boxConfigModel.findOneAndUpdate(
+                                                            {boxid: req.body.boxname},
+                                                            {$inc: {itemcount: 1}},
+                                                            function (err, data) {
                                                                 if (err) {
                                                                     console.error(err);
                                                                 }
                                                                 else {
-                                                                    console.log("Email sent"); //debug
-                                                                    console.log(res); //debug
-                                                                }
-                                                            });
-                                                            console.log("Setting upload capacity to true"); //debug
-                                                        }
-                                                        console.log("Successfully updated box configuration in the database."); //debug
-                                                        //console.log(data); //debug
+                                                                    //mark our boxes as complete once the number of items has reached the capacity
+                                                                    if (parseInt(data.itemcount) === parseInt(data.capacity)){
+                                                                        data.completed = "true";
+                                                                        data.save();
+                                                                        //send email notifying the owner and collaborators that their box is complete
+                                                                        for (var k in data.collaborators) {
+                                                                            console.log("to: " + data.collaborators[k]); //debug
+                                                                            transporter.sendMail({
+                                                                                from: 'schrodingersblackbox@yahoo.com',
+                                                                                to: data.collaborators[k],
+                                                                                subject: "[Shrödinger's Black Box] Created Box Complete!",
+                                                                                text: 'Hello,\n\n\tOne of your created boxes is complete. Please visit atwexpress.nodejitsu.com to view the box.\n\nSincerely,\nThe Shrödinger\'s Black Box Team'
+                                                                            }, function (err, res) {
+                                                                                if (err) {
+                                                                                    console.error(err);
+                                                                                }
+                                                                                else {
+                                                                                    console.log("Email sent"); //debug
+                                                                                    console.log(res); //debug
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        console.log("to: " + data.owner); //debug
+                                                                        transporter.sendMail({
+                                                                            from: "schrodingersblackbox@yahoo.com",
+                                                                            to: data.owner,
+                                                                            subject: "[Shrödinger's Black Box] Collaborated Box Complete!",
+                                                                            text: 'Hello,\n\n\tOne of your collaborated boxes is complete. Please visit atwexpress.nodejitsu.com to view the box.\n\nSincerely,\nThe Shrödinger\'s Black Box Team'
+                                                                        }, function (err, res) {
+                                                                            if (err) {
+                                                                                console.error(err);
+                                                                            }
+                                                                            else {
+                                                                                console.log("Email sent"); //debug
+                                                                                console.log(res); //debug
+                                                                            }
+                                                                        });
+                                                                        console.log("Setting upload capacity to true"); //debug
+                                                                    }
+                                                                    console.log("Successfully updated box configuration in the database."); //debug
+                                                                    //console.log(data); //debug
 
-                                                        res.writeHead(200, {
-                                                            'Content-Type': req.headers.accept
-                                                                .indexOf('application/json') !== -1 ?
-                                                                        'application/json' : 'text/plain'
-                                                        });
-                                                        response = {
-                                                            "files": [
-                                                                {
-                                                                    "name": thisFile.name,
-                                                                    "size": thisFile.size,
-                                                                    "url": "http://localhost:3000",
-                                                                    "thumbnailUrl": "http://localhost:3000",
-                                                                    "deleteUrl": "http://localhost:3000",
-                                                                    "deleteType": "DELETE"
+                                                                    res.writeHead(200, {
+                                                                        'Content-Type': req.headers.accept
+                                                                            .indexOf('application/json') !== -1 ?
+                                                                                    'application/json' : 'text/plain'
+                                                                    });
+                                                                    response = {
+                                                                        "files": [
+                                                                            {
+                                                                                "name": thisFile.name,
+                                                                                "size": thisFile.size,
+                                                                                "url": "http://localhost:3000",
+                                                                                "thumbnailUrl": "http://localhost:3000",
+                                                                                "deleteUrl": "http://localhost:3000",
+                                                                                "deleteType": "DELETE"
+                                                                            }
+                                                                        ]
+                                                                    };
+                                                                    res.end(JSON.stringify(response));
                                                                 }
-                                                            ]
-                                                        };
-                                                        res.end(JSON.stringify(response));
+                                                            }
+                                                        );
                                                     }
-                                                }
-                                            );
-                                        }
-                                    });
+                                                });
+                                            }
+                                            else{
+                                                console.error(err);
+                                                res.redirect('/fail');
+                                            }
+                                        });
                                 }
-                                else{
-                                    console.error(err);
-                                    res.redirect('/fail');
+                                else {
+                                    res.json({"files": [
+                                    {
+                                        "name": thisFile.name,
+                                        "size": thisFile.size,
+                                        "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
+                                    }
+                                    ]});
+                                    console.error("Exceeds box capacity!");
                                 }
-                            });
-                    }
-                    else{
-                        res.json({"files": [
-                    {
-                        "name": thisFile.name,
-                        "size": thisFile.size,
-                        "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
-                    }
-                    ]});
-                        console.error("Exceeds box capacity!");
-                    }
 
+                            }
+                        });
+                    }
+                    else {
+                        res.json({"files": [
+                        {
+                            "name": thisFile.name,
+                            "size": thisFile.size,
+                            "error": "Upload Fail! "+trycount+" upload(s) will exceed the user upload capacity! There are only " + numuploadsLeft +" item spots left in the box."
+                        }
+                        ]});
+                        console.error("Exceeds user upload cap!");
+                    }
                 }
             }
-        )
-        
+        );
+    
     });
 
     // process the create form
