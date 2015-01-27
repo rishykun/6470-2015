@@ -3,6 +3,7 @@
 - REMOVE ALL CONSOLE LOGS
 - can't upload shit from my phone
 - REMOVE CHENG WANG FROM GALLERY
+- sanitize forms
 
 would like to do future features
 - delete boxes
@@ -14,6 +15,7 @@ closing modal should redirect to help if this is the first time
 
 PROFILE CONTROLLER
 have profile specially mark complete boxes to distinguish them from incomplete boxes
+display "you have no boxes" if there are no boxes created and no collaborated
 
 minor issues/css
 fix the scrollbar for upload modal
