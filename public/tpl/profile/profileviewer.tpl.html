@@ -3,7 +3,7 @@
 	<div id = "createdDiv"> 
 		<div id = "createdHeader" class = "profileHeader">Boxes Created</div>
 		<div id ="createdBoxDiv" ng-repeat="created in boxlist.getCreatedBoxes()" class = "box-wrapper">
-			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(created.boxid,created.completed)"></img>
+			<img ng-src="{{catState}}" style="width: 100px; height: 100px; cursor:pointer" ng-mouseenter="collapse()" ng-mouseleave="uncollapse()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
 			<p>Box Name: {{created.boxname}}</p>
 			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
 			<div ng-show="created.ownerusername !== ''">
@@ -17,7 +17,7 @@
 	<div id = "collaboratedDiv">
 		<div id = "createdHeader" class = "profileHeader">Boxes Collaborated</div>
 		<div id ="collaboratedBoxDiv"  ng-repeat="collaborated in boxlist.getCollaboratedBoxes()" class = "box-wrapper">
-			<img src ="img/box.png" style = "width: 100px; height: 100px" ng-click = "openBoxGallery(collaborated.boxid,collaborated.completed)"></img>
+			<img ng-src="{{catState}}" style="width: 100px; height: 100px; cursor:pointer" ng-mouseenter="collapse()" ng-mouseleave="uncollapse()" ng-click="openBoxGallery(collaborated.boxid, collaborated.completed)"/>
 			<p>Box Name: {{collaborated.boxname}}</p>
 			<p>Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
 			<div ng-show="collaborated.ownerusername !== ''">
