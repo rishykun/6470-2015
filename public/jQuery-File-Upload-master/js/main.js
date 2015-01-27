@@ -91,21 +91,14 @@ $(function () {
         for(var i = 0; i< data.files.length;i++){
             if(data.files[i].type.indexOf("image")>-1)
             {
-                console.log("Image: ")
-                console.log(data.files[i]);
-                console.log(data.files[i].preview);//debug
                 var canvas = data.files[i].preview;
-                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
-                var dataURI = canvas.toDataURL("image/jpeg",0.5);
+                var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
                 console.log(blob);//debug
                 //thumbnailArray.push({"blob":blob,"name":data.files[i].name});
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
             else if(data.files[i].type.indexOf("video")>-1){
-                console.log("Video: ")
-                console.log(data.files[i]);
-                console.log(data.files[i].preview);//debug
                 var video = data.files[i].preview;
                 video.setAttribute("width",'500');
                 video.setAttribute("height",'450');
@@ -114,14 +107,12 @@ $(function () {
                     this.currentTime = this.duration/2;
                 }, false);
                 var canvas = getThumbnail(video,1);
-                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
-                var dataURI = canvas.toDataURL("image/jpeg",0.5);
+                var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
                 console.log(blob);//debug
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
-            /*else if(data.files[i].type.indexOf("mp3")>-1)
-           
+         
         }
         //data.formData = data.formData.concat({name: "fileName", value: data.files[i].name});
         //data.formData = data.formData.concat({name: "thumbnail", value: thumbnailArray});
