@@ -64,12 +64,13 @@
 */
 		//gets the user config file as a json for the current user
 		$scope.getUserBoxes = function() {
+			console.log("getting userboxes"); //debug
 			$http.get('/getuserconfig')
 				.success (function(data) {
 					$scope.userinfo = data;
 					$scope.boxes_created = $scope.userinfo.boxes_created;
 					$scope.boxes_collaborated = $scope.userinfo.boxes_collaborated;
-				
+
 //------------------------   retrieve box config ------------------
 					for(i=0;i< $scope.boxes_created.length;i++)
 						{

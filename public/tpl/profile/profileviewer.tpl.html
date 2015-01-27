@@ -7,7 +7,7 @@
 			<p>Box Name: {{created.boxname}}</p>
 			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
 			<div ng-show="created.ownerusername !== ''">
-				<p>Author: {{created.ownerusername}}</p>
+				<p>Author: {{created.ownerusername}} ({{created.owner}})</p>
 			</div>
 			<div ng-show="created.ownerusername === ''">
 				<p>Author: {{created.owner}}</p>
@@ -21,7 +21,7 @@
 			<p>Box Name: {{collaborated.boxname}}</p>
 			<p>Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
 			<div ng-show="collaborated.ownerusername !== ''">
-				<p>Author: {{collaborated.ownerusername}}</p>
+				<p>Author: {{collaborated.ownerusername}} ({{collaborated.owner}})</p>
 			</div>
 			<div ng-show="collaborated.ownerusername === ''">
 				<p>Author: {{collaborated.owner}}</p>
