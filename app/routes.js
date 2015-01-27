@@ -272,7 +272,7 @@ module.exports = function(app, passport, mongoose) {
                         Body: thisFile.buffer
                     }
 
-
+                    console.log(thisFile);
                     console.log("name: "+thisFile.name);
                     console.log(data); //debug
                     var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
@@ -282,22 +282,92 @@ module.exports = function(app, passport, mongoose) {
                             s3.upload(params,function(err,data){
                                 if (!err) {
                                     console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
-
+                                    if(thisFile.mimetype.indexOf("video")>-1||thisFile.mimetype.indexOf("image")>-1){
                                            thumbnailParams = {
                                               Bucket: bucketBox + "/Thumbnails",
                                              Key: thisFile.name+"-t.tbl",
                                              Body: req.files[thisFile.originalname].buffer
                                              }
-                                    s3.upload(thumbnailParams,function(err,data1){
-                                    if (!err) {
-                                        console.log("Successfully uploaded thumbnail to box "+ req.body.boxname + " with name "+ req.files[thisFile.originalname].name);//debug
+                                         }
+                                    else if(thisFile.mimetype.indexOf("audio")>-1)
+                                    {                                        fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                console.log("MP3 ICON DATA");
+                                                console.log(data);
+                                        thumbnailParams = {
+                                             Bucket: bucketBox + "/Thumbnails",
+                                             Key: thisFile.name+"-t.tbl",
+                                             Body: data
+                                             }
+                                             s3.upload(thumbnailParams,function(err,data1){
+                                                if (!err) {
+                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                }
+                                                else
+                                                {
+                                                    //upload default thumbnail?
+                                                    console.log(err);
+                                                }
+                                                });
+                                            }
+                                        });
+                                    }
+                                    else if(thisFile.mimetype.indexOf("pdf")>-1)
+                                    {
+                                        fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                console.log(data);
+                                                thumbnailParams = {
+                                                Bucket: bucketBox + "/Thumbnails",
+                                                Key: thisFile.name+"-t.tbl",
+                                                Body: data
+                                                 }
+                                                s3.upload(thumbnailParams,function(err,data1){
+                                                if (!err) {
+                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                }
+                                                else
+                                                {
+                                                    //upload default thumbnail?
+                                                    console.log(err);
+                                                }
+                                                });
+                                            }
+                                        });
                                     }
                                     else
                                     {
-                                        //upload default thumbnail?
-                                        console.log(err);
+                                        fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                console.log(data);
+                                                thumbnailParams = {
+                                                 Bucket: bucketBox + "/Thumbnails",
+                                                 Key: thisFile.name+"-t.tbl",
+                                                 Body: data
+                                              }
+                                                s3.upload(thumbnailParams,function(err,data1){
+                                                if (!err) {
+                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname);//debug
+                                                }
+                                                else
+                                                {
+                                                    //upload default thumbnail?
+                                                    console.log(err);
+                                                }
+                                                });
+                                            }
+                                        });
                                     }
-                                    });
+                                    
                                     //create item configuration in the database
                                     var itemConfig = new itemConfigModel({
                                         boxid: req.body.boxname,
