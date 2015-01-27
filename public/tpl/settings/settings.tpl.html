@@ -1,12 +1,12 @@
 <div style="position: absolute; left:50%; top:50%; transform: translate(-50%, -50%); width:50%; height: 75%; background-color:rgba(255,255,255,1)">
 		<form id="usernameForm" class="form-setusername" style="min-width: 200px; width: 90%; left: 50%; position: relative; transform: translate(-50%,0); margin-top:25px">
-			<div style="float:left; padding-top:5px">
-				<label class="font-gray" for="inputUsername" style="float:left; font-size:24px; padding-right: 20px">Username: </label>
-				<div style="float: right">
+			<div class="usernameLabelText" style="padding-top:5px">
+				<label class="font-gray .usernameLabelText" for="inputUsername" style="font-size:24px; padding-right: 20px">Username: </label>
+				<div class="usernameLabelTextBtn">
 					<input type="text" id="inputUsername" class="form-control" ng-model="formData.username" placeholder="{{userProfile.getProfile().username}}" required="" autofocus="" style="text-align: center">
 				</div>
 			</div>
-			<div style="float: right">
+			<div class="usernameLabelTextBtn">
 				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!userProfile.isLoggedIn()" ng-click="  changeUsername()">Change username</button>
 			</div>
 		</form>
