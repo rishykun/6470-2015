@@ -64,6 +64,7 @@ module.exports = function(app, passport, mongoose) {
                 function (err, data) {
                     if (err) {
                         console.error(err);
+                        redirect('/fail');
                     }
                     else {
                         console.log("Successfully retrieved user configuration in the database."); //debug
@@ -121,6 +122,7 @@ module.exports = function(app, passport, mongoose) {
         userConfig.save(function(err) {
             if (err) {
                 console.error(err);
+                redirect('/fail');
             }
             else {
                 console.log("Successfully registered user configuration in the database."); //debug
@@ -140,6 +142,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    redirect('/fail');
                 }
                 else {
                     console.log("Successfully updated user configuration in the database."); //debug
@@ -155,6 +158,7 @@ module.exports = function(app, passport, mongoose) {
                     function (err, data2) {
                         if (err) {
                             console.error(err);
+                            redirect('/fail');
                         }
                         else {
                             console.log("Successfully updated box configuration in the database."); //debug
@@ -170,6 +174,7 @@ module.exports = function(app, passport, mongoose) {
                             function (err, data3) {
                                 if (err) {
                                     console.error(err);
+                                    redirect('/fail');
                                 }
                                 else {
                                     console.log("Successfully updated item configuration in the database."); //debug
@@ -194,6 +199,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    redirect('/fail');
                 }
                 else {
                     console.log("Successfully retrieved user configuration in the database."); //debug
@@ -208,6 +214,7 @@ module.exports = function(app, passport, mongoose) {
                     boxConfigModel.find(function (err, data) {
                         if (err) {
                             console.error(err);
+                            redirect('/fail');
                         }
                         else {
                             boxes_list = data;
@@ -257,6 +264,7 @@ module.exports = function(app, passport, mongoose) {
                                     function (err, data) {
                                         if (err) {
                                             console.error(err);
+                                            redirect('/fail');
                                         }
                                         else {
                                             console.log("Successfully updated user configuration in the database."); //debug
@@ -270,6 +278,7 @@ module.exports = function(app, passport, mongoose) {
                                                 function (err, data) {
                                                     if (err) {
                                                         console.error(err);
+                                                        redirect('/fail');
                                                     }
                                                     else {
                                                         console.log("Successfully updated box configuration in the database."); //debug
@@ -301,6 +310,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    redirect('/fail');
                 }
                 else {
                     console.log("Successfully retrieved user uploads from the database."); //debug
@@ -339,6 +349,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    redirect('/fail');
                 }
                 else {
                     console.log("Successfully retrieved user uploads from the database."); //debug
@@ -352,6 +363,7 @@ module.exports = function(app, passport, mongoose) {
                         function(err,data){
                             if (err) {
                                 console.error(err);
+                                redirect('/fail');
                             }
                             else {
                                 params = {
@@ -479,6 +491,7 @@ module.exports = function(app, passport, mongoose) {
                                                 itemConfig.save(function(err) {
                                                     if (err) {
                                                         console.error(err);
+                                                        redirect('/fail');
                                                     }
                                                     else {
                                                         console.log("Successfully registered item configuration in the database."); //debug
@@ -491,6 +504,7 @@ module.exports = function(app, passport, mongoose) {
                                                             function (err, data) {
                                                                 if (err) {
                                                                     console.error(err);
+                                                                    redirect('/fail');
                                                                 }
                                                                 else {
                                                                     //mark our boxes as complete once the number of items has reached the capacity
@@ -508,6 +522,7 @@ module.exports = function(app, passport, mongoose) {
                                                                             }, function (err, res) {
                                                                                 if (err) {
                                                                                     console.error(err);
+                                                                                    redirect('/fail');
                                                                                 }
                                                                                 else {
                                                                                     console.log("Email sent"); //debug
@@ -524,6 +539,7 @@ module.exports = function(app, passport, mongoose) {
                                                                         }, function (err, res) {
                                                                             if (err) {
                                                                                 console.error(err);
+                                                                                redirect('/fail');
                                                                             }
                                                                             else {
                                                                                 console.log("Email sent"); //debug
@@ -566,6 +582,7 @@ module.exports = function(app, passport, mongoose) {
                                         });
                                 }
                                 else {
+                                    console.error("Exceeds box capacity!");
                                     res.json({"files": [
                                     {
                                         "name": thisFile.name,
@@ -573,13 +590,13 @@ module.exports = function(app, passport, mongoose) {
                                         "error": "Upload Fail! "+req.body.numuploads+" upload(s) will exceed the box capacity! There are only " + itemsLeft +" item spots left in the box."
                                     }
                                     ]});
-                                    console.error("Exceeds box capacity!");
                                 }
 
                             }
                         });
                     }
                     else {
+                        console.error("Exceeds user upload cap!");
                         res.json({"files": [
                         {
                             "name": thisFile.name,
@@ -587,7 +604,6 @@ module.exports = function(app, passport, mongoose) {
                             "error": "Upload Fail! "+trycount+" upload(s) will exceed the user upload capacity! There are only " + numuploadsLeft +" item spots left in the box."
                         }
                         ]});
-                        console.error("Exceeds user upload cap!");
                     }
                 }
             }
@@ -605,6 +621,7 @@ module.exports = function(app, passport, mongoose) {
                 s3.createBucket({Bucket:bucketBox},function(err,data){
                     if (err) {       
                         console.error(err);
+                        res.redirect('/fail');
                     }
                     else {
                         console.log("Successfully created box.");
@@ -629,6 +646,7 @@ module.exports = function(app, passport, mongoose) {
                         boxConfig.save(function(err) {
                             if (err) {
                                 console.error(err);
+                                res.redirect('/fail');
                             }
                             else {
                                 console.log("Successfully registered box configuration in the database."); //debug
@@ -642,6 +660,7 @@ module.exports = function(app, passport, mongoose) {
                                     function (err, data) {
                                         if (err) {
                                             console.error(err);
+                                            res.redirect('/fail');
                                         }
                                         else {
                                             console.log("Successfully updated user configuration in the database."); //debug
@@ -653,6 +672,7 @@ module.exports = function(app, passport, mongoose) {
                                                     s3.createBucket({Bucket:bucketBox + "Thumbnails/"},function(err,data){
                                                         if (err) {       
                                                             console.error(err);
+                                                            res.redirect('/fail');
                                                         }
                                                         else {
                                                             console.log("Successfully created thumbnails folder.");
@@ -661,6 +681,7 @@ module.exports = function(app, passport, mongoose) {
                                                     });
                                                  } else {
                                                      console.error("Thumbnails folder already exists!");
+                                                     res.redirect('/fail');
                                                  }
                                             });
                                         }
@@ -672,6 +693,7 @@ module.exports = function(app, passport, mongoose) {
                 });
              } else {
                  console.error("Box (bucket) already exists!");
+                 res.redirect('/fail');
              }
         });
     });
@@ -687,6 +709,7 @@ module.exports = function(app, passport, mongoose) {
         s3.listObjects(boxParams, function (err, data) {
             if (err) {
                 console.error(err, err.stack);
+                res.redirect('/fail');
             }
             else {
                 console.log(data.Contents); //debug
@@ -702,6 +725,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    res.redirect('/fail');
                 }
                 else {
                     console.log("Successfully retrieved user configuration in the database."); //debug
@@ -719,6 +743,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    res.redirect('/fail');
                 }
                 else {
                     console.log("Successfully retrieved box configuration in the database."); //debug
@@ -735,6 +760,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
+                    res.redirect('/fail');
                 }
                 else {
                     console.log("Successfully retrieved item configuration in the database."); //debug
