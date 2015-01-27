@@ -2,6 +2,63 @@
  cursor:pointer;
 }
 
+@-webkit-keyframes window-pulse {
+  25% {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  75% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+@keyframes window-pulse {
+  25% {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  75% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+.window-pulse {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  padding-right: 2.2em;
+}
+.window-pulse:before {
+  position: absolute;
+  right: 1em;
+  padding: 0 1px;
+  font-family: FontAwesome;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.window-pulse:hover:before, .window-pulse:focus:before, .window-pulse:active:before {
+  -webkit-animation-name: window-pulse;
+  animation-name: window-pulse;
+  -webkit-animation-duration: 0.7s;
+  animation-duration: 0.7s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
 #moreUpload {
   margin-top:4px;
   position:absolute;
@@ -305,6 +362,14 @@
   margin-right:auto;*/
 }
 
+.portrait-return{
+  margin-left: 35%;
+}
+
+.landscape-return{
+  margin-left: 45%;
+}
+
 .next-img{
   float:right;
   background-position: 90% center;
@@ -480,13 +545,11 @@
 
   .portrait-author{
     position:absolute;
-    padding-left:18%;
   }
 
   .landscape-author{
     float: left;
     display:inline-block;
-    margin-left:1%;
   }
 
   .landscape-wrapper{
@@ -499,8 +562,8 @@
 
 
   .landscape-description{
-    position:absolute;
-    margin-top:6%;
+    display:inline-block;
+    margin-left:50%;
   }
 
   .shadow {

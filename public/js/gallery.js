@@ -1,5 +1,6 @@
 var adjustDisplay = function(ratio) {
 	if (ratio >= 1){
+		$('.return').removeClass("landscape-return");
 		$('.single-image-wrapper').removeClass("landscape-wrapper");
 		$('.image-text').removeClass("landscape-text");
 		$('.image-description').removeClass("landscape-description");
@@ -14,8 +15,10 @@ var adjustDisplay = function(ratio) {
 		$('.profile').addClass("portrait-profile");
 		$('.image-author').addClass("portrait-author");
 		$('.image-comments').addClass("portrait-comments");
+		$('.return').addClass("portrait-return");
 	}
 	else{
+		$('.return').removeClass("portrait-return");
 		$('.single-image-wrapper').removeClass("portrait-wrapper");
 		$('.image-text').removeClass("portrait-text");
 		$('.image-description').removeClass("portrait-description");
@@ -30,6 +33,7 @@ var adjustDisplay = function(ratio) {
 		$('.profile').addClass("landscape-profile");
 		$('.image-author').addClass("landscape-author");
 		$('.image-comments').addClass("landscape-comments");
+		$('.return').addClass("landscape-return");
 	}
 };
 
@@ -288,7 +292,7 @@ var getType = function(s) {
 
 		$scope.iconSize = function() {
 			$('.prev-img,.return,.next-img').css("height", windowHeight*0.06+"px");
-			$('.buttons').css("padding-bottom", windowHeight*0.03+"px");
+			$('.buttons').css("padding-bottom", windowHeight*0.04+"px");
 		};
 
 		$scope.vidPad = function() {
