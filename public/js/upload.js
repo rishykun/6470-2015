@@ -3,8 +3,9 @@
 		'ui.router'
 	]);
 
-	app.controller ( 'uploadController', function uploadController ($scope, $http, $window, $state, Box, Modal, $modal) {
+	app.controller ( 'uploadController', function uploadController ($scope, $http, $window, $state, Box, UserProfile, Modal, $modal) {
 		$scope.box = Box; //needed to set current box id
+		$scope.userProfile = UserProfile;
 
 		$scope.uploadBoxID = $scope.box.getCurrentBoxID();
 

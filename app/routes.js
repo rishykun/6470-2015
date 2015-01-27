@@ -22,6 +22,7 @@ module.exports = function(app, passport, mongoose) {
         capacity: Number,
         itemcount: Number,
         owner: String,
+        ownerusername: String,
         collaborators: [String],
         completed: String,
         fileFilter: [String],
@@ -33,6 +34,7 @@ module.exports = function(app, passport, mongoose) {
         key: String,
         title: String,
         author: String,
+        authoremail: String,
         description: String,
         filetype: String
     });
@@ -216,7 +218,7 @@ module.exports = function(app, passport, mongoose) {
                                             console.log("Successfully updated user configuration in the database."); //debug
                                             console.log(data); //debug
 
-                                            //update user configuration to add this box as a box collaborated
+                                            //update box configuration to add this box as a box collaborated
                                             boxConfigModel.findOneAndUpdate(
                                                 {boxid: boxes_available[j].boxid},
                                                 {$push: {collaborators: req.user.local.email}},
@@ -249,7 +251,7 @@ module.exports = function(app, passport, mongoose) {
     app.post('/getusernumuploads', isLoggedIn, function (req, res, next) {
         itemConfigModel.find(
             {
-                email: req.user.local.email,
+                authoremail: req.user.local.email,
                 boxid: req.body.boxid
             },
             function (err, data) {
@@ -280,7 +282,8 @@ module.exports = function(app, passport, mongoose) {
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         
-
+        console.log(req.body); //debug
+        console.log("username is: " + req.body.username); //debug
         console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
             function(err,data){
@@ -325,7 +328,8 @@ module.exports = function(app, passport, mongoose) {
                                         boxid: req.body.boxname,
                                         key: thisFile.name,
                                         title: req.body.title,
-                                        author : req.user.local.email,
+                                        author: req.body.username,
+                                        authoremail: req.user.local.email,
                                         description: req.body.description || "",
                                         filetype: thisFile.mimetype
                                     });
@@ -422,6 +426,7 @@ module.exports = function(app, passport, mongoose) {
                             capacity: 20,
                             itemcount: 0,
                             owner: req.user.local.email,
+                            ownerusername: req.body.username,
                             collaborators: [],
                             completed: "false",
                             fileFilter: req.body.filters.files,
