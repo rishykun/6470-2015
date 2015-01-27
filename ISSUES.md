@@ -2,7 +2,6 @@
 - instead of console.error, we need to return a fail message to the front end so that the server doesn't crash unnecessarily whenever any error occurs (FIX VERY FRAIL SERVER)
 
 Responsive design
-- footer should come below boxes collaborated on mobile
 - modal of upload is weird on mobile portrait
 
 would like to do future features
