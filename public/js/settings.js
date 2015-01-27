@@ -1,34 +1,18 @@
 (function() {
-	var app = angular.module('main.setupuser', [
+	var app = angular.module('main.settings', [
 		'ui.growl',
 		'ui.router'
 	]);
 
-	app.controller ("setupuserController", ["$scope", "$window", "$http", "$state", "$modalInstance", "$growl", "Modal", "UserProfile",
-		function setupuserController ($scope, $window, $http, $state, $modalInstance, $growl, Modal, UserProfile) {
-		$scope.userProfile=UserProfile;
-		$scope.modal = Modal;
+	app.controller ( 'settingsController', function settingsController ($scope, $http, $state, $window, $growl, UserProfile) {
+		$scope.userProfile = UserProfile;
 		$scope.formData = {};
 
-		//redirects to the home page
-		$scope.resetState = function (s) {
-			//hacky way to prevent redirect unless we clicked outside the modal content window or the x button
-			if (s.target.className === "modal fade font-gray ng-isolate-scope"
-				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
-				|| s.currentTarget.className === "close") {
-				$('.form-setusername').trigger("reset"); //clears the create form
-				$state.go('home');
-			}
-		};
-
-		$scope.closeModal = function() {
-			$modalInstance.dismiss('cancel');
-			$('.form-setusername').trigger("reset"); //clears the create form
-		}
-
 		//updates the user configuration with the new username
-		$scope.setUsername = function () {
+		$scope.changeUsername = function () {
 			if ($scope.userProfile.isLoggedIn()) {
+				email = $scope.userProfile.getProfile().local.email;
+				$scope.formData.email = email;
 				if ($scope.formData.hasOwnProperty("username")) {
 					if ($scope.formData.username !== undefined && $scope.formData.username !== null
 						&& $scope.formData.username !== "") {
@@ -42,7 +26,7 @@
 							$growl.box("Success", "Set the username", {
 								class: "success"
 							}).open();
-							$scope.userProfile.loadProfile(false, 'home');
+							$scope.userProfile.loadProfile(false, 'settings');
 						})
 						.error (function() {
 							$("#usernameForm :input").prop("disabled", false); //renable form
@@ -69,5 +53,5 @@
 				}).open();
 			}
 		};
-	}]);
+	});
 })();
