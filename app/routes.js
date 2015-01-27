@@ -357,7 +357,8 @@ module.exports = function(app, passport, mongoose) {
                                 params = {
                                     Bucket: bucketBox + "/items",
                                     Key: thisFile.name,
-                                    Body: thisFile.buffer
+                                    Body: thisFile.buffer,
+                                    ContentType: thisFile.mimetype
                                 }
 
                                 console.log(thisFile);
