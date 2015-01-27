@@ -7,8 +7,34 @@
 	app.controller ( 'profileController', function profileController ($scope, $http, $state, $window, $growl, Box, BoxList) {
 		$scope.boxlist = BoxList;
 		$scope.box = Box;
-		$scope.catState="img/box.png";
+		$scope.mouseIndex=false;
 
+		$scope.catState=function (index) {
+			console.log("here");
+			if (!$scope.mouseIndex && $scope.mouseIndex !== 0) {
+				return "img/box.png";
+			}
+			else if (index === $scope.mouseIndex) {
+				n = parseInt(Math.random()*2);
+				switch(n) {
+					case 0:
+						return "img/alive.png";
+						break;
+					case 1:
+						return "img/dead.png";
+						break;
+				}
+			}
+		};
+
+		$scope.setIndex = function (index) {
+ 			$scope.mouseIndex = index;
+		};
+
+		$scope.resetIndex = function () {
+			$scope.mouseIndex = false;
+		};
+/*
 		$scope.collapse = function () {
 			console.log("entered");
 			n = parseInt(Math.random()*2);
@@ -27,7 +53,7 @@
 		$scope.uncollapse = function () {
 			$scope.catState="img/box.png";
 		}
-
+*/
 		//gets the user config file as a json for the current user
 		$scope.getUserBoxes = function() {
 			$http.get('/getuserconfig')

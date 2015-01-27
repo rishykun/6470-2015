@@ -2,8 +2,8 @@
 	<div id = "boxdisplay">
 	<div id = "createdDiv"> 
 		<div id = "createdHeader" class = "profileHeader">Boxes Created</div>
-		<div id ="createdBoxDiv" ng-repeat="created in boxlist.getCreatedBoxes()" class = "box-wrapper">
-			<img ng-src="{{catState}}" style="width: 100px; height: 100px; cursor:pointer" ng-mouseenter="collapse()" ng-mouseleave="uncollapse()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
+		<div id ="createdBoxDiv" ng-repeat="created in boxlist.getCreatedBoxes() track by $index" class = "box-wrapper">
+			<img ng-src="{{catState($index)}}" style="width: 100px; height: 100px; cursor:pointer" ng-mouseenter="setIndex($index)" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
 			<p>Box Name: {{created.boxname}}</p>
 			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
 			<div ng-show="created.ownerusername !== ''">

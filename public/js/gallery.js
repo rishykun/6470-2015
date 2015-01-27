@@ -57,7 +57,7 @@ var getType = function(s) {
 		"com.2fdevs.videogular.plugins.poster",
 		'ui.router']);
 
-	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http,Box,UserProfile){
+	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http, $state, Box,UserProfile){
 		$scope.box = Box;
 		$scope.UserProfile = UserProfile;
 		//$scope.video_sources=[];
@@ -94,10 +94,10 @@ var getType = function(s) {
 
 		$http.post('/getboxconfig', {boxid: boxNameObj.boxname})
 		.success (function(data){
-			debugger;
 			console.log(data);
 			//console.log(data);
 			$scope.boxComplete = data.completed;
+
 			//console.log($scope.boxComplete);
 			$scope.boxCollabs = data.collaborators;
 			console.log("collab");
@@ -111,6 +111,8 @@ var getType = function(s) {
 			// console.log("This is data");
 				//console.log(data);
 				dlength = data.length;
+				console.log(data);
+				debugger;
 				for (i=0; i < data.length; i++){
 					//console.log(data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length));
 					//console.log(i);
@@ -134,7 +136,7 @@ var getType = function(s) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Description":data.description, "Thumbs":0,"Comments":[]};
 							//console.log($scope.gallerydata[key]);	
-							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
+							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.tbl'})
 							.success(function(data){
 								data = JSON.parse(data);
 								key = data.key.substring(0, data.key.lastIndexOf('-t.tbl'));
@@ -192,6 +194,10 @@ var getType = function(s) {
 		// .error (function(){
 		// 	console.log("Error getting thumbnails!");
 		// });
+
+		$scope.goToUpload = function() {
+			$state.go('upload');
+		};
 
 		$scope.genUrl = function(num){
 			// if (num === 0) {
