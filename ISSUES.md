@@ -12,7 +12,6 @@ HELP CONTROLLER
 put help contents in modal form
 
 GALLERY CONTROLLER
-hide modal of gallery shoud go back to profile
 on mobile, make sure gallery modal doesnt exceed screen 100%
 hide user email if they dont want to show it
 

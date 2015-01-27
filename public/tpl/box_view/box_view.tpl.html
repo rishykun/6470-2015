@@ -41,7 +41,7 @@
 				<!-- <vg-poster-image vg-url='plugins.poster'></vg-poster-image>-->
 			</videogular>
 		</div>
-		<div class="audio" ng-show="isAud">
+		<div class="audio" ng-show="isAud" style="margin-top:80px">
 			<videogular vg-theme="theme" vg-responsive="true">
 				<vg-audio vg-src="audio_sources"></vg-audio>
 				<vg-controls>
@@ -74,9 +74,12 @@
 <!-- 			<div class="profile-wrapper">
 				<img class="profile" src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p160x160/10353637_1047631608585894_7807827911058557415_n.jpg?oh=df17ffe6942fdb5dbe14412bf894a5ea&oe=552EA325&__gda__=1428938202_8b4c55c17cbd53b4a35a45a5138bcd77"/>
 			</div> -->
-			<div class="image-author" style="font-size:18px">
-				{{gallery[num-1].Author}}
-			</div>					
+			<div class="image-author" style="font-size:18px" ng-show="gallery[num-1].showEmail">
+				{{gallery[num-1].Author}} ({{gallery[num-1].Email}})
+			</div>
+			<div class="image-author" style="font-size:18px" ng-hide="gallery[num-1].showEmail">
+				{{gallery[num-1].Author}} 
+			</div>							
 			<div class="image-description" style="font-size:18px">
 				{{gallery[num-1].Description}}
 			</div>
