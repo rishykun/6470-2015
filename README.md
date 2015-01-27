@@ -24,6 +24,7 @@ google fonts (http://www.google.com/fonts/specimen/Open+Sans)
 animate.css (http://daneden.github.io/animate.css/)
 hover.css (http://ianlunn.github.io/Hover/)
 normalize.css (http://necolas.github.io/normalize.css/)
+videogular (http://www.videogular.com/)
 
 And the back-end node.js dependences:
 express
