@@ -376,15 +376,23 @@ module.exports = function(app, passport, mongoose) {
                                                          Key: thisFile.name+"-t.tbl",
                                                          Body: req.files[thisFile.originalname].buffer
                                                          }
-                                                     }
+                                                         s3.upload(thumbnailParams,function(err,data1){
+                                                            if (!err) {
+                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                            }
+                                                            else
+                                                            {
+                                                                //upload default thumbnail?
+                                                                console.log(err);
+                                                            }
+                                                            });
+                                                    }
                                                 else if(thisFile.mimetype.indexOf("audio")>-1)
                                                 {                                        fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
                                                         if(err){
                                                             console.log(err);
                                                         }
                                                         else{
-                                                            console.log("MP3 ICON DATA");
-                                                            console.log(data);
                                                     thumbnailParams = {
                                                          Bucket: bucketBox + "/Thumbnails",
                                                          Key: thisFile.name+"-t.tbl",
