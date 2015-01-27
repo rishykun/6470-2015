@@ -10,11 +10,13 @@
 		<label for="inputPassword" class="sr-only">Password</label>
 		<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" ng-model="formData.password" ng-disabled="userProfile.isLoggedIn()">
 		<div>
+			<!--
 			<div class="checkbox pull-left">
 			  	<label class="no-text-sel default-cursor">
 			    	<input type="checkbox" value="remember-me" ng-disabled="userProfile.isLoggedIn()"> Remember me
 			  	</label>
 			</div>
+			-->
 			<a class="no-text-sel pull-right" ui-sref="signup" style="margin-top:10px; margin-bottom:10px">Don't have an account?</a>
 		</div>
 		<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="userProfile.isLoggedIn()" ng-click="login()">Sign In</button>

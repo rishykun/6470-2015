@@ -4,6 +4,17 @@ var fs = require('fs'); //used for file streaming
 var multer = require("multer"); //used to interpret/handle file data
 AWS.config.loadFromPath('./config/aws/config.json');
 var s3 = new AWS.S3();
+var nodemailer = require("nodemailer"); //email transporter
+var wellknown = require("nodemailer-wellknown");
+
+
+var transporter = nodemailer.createTransport({
+    service: "Yahoo",
+    auth: {
+        user: "schrodingersblackbox@yahoo.com",
+        pass: "3cr8410zy4"
+    }
+});
 
 // app/routes.js
 module.exports = function(app, passport, mongoose) {
@@ -421,9 +432,42 @@ module.exports = function(app, passport, mongoose) {
                                                     }
                                                     else {
                                                         //mark our boxes as complete once the number of items has reached the capacity
-                                                        if (data.itemcount == data.capacity){
+                                                        if (parseInt(data.itemcount) === parseInt(data.capacity)){
                                                             data.completed = "true";
                                                             data.save();
+                                                            //send email notifying the owner and collaborators that their box is complete
+                                                            for (var k in data.collaborators) {
+                                                                console.log("to: " + data.collaborators[k]); //debug
+                                                                transporter.sendMail({
+                                                                    from: 'schrodingersblackbox@yahoo.com',
+                                                                    to: data.collaborators[k],
+                                                                    subject: "[Shrödinger's Black Box] Created Box Complete!",
+                                                                    text: 'Hello,\n\n\tOne of your created boxes is complete. Please visit atwexpress.nodejitsu.com to view the box.\n\nSincerely,\nThe Shrödinger\'s Black Box Team'
+                                                                }, function (err, res) {
+                                                                    if (err) {
+                                                                        console.error(err);
+                                                                    }
+                                                                    else {
+                                                                        console.log("Email sent"); //debug
+                                                                        console.log(res); //debug
+                                                                    }
+                                                                });
+                                                            }
+                                                            console.log("to: " + data.owner); //debug
+                                                            transporter.sendMail({
+                                                                from: "schrodingersblackbox@yahoo.com",
+                                                                to: data.owner,
+                                                                subject: "[Shrödinger's Black Box] Collaborated Box Complete!",
+                                                                text: 'Hello,\n\n\tOne of your collaborated boxes is complete. Please visit atwexpress.nodejitsu.com to view the box.\n\nSincerely,\nThe Shrödinger\'s Black Box Team'
+                                                            }, function (err, res) {
+                                                                if (err) {
+                                                                    console.error(err);
+                                                                }
+                                                                else {
+                                                                    console.log("Email sent"); //debug
+                                                                    console.log(res); //debug
+                                                                }
+                                                            });
                                                             console.log("Setting upload capacity to true"); //debug
                                                         }
                                                         console.log("Successfully updated box configuration in the database."); //debug
