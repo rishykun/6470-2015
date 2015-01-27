@@ -133,7 +133,7 @@ var getType = function(s) {
 						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email) /*|| 
 							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 */))) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
-							"Author": data.author, "Email": data.authoremail, "Description":data.description, "Thumbs":0,"Comments":[]};
+							"Author": data.author, "Email": data.authoremail, "Description":data.description, "showEmail": data.showEmail};
 							//console.log($scope.gallerydata[key]);	
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.tbl'})
 							.success(function(data){
@@ -313,6 +313,17 @@ var getType = function(s) {
 				adjustDisplay(1.1);
 			}
 		}
+
+		$scope.resetState = function (s) {
+			//hacky way to prevent redirect unless we clicked outside the modal content window or the x button
+			if (s.target.className === "modal fade ng-isolate-scope"
+				|| s.target.className === "modal fade ng-isolate-scope in"
+				|| s.currentTarget.className === "close") {
+				console.log($scope.box.getCurrentBoxID()); //debug
+				$scope.box.clearCurrentBox(); //reset current box
+				$state.go('profileview');
+			}
+		};
 
 	}).directive('imageonload', function() {
 		return {
