@@ -33,5 +33,5 @@ automatic filetype check and automatic conversion to one standard multimedia for
 thumbnails generator
 
 minor issues/css
-fix the scrollbar for upload modal
+fix the scrollba for upload modal
 make css of profile pretty

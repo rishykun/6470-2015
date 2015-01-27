@@ -45,7 +45,7 @@
 							$growl.box("Success", "Set the username", {
 								class: "success"
 							}).open();
-							$state.go('home');
+							$scope.userProfile.loadProfile(false, 'home');
 						})
 						.error (function() {
 							$("#usernameForm :input").prop("disabled", false); //renable form
