@@ -70,7 +70,6 @@ module.exports = function(app, passport, mongoose) {
                         redirect('/fail');
                     }
                     else {
-                        //console.log("Successfully retrieved user configuration in the database."); //debug
                         newData = {};
                         newData["local"] = req.user.local;
                         newData["username"] = data.username; //set username that was just retrieved
@@ -86,7 +85,6 @@ module.exports = function(app, passport, mongoose) {
     });
     
     app.get('/logout', function (req, res) {
-        console.log("Logged out of the server.");
         req.logout();
         res.redirect('/');
     });
@@ -129,7 +127,6 @@ module.exports = function(app, passport, mongoose) {
                 redirect('/fail');
             }
             else {
-                //console.log("Successfully registered user configuration in the database."); //debug
                 res.redirect('/');
             }
         });
@@ -409,7 +406,6 @@ module.exports = function(app, passport, mongoose) {
                                                             }
                                                             else
                                                             {
-                                                                //upload default thumbnail?
                                                                 console.log(err);
                                                             }
                                                             });
@@ -455,7 +451,6 @@ module.exports = function(app, passport, mongoose) {
                                                             }
                                                             else
                                                             {
-                                                                //upload default thumbnail?
                                                                 console.log(err);
                                                             }
                                                             });
@@ -479,7 +474,6 @@ module.exports = function(app, passport, mongoose) {
                                                             }
                                                             else
                                                             {
-                                                                //upload default thumbnail?
                                                                 console.log(err);
                                                             }
                                                             });
@@ -549,7 +543,6 @@ module.exports = function(app, passport, mongoose) {
                                                                             }
                                                                         });
                                                                     }
-                                                                    //console.log(data); //debug
 
                                                                     res.writeHead(200, {
                                                                         'Content-Type': req.headers.accept
@@ -780,10 +773,8 @@ module.exports = function(app, passport, mongoose) {
 function isLoggedIn (req, res, next) {
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated()) {
-        console.log("User authenticated.");
         return next();
     }
 
-    console.log("User not authenticated.");
     return next("User not authenticated."); //causes http request to fail with an error
 }
