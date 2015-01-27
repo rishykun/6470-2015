@@ -3,7 +3,7 @@
 		<div id = "createdDiv"> 
 			<div id = "createdHeader" class = "profileHeader">Boxes Created</div>
 			<div id ="createdBoxDiv" ng-repeat="created in boxlist.getCreatedBoxes() track by $index" class = "box-wrapper">
-				<img ng-src="{{catState($index, 0, created)}}" style="width: 125px; height: 125px; cursor:pointer; left:50%; position: relative; transform: translate(-50%, 0%);" ng-mouseenter="setIndex($index, 0);" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
+				<img ng-src="{{catState($index, 0, created)}}" style="width: 125px; height: 125px; cursor:pointer; position: relative;" ng-mouseenter="setIndex($index, 0);" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
 				<p style="text-align:center">Box Name: {{created.boxname}}</p>
 				<p style="text-align:center">Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
 			</div>
@@ -11,7 +11,7 @@
 		<div id = "collaboratedDiv">
 			<div id = "createdHeader" class = "profileHeader">Boxes Collaborated</div>
 			<div id ="collaboratedBoxDiv"  ng-repeat="collaborated in boxlist.getCollaboratedBoxes()" class = "box-wrapper">
-				<img ng-src="{{catState($index, 1, collaborated)}}" style="width: 125px; height: 125px; cursor:pointer; left:50%; position: relative; transform: translate(-50%, 0%);" ng-mouseenter="setIndex($index, 1)" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(collaborated.boxid, collaborated.completed)"/>
+				<img ng-src="{{catState($index, 1, collaborated)}}" style="width: 125px; height: 125px; cursor:pointer; position: relative;" ng-mouseenter="setIndex($index, 1)" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(collaborated.boxid, collaborated.completed)"/>
 				<p style="text-align:center">Box Name: {{collaborated.boxname}}</p>
 				<p style="text-align:center">Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
 				<div ng-show="collaborated.ownerusername !=='' && userProfile.getProfile().showEmail" style="text-align:center">
