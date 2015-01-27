@@ -144,6 +144,20 @@
 				requireLogout: false
 			}
 		})
+		.state( 'help', {
+			url: '/help',
+			onEnter: function(Modal) {
+				if (Modal.checkOpenModal()) {
+					Modal.closeModal(); //closes any modal that's already open
+				}
+			},
+			templateUrl: "../tpl/help/help.tpl.html",
+			controller: "helpController",
+			data: {
+				requireLogin: false,
+				requireLogout: false
+			}
+		})
 		.state( 'boxview', {
 			url: '/boxview',
 			onEnter: function(Modal, $modal) {

@@ -8,6 +8,7 @@
 		'main.upload',
 		'main.profile',
 		'main.settings',
+		'main.help',
 		'main.gallery',
 		'angular-loading-bar',
 		'ngAnimate',

@@ -52,6 +52,7 @@
 	<script type='text/javascript' src="/js/upload.js"></script>
 	<script type='text/javascript' src="/js/profile.js"></script>
 	<script type='text/javascript' src="/js/settings.js"></script>
+	<script type='text/javascript' src="/js/help.js"></script>
 	<script type='text/javascript' src="/js/gallery.js"></script>
 
 	<!-- scripts necessary vid player -->
@@ -94,7 +95,7 @@
 		</div>
 
 		<!-- box view, create, signin signout -->
-		<div ng-show="compareState(['profileview', 'settings'])">
+		<div ng-show="compareState(['profileview', 'settings', 'help'])">
 			<div ui-view></div>
 		</div>
 
