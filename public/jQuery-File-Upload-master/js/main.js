@@ -21,7 +21,9 @@ $(function () {
         url: 'http://localhost:3000/uploadgoodies',
         maxFileSize: 25000000,
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|pdf|mp3)$/i,
-        limitMultiFileUploads: 3
+        limitMultiFileUploads: 3,
+        previewMaxHeight:200,
+        previewMaxWidth:200
         //previewThumbnail: true
     });
 
@@ -40,8 +42,8 @@ $(function () {
             function getThumbnail(original, scale) {
               var canvas = document.createElement("canvas");
 
-              canvas.width = original.width * scale;
-              canvas.height = original.height * scale;
+              canvas.width = 200;
+              canvas.height = 200;
 
               canvas.getContext("2d").drawImage
                 (original, 0, 0, canvas.width, canvas.height);
@@ -91,7 +93,7 @@ $(function () {
         for(var i = 0; i< data.files.length;i++){
             if(data.files[i].type.indexOf("image")>-1)
             {
-                var canvas = data.files[i].preview;
+                var canvas = getThumbnail(data.files[i].preview,1);
                 var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
                 console.log(blob);//debug
