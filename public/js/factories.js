@@ -204,6 +204,8 @@
 			//gets a box config file given the name
 			//and will either add it to created or collaborated depending on isCreated
 			getBoxConfig: function (boxid, isCreated) {
+				created = []; //reset boxes everytime we try to grab box info
+				collaborated = [];
 				reqData = {
 					'boxid':  boxid,
 				}

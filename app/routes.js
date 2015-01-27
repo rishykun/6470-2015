@@ -131,11 +131,12 @@ module.exports = function(app, passport, mongoose) {
     });
 
     app.post('/setupusername', isLoggedIn, function (req, res) {
+        console.log("username is now: " + req.body.username); //debug
         //update user configuration to update the username
         userConfigModel.findOneAndUpdate(
             {email: req.user.local.email},
             {username: req.body.username},
-            {upsert: true},
+            {upsert: false},
             function (err, data) {
                 if (err) {
                     console.error(err);
@@ -143,7 +144,41 @@ module.exports = function(app, passport, mongoose) {
                 else {
                     console.log("Successfully updated user configuration in the database."); //debug
                     console.log(data); //debug
-                    res.json(data);
+
+                    boxConfigModel.update(
+                    {owner: req.user.local.email},
+                    {ownerusername: req.body.username},
+                    {
+                        upsert: false,
+                        multi: true
+                    },
+                    function (err, data2) {
+                        if (err) {
+                            console.error(err);
+                        }
+                        else {
+                            console.log("Successfully updated box configuration in the database."); //debug
+                            console.log(data2); //debug
+
+                            itemConfigModel.update(
+                            {authoremail: req.user.local.email},
+                            {author: req.body.username},
+                            {
+                                upsert: false,
+                                multi: true
+                            },
+                            function (err, data3) {
+                                if (err) {
+                                    console.error(err);
+                                }
+                                else {
+                                    console.log("Successfully updated item configuration in the database."); //debug
+                                    console.log(data3); //debug
+                                    res.json(data);
+                                }
+                            });
+                        }
+                    });
                 }
             }
         );
@@ -575,7 +610,7 @@ module.exports = function(app, passport, mongoose) {
                         //create box configuration in the database
                         var ownername = "";
                         if (req.body.username !== '') {
-                            var ownername = req.body.username + " (" + req.user.local.email + ")";
+                            var ownername = req.body.username;
                         }
                         var boxConfig = new boxConfigModel({
                             boxid: boxId,
