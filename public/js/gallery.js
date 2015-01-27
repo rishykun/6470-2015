@@ -60,6 +60,9 @@ var getType = function(s) {
 	app.controller('GalleryController', function GalleryController($sce, $scope, $window, $http, $state, Box,UserProfile){
 		$scope.box = Box;
 		$scope.UserProfile = UserProfile;
+		$scope.UserCount = 0;
+		$scope.thumbComplete = false;
+	
 		//$scope.video_sources=[];
 		//$scope.audio_sources=[];
 		$scope.theme="videogular/videogular-themes/videogular.css";
@@ -91,25 +94,27 @@ var getType = function(s) {
 		boxConfig = {boxname: boxNameObj.boxname+"/config"};
 		boxThumb = {boxname: boxNameObj.boxname+"/Thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/items"};
+		
 		$http.post('/getboxconfig', {boxid: boxNameObj.boxname})
 		.success (function(data){
 			$scope.boxComplete = data.completed;
 			$scope.boxCollabs = data.collaborators;
-
 			$scope.boxOwner = data.owner;
-
 			$scope.boxName = data.boxname;
+			$scope.boxLength = data.itemcount;
+
 			console.log(data);
 			$http.post('/getbox', boxItems)
 			.success (function(data) {
 				console.log(data);
-				
 				dlength = data.length;
 				for (i=0; i < data.length; i++){
 					$http.post('/getitemconfig', {/*'uri': '6.470',*/ 'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
 					.success (function(data) {
+						if (data.authoremail === $scope.UserProfile.getProfile().local.email) {
+							$scope.UserCount++;
+						};
 						console.log(data);
-						
 						//data = JSON.parse(data);
 						key = data.key;
 						//"num": Object.keys($scope.gallerydata).length+1,
@@ -123,7 +128,6 @@ var getType = function(s) {
 						
 						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email) /*|| 
 							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 */))) {
-
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Email": data.authoremail, "Description":data.description, "Thumbs":0,"Comments":[]};
 							//console.log($scope.gallerydata[key]);	
@@ -139,6 +143,7 @@ var getType = function(s) {
 								if (Object.keys($scope.gallerydata).length === (dlength)) {
 									//console.log("went through");
 									var c = 0;
+									$scope.thumbComplete = true;
 									for (var key in $scope.gallerydata) {
 										//console.log("went through through");
 										if ($scope.gallerydata.hasOwnProperty(key) && $scope.gallerydata[key]!== false) {
