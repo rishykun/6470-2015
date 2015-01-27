@@ -3,6 +3,7 @@
 - REMOVE ALL CONSOLE LOGS
 - can't upload shit from my phone
 - REMOVE CHENG WANG FROM GALLERY
+- sanitize forms
 
 would like to do future features
 - delete boxes
