@@ -1,9 +1,8 @@
 [VERY IMPORTANT]
 - instead of console.error, we need to return a fail message to the front end so that the server doesn't crash unnecessarily whenever any error occurs (FIX VERY FRAIL SERVER)
+- REMOVE ALL CONSOLE LOGS
 - can't upload shit from my phone
-
-Responsive design
-- modal of upload is weird on mobile portrait
+- REMOVE CHENG WANG FROM GALLERY
 
 would like to do future features
 - delete boxes
@@ -15,13 +14,6 @@ closing modal should redirect to help if this is the first time
 
 PROFILE CONTROLLER
 have profile specially mark complete boxes to distinguish them from incomplete boxes
-
-UPLOAD CONTROLLER
-automatic filetype check and automatic conversion to one standard multimedia format for each multimedia
-		.pdf for all text
-		.mp3 for all music
-		.mp4 for all videos
-		etc.
 
 minor issues/css
 fix the scrollbar for upload modal
