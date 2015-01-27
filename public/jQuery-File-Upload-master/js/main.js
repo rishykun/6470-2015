@@ -121,26 +121,7 @@ $(function () {
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
             /*else if(data.files[i].type.indexOf("mp3")>-1)
-            {
-                var mp3Image = document.createElement("img");
-                mp3Image.height = 200;
-                mp3Image.width = 150;
-                mp3Image.onload = function(){
-                var canvas = getThumbnail(mp3Image,1);
-                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
-                var dataURI = canvas.toDataURL("image/jpeg",0.5);
-                //var reader = new FileReader();
-                //var dataURI = reader.readAsDataURL(new File("../img/mp3icon.png"));
-                var blob = dataURItoBlob(dataURI);
-                console.log(blob);//debug
-                data.formData = data.formData.concat({name: data.files[i].name, value: blob});
-                }
-                mp3Image.src = "../img/mp3icon.png";
-                console.log(mp3Image);
-               
-
-            }*/
-            //handle videos capture specific frame
+           
         }
         //data.formData = data.formData.concat({name: "fileName", value: data.files[i].name});
         //data.formData = data.formData.concat({name: "thumbnail", value: thumbnailArray});
