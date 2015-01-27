@@ -22,7 +22,6 @@
 						.success (function(data) {
 							$('.form-setusername').trigger("reset"); //clears the create form
 							$("#usernameForm :input").prop("disabled", false); //renable form
-							$scope.modal.closeModal();
 							$growl.box("Success", "Set the username", {
 								class: "success"
 							}).open();
