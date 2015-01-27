@@ -111,7 +111,9 @@
 								class: "primary"
 							}).open();
 						}
-						$state.go(toState); //redirects to a state after success loading user profile
+						if (toState !== '') {
+							$state.go(toState); //redirects to a state after success loading user profile
+						}
 					}
 					//don't notify of an empty profile
 					//because this function is called immediately upon loading the website to check if the user is already logged in

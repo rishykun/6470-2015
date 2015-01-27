@@ -53,5 +53,23 @@
 				}).open();
 			}
 		};
+
+		$scope.toggleEmailVisibility = function () {
+			$scope.showEmailObj = {
+				showemail: !$scope.userProfile.getProfile().showEmail
+			};
+			$http.post('/toggleshowemail', $scope.showEmailObj)
+			.success(function(data) {
+				$growl.box("Success", "Toggled email visibility", {
+					class: "success"
+				}).open();
+				$scope.userProfile.loadProfile(false, 'settings');
+			})
+			.error(function() {
+				$growl.box("Error", "Cannot toggle email visibility", {
+					class: "danger"
+				}).open();
+			});
+		};
 	});
 })();

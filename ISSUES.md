@@ -16,6 +16,7 @@ put help contents in modal form
 GALLERY CONTROLLER
 hide modal of gallery shud go bak to profile
 on mobile, make sure gallery modal doesnt exceed screen 100%
+hide user email if they dont want to show it
 
 SETUPUSER CONTROLLER
 closing modal should redirect to help if this is the first time

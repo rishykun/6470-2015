@@ -6,12 +6,6 @@
 			<img ng-src="{{catState($index, 0, created)}}" style="width: 125px; height: 125px; cursor:pointer; left:50%; position: relative; transform: translate(-50%, 0%);" ng-mouseenter="setIndex($index, 0);" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
 			<p style="text-align:center">Box Name: {{created.boxname}}</p>
 			<p style="text-align:center">Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
-			<div ng-show="created.ownerusername !== ''" style="text-align:center">
-				<p>Author: {{created.ownerusername}} ({{created.owner}})</p>
-			</div>
-			<div ng-show="created.ownerusername === ''" style="text-align:center">
-				<p>Author: {{created.owner}}</p>
-			</div>
 		</div>
 	</div>
 	<div id = "collaboratedDiv">
@@ -20,11 +14,17 @@
 			<img ng-src="{{catState($index, 1, collaborated)}}" style="width: 125px; height: 125px; cursor:pointer; left:50%; position: relative; transform: translate(-50%, 0%);" ng-mouseenter="setIndex($index, 1)" ng-mouseleave="resetIndex()" ng-click="openBoxGallery(collaborated.boxid, collaborated.completed)"/>
 			<p style="text-align:center">Box Name: {{collaborated.boxname}}</p>
 			<p style="text-align:center">Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
-			<div ng-show="collaborated.ownerusername !== ''" style="text-align:center">
+			<div ng-show="collaborated.ownerusername !=='' && userProfile.getProfile().showEmail" style="text-align:center">
 				<p>Author: {{collaborated.ownerusername}} ({{collaborated.owner}})</p>
 			</div>
-			<div ng-show="collaborated.ownerusername === ''" style="text-align:center">
+			<div ng-show="collaborated.ownerusername !== '' && !userProfile.getProfile().showEmail" style="text-align:center">
+				<p>Author: {{collaborated.ownerusername}}</p>
+			</div>
+			<div ng-show="collaborated.ownerusername === '' && userProfile.getProfile().showEmail" style="text-align:center">
 				<p>Author: {{collaborated.owner}}</p>
+			</div>
+			<div ng-show="collaborated.ownerusername === '' && !userProfile.getProfile().showEmail" style="text-align:center">
+				<p>Author: Anonymous</p>
 			</div>
 		</div>
 		</div>
