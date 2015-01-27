@@ -2,6 +2,22 @@
  cursor:pointer;
 }
 
+#moreUpload {
+  margin-top:4px;
+  position:absolute;
+  display:inline-block;
+  right:15px;
+  width:100px;
+  border-radius:5px;
+  background-color: #99ccff;
+  border-color: #99ffff;
+}
+
+#moreUpload:hover{
+  background-color: #6666FF;
+  border-color: #6699FF;
+}
+
 .file-filter {
   padding-top: 10px;
 }
