@@ -67,7 +67,7 @@ module.exports = function(app, passport, mongoose) {
                 function (err, data) {
                     if (err) {
                         console.error(err);
-                        redirect('/fail');
+                        res.redirect('/fail');
                     }
                     else {
                         newData = {};
@@ -124,7 +124,7 @@ module.exports = function(app, passport, mongoose) {
         userConfig.save(function(err) {
             if (err) {
                 console.error(err);
-                redirect('/fail');
+                res.redirect('/fail');
             }
             else {
                 res.redirect('/');
@@ -141,7 +141,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
-                    redirect('/fail');
+                    res.redirect('/fail');
                 }
                 else {
 
@@ -155,7 +155,7 @@ module.exports = function(app, passport, mongoose) {
                     function (err, data2) {
                         if (err) {
                             console.error(err);
-                            redirect('/fail');
+                            res.redirect('/fail');
                         }
                         else {
 
@@ -169,7 +169,7 @@ module.exports = function(app, passport, mongoose) {
                             function (err, data3) {
                                 if (err) {
                                     console.error(err);
-                                    redirect('/fail');
+                                    res.redirect('/fail');
                                 }
                                 else {
                                     res.json(data);
@@ -191,7 +191,7 @@ module.exports = function(app, passport, mongoose) {
         function (err, data) {
             if (err) {
                 console.error(err);
-                redirect('/fail');
+                res.redirect('/fail');
             }
             else {
 
@@ -205,7 +205,7 @@ module.exports = function(app, passport, mongoose) {
                 function (err, data2) {
                     if (err) {
                         console.error(err);
-                        redirect('/fail');
+                        res.redirect('/fail');
                     }
                     else {
 
@@ -219,7 +219,7 @@ module.exports = function(app, passport, mongoose) {
                         function (err, data3) {
                             if (err) {
                                 console.error(err);
-                                redirect('/fail');
+                                res.redirect('/fail');
                             }
                             else {
                                 res.json(data);
@@ -241,7 +241,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
-                    redirect('/fail');
+                    res.redirect('/fail');
                 }
                 else {
                     boxes_created = data.boxes_created;
@@ -250,7 +250,7 @@ module.exports = function(app, passport, mongoose) {
                     boxConfigModel.find(function (err, data) {
                         if (err) {
                             console.error(err);
-                            redirect('/fail');
+                            res.redirect('/fail');
                         }
                         else {
                             boxes_list = data;
@@ -294,7 +294,7 @@ module.exports = function(app, passport, mongoose) {
                                     function (err, data) {
                                         if (err) {
                                             console.error(err);
-                                            redirect('/fail');
+                                            res.redirect('/fail');
                                         }
                                         else {
 
@@ -306,7 +306,7 @@ module.exports = function(app, passport, mongoose) {
                                                 function (err, data) {
                                                     if (err) {
                                                         console.error(err);
-                                                        redirect('/fail');
+                                                        res.redirect('/fail');
                                                     }
                                                     else {
                                                         res.json(boxes_available[j]);
@@ -336,7 +336,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
-                    redirect('/fail');
+                    res.redirect('/fail');
                 }
                 else {
                     numuploadsLeft = 4 - data.length; //max upload per user
@@ -368,7 +368,7 @@ module.exports = function(app, passport, mongoose) {
             function (err, data) {
                 if (err) {
                     console.error(err);
-                    redirect('/fail');
+                    res.redirect('/fail');
                 }
                 else {
                     var numuploadsLeft = 4 - data.length; //max upload per user
@@ -380,7 +380,7 @@ module.exports = function(app, passport, mongoose) {
                         function(err,data){
                             if (err) {
                                 console.error(err);
-                                redirect('/fail');
+                                res.redirect('/fail');
                             }
                             else {
                                 params = {
@@ -408,7 +408,7 @@ module.exports = function(app, passport, mongoose) {
                                                             {
                                                                 //upload default thumbnail?
                                                                 console.error(err);
-                                                                redirect('/fail');
+                                                                res.redirect('/fail');
                                                             }
                                                             });
                                                     }
@@ -417,7 +417,7 @@ module.exports = function(app, passport, mongoose) {
                                                     fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
                                                         if(err){
                                                             console.error(err);
-                                                            redirect('/fail');
+                                                            res.redirect('/fail');
                                                         }
                                                         else{
                                                     thumbnailParams = {
@@ -432,7 +432,7 @@ module.exports = function(app, passport, mongoose) {
                                                             {
                                                                 //upload default thumbnail?
                                                                 console.error(err);
-                                                                redirect('/fail');
+                                                                res.redirect('/fail');
                                                             }
                                                             });
                                                         }
@@ -443,7 +443,7 @@ module.exports = function(app, passport, mongoose) {
                                                     fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
                                                         if(err){
                                                             console.error(err);
-                                                            redirect('/fail');
+                                                            res.redirect('/fail');
                                                         }
                                                         else{
                                                             thumbnailParams = {
@@ -458,7 +458,7 @@ module.exports = function(app, passport, mongoose) {
                                                             {
                                                                 //upload default thumbnail?
                                                                 console.error(err);
-                                                                redirect('/fail');
+                                                                res.redirect('/fail');
                                                             }
                                                             });
                                                         }
@@ -469,7 +469,7 @@ module.exports = function(app, passport, mongoose) {
                                                     fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
                                                         if(err){
                                                             console.error(err);
-                                                            redirect('/fail');
+                                                            res.redirect('/fail');
                                                         }
                                                         else{
                                                             thumbnailParams = {
@@ -484,7 +484,7 @@ module.exports = function(app, passport, mongoose) {
                                                             {
                                                                 //upload default thumbnail?
                                                                 console.error(err);
-                                                                redirect('/fail');
+                                                                res.redirect('/fail');
                                                             }
                                                             });
                                                         }
@@ -505,7 +505,7 @@ module.exports = function(app, passport, mongoose) {
                                                 itemConfig.save(function(err) {
                                                     if (err) {
                                                         console.error(err);
-                                                        redirect('/fail');
+                                                        res.redirect('/fail');
                                                     }
                                                     else {
 
@@ -516,7 +516,7 @@ module.exports = function(app, passport, mongoose) {
                                                             function (err, data) {
                                                                 if (err) {
                                                                     console.error(err);
-                                                                    redirect('/fail');
+                                                                    res.redirect('/fail');
                                                                 }
                                                                 else {
                                                                     //mark our boxes as complete once the number of items has reached the capacity
@@ -533,7 +533,7 @@ module.exports = function(app, passport, mongoose) {
                                                                             }, function (err, res) {
                                                                                 if (err) {
                                                                                     console.error(err);
-                                                                                    redirect('/fail');
+                                                                                    res.redirect('/fail');
                                                                                 }
                                                                                 else {
                                                                                 }
@@ -547,7 +547,7 @@ module.exports = function(app, passport, mongoose) {
                                                                         }, function (err, res) {
                                                                             if (err) {
                                                                                 console.error(err);
-                                                                                redirect('/fail');
+                                                                                res.redirect('/fail');
                                                                             }
                                                                             else {
                                                                             }

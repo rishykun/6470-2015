@@ -364,3 +364,7 @@ fixes the glitch that gives the backdrop 0 width and/or height*/
     margin-bottom: 10px;
   }
 }
+
+@media (max-width: 480px) {
+  
+}
