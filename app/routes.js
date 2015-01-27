@@ -70,13 +70,11 @@ module.exports = function(app, passport, mongoose) {
                         redirect('/fail');
                     }
                     else {
-                        console.log("Successfully retrieved user configuration in the database."); //debug
-                        console.log(data); //debug
+                        //console.log("Successfully retrieved user configuration in the database."); //debug
                         newData = {};
                         newData["local"] = req.user.local;
                         newData["username"] = data.username; //set username that was just retrieved
                         newData["showEmail"] = data.showEmail;
-                        console.log(newData); //debug
                         res.json(newData);
                     }
                 }
@@ -131,15 +129,13 @@ module.exports = function(app, passport, mongoose) {
                 redirect('/fail');
             }
             else {
-                console.log("Successfully registered user configuration in the database."); //debug
-                console.log(userConfig); //debug
+                //console.log("Successfully registered user configuration in the database."); //debug
                 res.redirect('/');
             }
         });
     });
 
     app.post('/setupusername', isLoggedIn, function (req, res) {
-        console.log("username is now: " + req.body.username); //debug
         //update user configuration to update the username
         userConfigModel.findOneAndUpdate(
             {email: req.user.local.email},
@@ -151,8 +147,6 @@ module.exports = function(app, passport, mongoose) {
                     redirect('/fail');
                 }
                 else {
-                    console.log("Successfully updated user configuration in the database."); //debug
-                    console.log(data); //debug
 
                     boxConfigModel.update(
                     {owner: req.user.local.email},
@@ -167,8 +161,6 @@ module.exports = function(app, passport, mongoose) {
                             redirect('/fail');
                         }
                         else {
-                            console.log("Successfully updated box configuration in the database."); //debug
-                            console.log(data2); //debug
 
                             itemConfigModel.update(
                             {authoremail: req.user.local.email},
@@ -183,8 +175,6 @@ module.exports = function(app, passport, mongoose) {
                                     redirect('/fail');
                                 }
                                 else {
-                                    console.log("Successfully updated item configuration in the database."); //debug
-                                    console.log(data3); //debug
                                     res.json(data);
                                 }
                             });
@@ -207,8 +197,6 @@ module.exports = function(app, passport, mongoose) {
                 redirect('/fail');
             }
             else {
-                console.log("Successfully updated user configuration in the database."); //debug
-                console.log(data); //debug
 
                 boxConfigModel.update(
                 {owner: req.user.local.email},
@@ -223,8 +211,6 @@ module.exports = function(app, passport, mongoose) {
                         redirect('/fail');
                     }
                     else {
-                        console.log("Successfully updated box configuration in the database."); //debug
-                        console.log(data2); //debug
 
                         itemConfigModel.update(
                         {authoremail: req.user.local.email},
@@ -239,8 +225,6 @@ module.exports = function(app, passport, mongoose) {
                                 redirect('/fail');
                             }
                             else {
-                                console.log("Successfully updated item configuration in the database."); //debug
-                                console.log(data3); //debug
                                 res.json(data);
                             }
                         });
@@ -263,14 +247,8 @@ module.exports = function(app, passport, mongoose) {
                     redirect('/fail');
                 }
                 else {
-                    console.log("Successfully retrieved user configuration in the database."); //debug
-                    console.log(data); //debug
-
                     boxes_created = data.boxes_created;
                     boxes_collaborated = data.boxes_collaborated;
-
-                    console.log("\nboxes created"); //debug
-                    console.log(boxes_created); //debug
 
                     boxConfigModel.find(function (err, data) {
                         if (err) {
@@ -279,8 +257,6 @@ module.exports = function(app, passport, mongoose) {
                         }
                         else {
                             boxes_list = data;
-                            console.log("\nall box list"); //debug
-                            console.log(boxes_list); //debug
 
                             //exclude the boxes that the user has already created/collaborated
                             //or are already complete
@@ -307,15 +283,11 @@ module.exports = function(app, passport, mongoose) {
                                 return true; //if box is incomplete and it's not a box that the user has created or collaborated, return true
                             }
                             var boxes_available = boxes_list.filter(excludeBoxes);
-                            console.log("\nboxes available"); //debug
-                            console.log(boxes_available); //debug
 
                             //check if boxes_available > 0
                             if (boxes_available.length > 0) {
                                 //randomly pick a box to give
                                 var j = Math.floor((Math.random() * boxes_available.length));
-                                console.log("box returned, index: " + j); //debug
-                                console.log(boxes_available[j]); //debug
 
                                 //update user configuration to add this box as a box collaborated
                                 userConfigModel.findOneAndUpdate(
@@ -328,8 +300,6 @@ module.exports = function(app, passport, mongoose) {
                                             redirect('/fail');
                                         }
                                         else {
-                                            console.log("Successfully updated user configuration in the database."); //debug
-                                            console.log(data); //debug
 
                                             //update box configuration to add this box as a box collaborated
                                             boxConfigModel.findOneAndUpdate(
@@ -342,8 +312,6 @@ module.exports = function(app, passport, mongoose) {
                                                         redirect('/fail');
                                                     }
                                                     else {
-                                                        console.log("Successfully updated box configuration in the database."); //debug
-                                                        console.log(data); //debug
                                                         res.json(boxes_available[j]);
                                                     }
                                                 }
@@ -374,8 +342,6 @@ module.exports = function(app, passport, mongoose) {
                     redirect('/fail');
                 }
                 else {
-                    console.log("Successfully retrieved user uploads from the database."); //debug
-                    console.log(data.length); //debug
                     numuploadsLeft = 4 - data.length; //max upload per user
                     uploadsLeftObj = {
                         uploadsLeft: numuploadsLeft
@@ -388,7 +354,6 @@ module.exports = function(app, passport, mongoose) {
 
     //this is required for upload.tpl.html
     app.get('/uploadgoodies', isLoggedIn, function (req, res, next) {
-        console.log(req.files);
         res.json({});
     });
 
@@ -396,10 +361,6 @@ module.exports = function(app, passport, mongoose) {
     app.post('/uploadgoodies', isLoggedIn, function (req, res) {
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
-        
-        console.log(req.body); //debug
-        console.log("username is: " + req.body.username); //debug
-        console.log("boxname is: " + req.body.boxname); //debug
 
 
         itemConfigModel.find(
@@ -413,8 +374,6 @@ module.exports = function(app, passport, mongoose) {
                     redirect('/fail');
                 }
                 else {
-                    console.log("Successfully retrieved user uploads from the database."); //debug
-                    console.log(data.length); //debug
                     var numuploadsLeft = 4 - data.length; //max upload per user
                     numuploadsLeft = parseInt(numuploadsLeft);
                     //Does not pass upload if number of uploaded items total will exceed user upload capacity for this box
@@ -433,17 +392,12 @@ module.exports = function(app, passport, mongoose) {
                                     Body: thisFile.buffer,
                                     ContentType: thisFile.mimetype
                                 }
-
-                                console.log(thisFile);
-                                console.log("name: "+thisFile.name);
-                                console.log(data); //debug
                                 var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
                                 //Does not pass upload if number of uploaded items total will exceed box capacity
                                 var newcount = parseInt(data.itemcount) + parseInt(req.body.numuploads);
                                 if(newcount<=data.capacity){
                                         s3.upload(params,function(err,data){
                                             if (!err) {
-                                                console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
                                                 if(thisFile.mimetype.indexOf("video")>-1||thisFile.mimetype.indexOf("image")>-1){
                                                        thumbnailParams = {
                                                           Bucket: bucketBox + "/Thumbnails",
@@ -452,7 +406,6 @@ module.exports = function(app, passport, mongoose) {
                                                          }
                                                          s3.upload(thumbnailParams,function(err,data1){
                                                             if (!err) {
-                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
                                                             }
                                                             else
                                                             {
@@ -475,7 +428,6 @@ module.exports = function(app, passport, mongoose) {
                                                          }
                                                          s3.upload(thumbnailParams,function(err,data1){
                                                             if (!err) {
-                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
                                                             }
                                                             else
                                                             {
@@ -493,7 +445,6 @@ module.exports = function(app, passport, mongoose) {
                                                             console.log(err);
                                                         }
                                                         else{
-                                                            console.log(data);
                                                             thumbnailParams = {
                                                             Bucket: bucketBox + "/Thumbnails",
                                                             Key: thisFile.name+"-t.tbl",
@@ -501,7 +452,6 @@ module.exports = function(app, passport, mongoose) {
                                                              }
                                                             s3.upload(thumbnailParams,function(err,data1){
                                                             if (!err) {
-                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
                                                             }
                                                             else
                                                             {
@@ -519,7 +469,6 @@ module.exports = function(app, passport, mongoose) {
                                                             console.log(err);
                                                         }
                                                         else{
-                                                            console.log(data);
                                                             thumbnailParams = {
                                                              Bucket: bucketBox + "/Thumbnails",
                                                              Key: thisFile.name+"-t.tbl",
@@ -527,7 +476,6 @@ module.exports = function(app, passport, mongoose) {
                                                           }
                                                             s3.upload(thumbnailParams,function(err,data1){
                                                             if (!err) {
-                                                                console.log("Successfully uploaded thumbnail to box "+ req.body.boxname);//debug
                                                             }
                                                             else
                                                             {
@@ -556,8 +504,6 @@ module.exports = function(app, passport, mongoose) {
                                                         redirect('/fail');
                                                     }
                                                     else {
-                                                        console.log("Successfully registered item configuration in the database."); //debug
-                                                       // console.log(itemConfig); //debug
 
                                                         //update box configuration
                                                         boxConfigModel.findOneAndUpdate(
@@ -575,7 +521,6 @@ module.exports = function(app, passport, mongoose) {
                                                                         data.save();
                                                                         //send email notifying the owner and collaborators that their box is complete
                                                                         for (var k in data.collaborators) {
-                                                                            console.log("to: " + data.collaborators[k]); //debug
                                                                             transporter.sendMail({
                                                                                 from: 'schrodingersblackbox@yahoo.com',
                                                                                 to: data.collaborators[k],
@@ -587,12 +532,9 @@ module.exports = function(app, passport, mongoose) {
                                                                                     redirect('/fail');
                                                                                 }
                                                                                 else {
-                                                                                    console.log("Email sent"); //debug
-                                                                                    console.log(res); //debug
                                                                                 }
                                                                             });
                                                                         }
-                                                                        console.log("to: " + data.owner); //debug
                                                                         transporter.sendMail({
                                                                             from: "schrodingersblackbox@yahoo.com",
                                                                             to: data.owner,
@@ -604,13 +546,9 @@ module.exports = function(app, passport, mongoose) {
                                                                                 redirect('/fail');
                                                                             }
                                                                             else {
-                                                                                console.log("Email sent"); //debug
-                                                                                console.log(res); //debug
                                                                             }
                                                                         });
-                                                                        console.log("Setting upload capacity to true"); //debug
                                                                     }
-                                                                    console.log("Successfully updated box configuration in the database."); //debug
                                                                     //console.log(data); //debug
 
                                                                     res.writeHead(200, {
@@ -677,7 +615,6 @@ module.exports = function(app, passport, mongoose) {
     app.post('/create', isLoggedIn, function (req, res) {
         var boxId = uuid.v4(); //generate a unique uuid for the box
         bucketBox = "6.470/Boxes/" + boxId + "/";
-        console.log(req);
         s3.headBucket({Bucket:bucketBox}, function(err,data){
             if(err){
                 s3.createBucket({Bucket:bucketBox},function(err,data){
@@ -686,7 +623,6 @@ module.exports = function(app, passport, mongoose) {
                         res.redirect('/fail');
                     }
                     else {
-                        console.log("Successfully created box.");
 
                         //create box configuration in the database
                         var ownername = "";
@@ -712,8 +648,6 @@ module.exports = function(app, passport, mongoose) {
                                 res.redirect('/fail');
                             }
                             else {
-                                console.log("Successfully registered box configuration in the database."); //debug
-                                console.log(boxConfig); //debug
 
                                 //update user configuration to add this box as a box created
                                 userConfigModel.findOneAndUpdate(
@@ -726,8 +660,6 @@ module.exports = function(app, passport, mongoose) {
                                             res.redirect('/fail');
                                         }
                                         else {
-                                            console.log("Successfully updated user configuration in the database."); //debug
-                                            console.log(data); //debug
 
                                             //create the thumbnails folder
                                             s3.headBucket({Bucket:bucketBox + "Thumbnails/"}, function(err,data){
@@ -738,7 +670,6 @@ module.exports = function(app, passport, mongoose) {
                                                             res.redirect('/fail');
                                                         }
                                                         else {
-                                                            console.log("Successfully created thumbnails folder.");
                                                             res.json(boxConfig);
                                                         }
                                                     });
@@ -775,7 +706,6 @@ module.exports = function(app, passport, mongoose) {
                 res.redirect('/fail');
             }
             else {
-                console.log(data.Contents); //debug
                 res.json(data.Contents);
             }
         });
@@ -791,8 +721,6 @@ module.exports = function(app, passport, mongoose) {
                     res.redirect('/fail');
                 }
                 else {
-                    console.log("Successfully retrieved user configuration in the database."); //debug
-                    console.log(data); //debug
                     res.json(data);
                 }
             }
@@ -809,8 +737,6 @@ module.exports = function(app, passport, mongoose) {
                     res.redirect('/fail');
                 }
                 else {
-                    console.log("Successfully retrieved box configuration in the database."); //debug
-                    console.log(data); //debug
                     res.json(data);
                 }
             }
@@ -826,8 +752,6 @@ module.exports = function(app, passport, mongoose) {
                     res.redirect('/fail');
                 }
                 else {
-                    console.log("Successfully retrieved item configuration in the database."); //debug
-                    console.log(data); //debug
                     res.json(data);
                 }
             }
@@ -835,8 +759,6 @@ module.exports = function(app, passport, mongoose) {
     });
 
     app.post('/getitem', isLoggedIn, function (req, res) {
-        console.log(req.body.uri); //debug
-        console.log(req.body.key); //debug
 
         var itemParams = {
             Bucket: req.body.uri,

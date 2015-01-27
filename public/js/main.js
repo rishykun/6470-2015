@@ -81,8 +81,6 @@
 			}
 			$http.post('/getitem', reqData)
 			.success (function(data) {
-				console.log("Success getting item"); //debug
-				console.log(data); //debug
 			})
 			.error (function() {
 				$growl.box("Error", "Cannot retrieve item from the server", {
