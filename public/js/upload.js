@@ -15,7 +15,6 @@
 			if (s.target.className === "modal fade font-gray ng-isolate-scope"
 				|| s.target.className === "modal fade font-gray ng-isolate-scope in"
 				|| s.currentTarget.className === "close") {
-				console.log($scope.box.getCurrentBoxID()); //debug
 				$scope.box.clearCurrentBox(); //reset current box
 				$state.go('profileview');
 			}

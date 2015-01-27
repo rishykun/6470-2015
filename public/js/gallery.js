@@ -86,15 +86,10 @@ var getType = function(s) {
 		$scope.gallerydata={};
 		$scope.gallery=[];
 
-		//console.log($scope.UserProfile.getProfile());
-		
-
 		boxNameObj = {
 			boxname: $scope.box.getCurrentBoxID()
 		};
 
-		// console.log("boxname");
-		// console.log(boxNameObj.boxname);
 		boxConfig = {boxname: boxNameObj.boxname+"/config"};
 		boxThumb = {boxname: boxNameObj.boxname+"/Thumbnails"};
 		boxItems = {boxname: boxNameObj.boxname+"/items"};
@@ -107,10 +102,8 @@ var getType = function(s) {
 			$scope.boxName = data.boxname;
 			$scope.boxLength = data.itemcount;
 
-			console.log(data);
 			$http.post('/getbox', boxItems)
 			.success (function(data) {
-				console.log(data);
 				dlength = data.length;
 				for (i=0; i < data.length; i++){
 					$http.post('/getitemconfig', {/*'uri': '6.470',*/ 'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
@@ -118,48 +111,30 @@ var getType = function(s) {
 						if (data.authoremail === $scope.UserProfile.getProfile().local.email) {
 							$scope.UserCount++;
 						};
-						console.log(data);
-						//data = JSON.parse(data);
 						key = data.key;
-						//"num": Object.keys($scope.gallerydata).length+1,
 						$scope.gallerydata[key] = false;
-						// console.log($scope.boxComplete);
-						// console.log(data.author);
-						// console.log($scope.UserProfile.getProfile().local.email);
-						// console.log($scope.boxCollabs);
-						console.log((($scope.boxComplete === "true") || (($scope.boxComplete === "false") && ((data.authoremail === $scope.UserProfile.getProfile().local.email) /*|| 
-							($.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 ) */))));
 						
 						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email) /*|| 
 							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 */))) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Email": data.authoremail, "Description":data.description, "showEmail": data.showEmail};
-							//console.log($scope.gallerydata[key]);	
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.tbl'})
 							.success(function(data){
-								console.log(data);
 								
 								data = JSON.parse(data);
 								key = data.key.substring(0, data.key.lastIndexOf('-t.tbl'));
 								$scope.gallerydata[key].Thumbnail = data.uri;
-								//console.log(Object.keys($scope.gallerydata).length);
-								//console.log(dlength-1);
 								if (Object.keys($scope.gallerydata).length === (dlength)) {
-									//console.log("went through");
 									var c = 0;
 									$scope.thumbComplete = true;
 									for (var key in $scope.gallerydata) {
-										//console.log("went through through");
 										if ($scope.gallerydata.hasOwnProperty(key) && $scope.gallerydata[key]!== false) {
-											//console.log("w t t t t ");
 											$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));
 											c++;
 										}
 									}
-									//console.log($scope.gallery);
 									
 								}
-								//console.log($scope.gallerydata);
 							})
 							.error (function(){
 								console.log("Error getting thumbnail");
@@ -179,63 +154,22 @@ var getType = function(s) {
 			console.log("Error getting box config");
 		});
 
-
-		// $http.post('/getbox', boxThumb)
-		// .success(function(data) {
-		// 	for (i=1; i<data.length; i++){
-		// 		$http.post('/getitem', {'uri': '6.470', 'key': data[i].Key})
-		// 		.success (function(data) {
-		// 			data = JSON.parse(data);
-		// 			key = data.key.substr(data.lastIndexOf('/')+1);;
-		// 			$scope.gallerydata[key].Thumbnails = data.uri;
-		// 		})
-		// 		.error (function() {
-		// 			console.log("Error getting thumbnail");
-		// 		});
-		// 	}})
-		// .error (function(){
-		// 	console.log("Error getting thumbnails!");
-		// });
-
 		$scope.goToUpload = function() {
 			$state.go('upload');
 		};
 
 		$scope.genUrl = function(num){
-			// if (num === 0) {
-			// 	num = $scope.gallery.length
-			// }
-			// $http.post('/getbox', boxItems)
-			// .success(function(data) {
-			// 	console.log('data');
-			// 	console.log(data);
-			// 	console.log('here');
-			// 	console.log('uri');
-			// 	console.log(boxItems.boxname);
-			// 	console.log('key');
-			// 	console.log($scope.gallery[num].key);
-				$http.post('/getitem', {'uri': '6.470/Boxes/'+boxItems.boxname, 'key': $scope.gallery[num].key})
-				.success (function(data) {
-					console.log('more data');
-					console.log(data);
-					data = JSON.parse(data);
-					$scope.curLink = data.uri;
-					console.log('link');
-					console.log($scope.curLink);
-					//var myPDF = PDFObject({url: ""}).embed('pdf-view');
-					$('.pdf-file').attr("data", $scope.curLink);
-					//console.log($scope.curLink);
-					$scope.audio_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "audio/mp3"}];
-					$scope.video_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "video/mp4"}];
-					//$scope.curLink = "https://www.google.com.ua/images/srpr/logo4w.png";
-				})
-				.error (function() {
-					console.log("Error getting pic");
-				});
-			// })
-			// .error (function(){
-			// 	console.log("Error getting box_pic!");
-			// });
+			$http.post('/getitem', {'uri': '6.470/Boxes/'+boxItems.boxname, 'key': $scope.gallery[num].key})
+			.success (function(data) {
+				data = JSON.parse(data);
+				$scope.curLink = data.uri;
+				$('.pdf-file').attr("data", $scope.curLink);
+				$scope.audio_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "audio/mp3"}];
+				$scope.video_sources = [{src: $sce.trustAsResourceUrl($scope.curLink), type: "video/mp4"}];
+			})
+			.error (function() {
+				console.log("Error getting pic");
+			});
 		};
 
 		$scope.num = -1;
@@ -247,14 +181,12 @@ var getType = function(s) {
 
 		$scope.setType = function(type) {
 			if (type === "Photo"){
-				console.log("Photo");
 				$scope.isImg = true;
 				$scope.isVid = false;
 				$scope.isAud = false;
 				$scope.isPdf = false;
 			}
 			else if (type === "Video"){
-				console.log("Video");
 				$scope.isImg = false;
 				$scope.isVid = true;
 				$scope.isAud = false;
@@ -262,7 +194,6 @@ var getType = function(s) {
 
 			}
 			else if (type === "Audio"){
-				console.log("Audio");
 				$scope.isImg = false;
 				$scope.isVid = false;
 				$scope.isAud = true;
@@ -307,8 +238,6 @@ var getType = function(s) {
 		}
 
 		$scope.genPdf = function(type) {
-			console.log("genPdf accessing");
-			console.log($scope.curLink);
 			if (type === "Pdf") {
 				adjustDisplay(1.1);
 			}
@@ -319,7 +248,6 @@ var getType = function(s) {
 			if (s.target.className === "modal fade ng-isolate-scope"
 				|| s.target.className === "modal fade ng-isolate-scope in"
 				|| s.currentTarget.className === "close") {
-				console.log($scope.box.getCurrentBoxID()); //debug
 				$scope.box.clearCurrentBox(); //reset current box
 				$state.go('profileview');
 			}

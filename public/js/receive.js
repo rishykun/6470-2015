@@ -22,7 +22,6 @@
 		$scope.setFilter = function() {
 			for (i=0; i<$('.myDropdownCheckbox').dropdownCheckbox("checked").length; i++)
 			$scope.formData.filters.regions.push($('.myDropdownCheckbox').dropdownCheckbox("checked")[i].label);
-			console.log($scope.fileFilter);
 			for (var key in $scope.fileFilter) {
 				if ($scope.fileFilter[key] === true) {
 					$scope.formData.filters.files.push(key);
@@ -46,20 +45,14 @@
 		}
 
 		$scope.receiveBox = function() {
-			console.log($scope.formData);
 			if ($scope.userProfile.isLoggedIn()) {
 				if (!$scope.box.isBoxSet()) {
-					//$("#receiveButton :input").prop("disabled", true); //disable button while get request is handled
 					$http.post('/receivebox', $scope.formData.filters)
 					.success (function(data) {
-						console.log(data); //debug
 						$scope.boxid = data.boxid;
-						console.log($scope.boxid); //debug
 						
 						$scope.box.setCurrentBoxID($scope.boxid, true);
 						
-						//TODO DEBUG do check at this point to make sure we can upload to box before going to uploads
-						//$("#receiveButton :input").prop("disabled", false); //renable button
 						$growl.box("Success", "Retrieved a box from the server", {
 							class: "success"
 						}).open();

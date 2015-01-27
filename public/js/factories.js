@@ -43,17 +43,6 @@
 					modalopen.opened.then(function () {
 						modalopenevent;
 					});
-					/*
-					//center the open modal in the browser window
-					modalopen.opened.then(function() {
-						console.log("opened");
-						var windowHeight = $(window).height();
-						var modalHeight = $(modalname).height();
-						console.log(windowHeight);
-						console.log(modalHeight);
-						$(modalname).css("margin-top", (windowHeight-modalHeight)/2);
-						$(modalname).css("margin-left", "auto");
-					});*/
 				}
 				else {
 					console.log("Error: can't open modal because it isn't registered.");
@@ -105,7 +94,6 @@
 						}
 						loggedIn = true; //set our login status to be true
 						userProfile = data; //load data into the user profile
-						//debug note: user/email is data.local.email
 						if (alert) {
 							$growl.box("Success", "Profile found", {
 								class: "primary"

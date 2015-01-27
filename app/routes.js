@@ -70,7 +70,6 @@ module.exports = function(app, passport, mongoose) {
                         redirect('/fail');
                     }
                     else {
-                        //console.log("Successfully retrieved user configuration in the database."); //debug
                         newData = {};
                         newData["local"] = req.user.local;
                         newData["username"] = data.username; //set username that was just retrieved
@@ -129,7 +128,6 @@ module.exports = function(app, passport, mongoose) {
                 redirect('/fail');
             }
             else {
-                //console.log("Successfully registered user configuration in the database."); //debug
                 res.redirect('/');
             }
         });
@@ -410,7 +408,8 @@ module.exports = function(app, passport, mongoose) {
                                                             else
                                                             {
                                                                 //upload default thumbnail?
-                                                                console.log(err);
+                                                                console.error(err);
+                                                                redirect('/fail');
                                                             }
                                                             });
                                                     }
@@ -418,7 +417,8 @@ module.exports = function(app, passport, mongoose) {
                                                 {                                        
                                                     fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
                                                         if(err){
-                                                            console.log(err);
+                                                            console.error(err);
+                                                            redirect('/fail');
                                                         }
                                                         else{
                                                     thumbnailParams = {
@@ -432,7 +432,8 @@ module.exports = function(app, passport, mongoose) {
                                                             else
                                                             {
                                                                 //upload default thumbnail?
-                                                                console.log(err);
+                                                                console.error(err);
+                                                                redirect('/fail');
                                                             }
                                                             });
                                                         }
@@ -442,7 +443,8 @@ module.exports = function(app, passport, mongoose) {
                                                 {
                                                     fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
                                                         if(err){
-                                                            console.log(err);
+                                                            console.error(err);
+                                                            redirect('/fail');
                                                         }
                                                         else{
                                                             thumbnailParams = {
@@ -456,7 +458,8 @@ module.exports = function(app, passport, mongoose) {
                                                             else
                                                             {
                                                                 //upload default thumbnail?
-                                                                console.log(err);
+                                                                console.error(err);
+                                                                redirect('/fail');
                                                             }
                                                             });
                                                         }
@@ -466,7 +469,8 @@ module.exports = function(app, passport, mongoose) {
                                                 {
                                                     fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
                                                         if(err){
-                                                            console.log(err);
+                                                            console.error(err);
+                                                            redirect('/fail');
                                                         }
                                                         else{
                                                             thumbnailParams = {
@@ -480,7 +484,8 @@ module.exports = function(app, passport, mongoose) {
                                                             else
                                                             {
                                                                 //upload default thumbnail?
-                                                                console.log(err);
+                                                                console.error(err);
+                                                                redirect('/fail');
                                                             }
                                                             });
                                                         }
@@ -549,7 +554,6 @@ module.exports = function(app, passport, mongoose) {
                                                                             }
                                                                         });
                                                                     }
-                                                                    //console.log(data); //debug
 
                                                                     res.writeHead(200, {
                                                                         'Content-Type': req.headers.accept
