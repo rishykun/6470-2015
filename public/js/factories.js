@@ -286,7 +286,6 @@
 		}
 	});
 
-
 	app.factory('CountryList', function() {
 		var countryData =
 		[{id: 1, label: "Africa" },

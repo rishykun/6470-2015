@@ -480,6 +480,7 @@ module.exports = function(app, passport, mongoose) {
     app.post('/create', isLoggedIn, function (req, res) {
         var boxId = uuid.v4(); //generate a unique uuid for the box
         bucketBox = "6.470/Boxes/" + boxId + "/";
+        console.log(req);
         s3.headBucket({Bucket:bucketBox}, function(err,data){
             if(err){
                 s3.createBucket({Bucket:bucketBox},function(err,data){
@@ -497,7 +498,7 @@ module.exports = function(app, passport, mongoose) {
                         var boxConfig = new boxConfigModel({
                             boxid: boxId,
                             boxname: req.body.boxname,
-                            capacity: 20,
+                            capacity: req.body.boxSize,
                             itemcount: 0,
                             owner: req.user.local.email,
                             ownerusername: ownername,
