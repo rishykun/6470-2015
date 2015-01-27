@@ -389,7 +389,8 @@ module.exports = function(app, passport, mongoose) {
                                                             });
                                                     }
                                                 else if(thisFile.mimetype.indexOf("audio")>-1)
-                                                {                                        fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
+                                                {                                        
+                                                    fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
                                                         if(err){
                                                             console.log(err);
                                                         }

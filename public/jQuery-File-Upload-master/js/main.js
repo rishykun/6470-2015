@@ -91,21 +91,14 @@ $(function () {
         for(var i = 0; i< data.files.length;i++){
             if(data.files[i].type.indexOf("image")>-1)
             {
-                console.log("Image: ")
-                console.log(data.files[i]);
-                console.log(data.files[i].preview);//debug
                 var canvas = data.files[i].preview;
-                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
-                var dataURI = canvas.toDataURL("image/jpeg",0.5);
+                var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
                 console.log(blob);//debug
                 //thumbnailArray.push({"blob":blob,"name":data.files[i].name});
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
             else if(data.files[i].type.indexOf("video")>-1){
-                console.log("Video: ")
-                console.log(data.files[i]);
-                console.log(data.files[i].preview);//debug
                 var video = data.files[i].preview;
                 video.setAttribute("width",'500');
                 video.setAttribute("height",'450');
@@ -114,33 +107,12 @@ $(function () {
                     this.currentTime = this.duration/2;
                 }, false);
                 var canvas = getThumbnail(video,1);
-                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
-                var dataURI = canvas.toDataURL("image/jpeg",0.5);
+                var dataURI = canvas.toDataURL("image/jpeg",1);
                 var blob = dataURItoBlob(dataURI);
                 console.log(blob);//debug
                 data.formData = data.formData.concat({name: data.files[i].name, value: blob});
             }
-            /*else if(data.files[i].type.indexOf("mp3")>-1)
-            {
-                var mp3Image = document.createElement("img");
-                mp3Image.height = 200;
-                mp3Image.width = 150;
-                mp3Image.onload = function(){
-                var canvas = getThumbnail(mp3Image,1);
-                console.log(canvas.toDataURL("image/jpeg",0.5));//debug
-                var dataURI = canvas.toDataURL("image/jpeg",0.5);
-                //var reader = new FileReader();
-                //var dataURI = reader.readAsDataURL(new File("../img/mp3icon.png"));
-                var blob = dataURItoBlob(dataURI);
-                console.log(blob);//debug
-                data.formData = data.formData.concat({name: data.files[i].name, value: blob});
-                }
-                mp3Image.src = "../img/mp3icon.png";
-                console.log(mp3Image);
-               
-
-            }*/
-            //handle videos capture specific frame
+         
         }
         //data.formData = data.formData.concat({name: "fileName", value: data.files[i].name});
         //data.formData = data.formData.concat({name: "thumbnail", value: thumbnailArray});
