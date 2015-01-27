@@ -10,8 +10,11 @@
 		$scope.mouseIndex=false;
 		$scope.section=false;
 
-		$scope.catState=function (index, section) {
-			if ((!$scope.mouseIndex && $scope.mouseIndex !== 0) || (!$scope.section && $scope.section !== 0)) {
+		$scope.catState=function (index, section, box) {
+			if (box.itemcount === box.capacity){
+				return "img/complete.png";
+			}
+			else if ((!$scope.mouseIndex && $scope.mouseIndex !== 0) || (!$scope.section && $scope.section !== 0)) {
 				//console.log("here");
 				return "img/box.png";
 			}
