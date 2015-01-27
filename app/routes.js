@@ -5,8 +5,6 @@ var multer = require("multer"); //used to interpret/handle file data
 AWS.config.loadFromPath('./config/aws/config.json');
 var s3 = new AWS.S3();
 var nodemailer = require("nodemailer"); //email transporter
-var wellknown = require("nodemailer-wellknown");
-
 
 var transporter = nodemailer.createTransport({
     service: "Yahoo",
