@@ -8,13 +8,14 @@
 		$scope.boxlist = BoxList;
 		$scope.box = Box;
 		$scope.mouseIndex=false;
+		$scope.section=false;
 
-		$scope.catState=function (index) {
-			console.log("here");
-			if (!$scope.mouseIndex && $scope.mouseIndex !== 0) {
+		$scope.catState=function (index, section) {
+			if ((!$scope.mouseIndex && $scope.mouseIndex !== 0) || (!$scope.section && $scope.section !== 0)) {
+				console.log("here");
 				return "img/box.png";
 			}
-			else if (index === $scope.mouseIndex) {
+			else if ((index === $scope.mouseIndex) && (section === $scope.section)) {
 				n = parseInt(Math.random()*2);
 				switch(n) {
 					case 0:
@@ -27,12 +28,14 @@
 			}
 		};
 
-		$scope.setIndex = function (index) {
+		$scope.setIndex = function (index, section) {
  			$scope.mouseIndex = index;
+ 			$scope.section = section;
 		};
 
 		$scope.resetIndex = function () {
 			$scope.mouseIndex = false;
+			$scope.section = false;
 		};
 /*
 		$scope.collapse = function () {
