@@ -22,6 +22,7 @@ module.exports = function(app, passport, mongoose) {
         capacity: Number,
         itemcount: Number,
         owner: String,
+        ownerusername: String,
         collaborators: [String],
         completed: String,
         fileFilter: [String],
@@ -33,6 +34,7 @@ module.exports = function(app, passport, mongoose) {
         key: String,
         title: String,
         author: String,
+        authoremail: String,
         description: String,
         filetype: String
     });
@@ -216,7 +218,7 @@ module.exports = function(app, passport, mongoose) {
                                             console.log("Successfully updated user configuration in the database."); //debug
                                             console.log(data); //debug
 
-                                            //update user configuration to add this box as a box collaborated
+                                            //update box configuration to add this box as a box collaborated
                                             boxConfigModel.findOneAndUpdate(
                                                 {boxid: boxes_available[j].boxid},
                                                 {$push: {collaborators: req.user.local.email}},
@@ -249,7 +251,7 @@ module.exports = function(app, passport, mongoose) {
     app.post('/getusernumuploads', isLoggedIn, function (req, res, next) {
         itemConfigModel.find(
             {
-                email: req.user.local.email,
+                authoremail: req.user.local.email,
                 boxid: req.body.boxid
             },
             function (err, data) {
@@ -280,7 +282,8 @@ module.exports = function(app, passport, mongoose) {
         var thisFile = req.files['files[]'];
         bucketBox = '6.470/Boxes/' + req.body.boxname;
         
-
+        console.log(req.body); //debug
+        console.log("username is: " + req.body.username); //debug
         console.log("boxname is: " + req.body.boxname); //debug
         boxConfigModel.findOne({"boxid": req.body.boxname},
             function(err,data){
@@ -294,7 +297,7 @@ module.exports = function(app, passport, mongoose) {
                         Body: thisFile.buffer
                     }
 
-
+                    console.log(thisFile);
                     console.log("name: "+thisFile.name);
                     console.log(data); //debug
                     var itemsLeft = parseInt(data.capacity)-parseInt(data.itemcount);
@@ -304,28 +307,99 @@ module.exports = function(app, passport, mongoose) {
                             s3.upload(params,function(err,data){
                                 if (!err) {
                                     console.log('Successfully uploaded item to box: ' + req.body.boxname + "with name " + thisFile.name + " and "+params.Key); //debug
-
+                                    if(thisFile.mimetype.indexOf("video")>-1||thisFile.mimetype.indexOf("image")>-1){
                                            thumbnailParams = {
                                               Bucket: bucketBox + "/Thumbnails",
                                              Key: thisFile.name+"-t.tbl",
                                              Body: req.files[thisFile.originalname].buffer
                                              }
-                                    s3.upload(thumbnailParams,function(err,data1){
-                                    if (!err) {
-                                        console.log("Successfully uploaded thumbnail to box "+ req.body.boxname + " with name "+ req.files[thisFile.originalname].name);//debug
+                                         }
+                                    else if(thisFile.mimetype.indexOf("audio")>-1)
+                                    {                                        fs.readFile('../atw/public/img/mp3icon.png', function(err, data) {
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                console.log("MP3 ICON DATA");
+                                                console.log(data);
+                                        thumbnailParams = {
+                                             Bucket: bucketBox + "/Thumbnails",
+                                             Key: thisFile.name+"-t.tbl",
+                                             Body: data
+                                             }
+                                             s3.upload(thumbnailParams,function(err,data1){
+                                                if (!err) {
+                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                }
+                                                else
+                                                {
+                                                    //upload default thumbnail?
+                                                    console.log(err);
+                                                }
+                                                });
+                                            }
+                                        });
+                                    }
+                                    else if(thisFile.mimetype.indexOf("pdf")>-1)
+                                    {
+                                        fs.readFile('../atw/public/img/pdficon.png', function(err, data) {
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                console.log(data);
+                                                thumbnailParams = {
+                                                Bucket: bucketBox + "/Thumbnails",
+                                                Key: thisFile.name+"-t.tbl",
+                                                Body: data
+                                                 }
+                                                s3.upload(thumbnailParams,function(err,data1){
+                                                if (!err) {
+                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname );//debug
+                                                }
+                                                else
+                                                {
+                                                    //upload default thumbnail?
+                                                    console.log(err);
+                                                }
+                                                });
+                                            }
+                                        });
                                     }
                                     else
                                     {
-                                        //upload default thumbnail?
-                                        console.log(err);
+                                        fs.readFile('../atw/public/img/unknownicon.png', function(err, data) {
+                                            if(err){
+                                                console.log(err);
+                                            }
+                                            else{
+                                                console.log(data);
+                                                thumbnailParams = {
+                                                 Bucket: bucketBox + "/Thumbnails",
+                                                 Key: thisFile.name+"-t.tbl",
+                                                 Body: data
+                                              }
+                                                s3.upload(thumbnailParams,function(err,data1){
+                                                if (!err) {
+                                                    console.log("Successfully uploaded thumbnail to box "+ req.body.boxname);//debug
+                                                }
+                                                else
+                                                {
+                                                    //upload default thumbnail?
+                                                    console.log(err);
+                                                }
+                                                });
+                                            }
+                                        });
                                     }
-                                    });
+                                    
                                     //create item configuration in the database
                                     var itemConfig = new itemConfigModel({
                                         boxid: req.body.boxname,
                                         key: thisFile.name,
                                         title: req.body.title,
-                                        author : req.user.local.email,
+                                        author: req.body.username,
+                                        authoremail: req.user.local.email,
                                         description: req.body.description || "",
                                         filetype: thisFile.mimetype
                                     });
@@ -416,12 +490,17 @@ module.exports = function(app, passport, mongoose) {
                         console.log("Successfully created box.");
 
                         //create box configuration in the database
+                        var ownername = "";
+                        if (req.body.username !== '') {
+                            var ownername = req.body.username + " (" + req.user.local.email + ")";
+                        }
                         var boxConfig = new boxConfigModel({
                             boxid: boxId,
                             boxname: req.body.boxname,
                             capacity: 20,
                             itemcount: 0,
                             owner: req.user.local.email,
+                            ownerusername: ownername,
                             collaborators: [],
                             completed: "false",
                             fileFilter: req.body.filters.files,

@@ -6,7 +6,12 @@
 			<img ng-src="{{catState}}" style="width: 100px; height: 100px; cursor:pointer" ng-mouseenter="collapse()" ng-mouseleave="uncollapse()" ng-click="openBoxGallery(created.boxid, created.completed)"/>
 			<p>Box Name: {{created.boxname}}</p>
 			<p>Number of Items: {{created.itemcount}} / {{created.capacity}}</p>
-			<p>Author: {{created.owner}}</p>
+			<div ng-show="created.ownerusername !== ''">
+				<p>Author: {{created.ownerusername}}</p>
+			</div>
+			<div ng-show="created.ownerusername === ''">
+				<p>Author: {{created.owner}}</p>
+			</div>
 		</div>
 	</div>
 	<div id = "collaboratedDiv">
@@ -15,7 +20,12 @@
 			<img ng-src="{{catState}}" style="width: 100px; height: 100px; cursor:pointer" ng-mouseenter="collapse()" ng-mouseleave="uncollapse()" ng-click="openBoxGallery(collaborated.boxid, collaborated.completed)"/>
 			<p>Box Name: {{collaborated.boxname}}</p>
 			<p>Number of Items: {{collaborated.itemcount}} / {{collaborated.capacity}}</p>
-			<p>Author: {{collaborated.owner}}</p>
+			<div ng-show="collaborated.ownerusername !== ''">
+				<p>Author: {{collaborated.ownerusername}}</p>
+			</div>
+			<div ng-show="collaborated.ownerusername === ''">
+				<p>Author: {{collaborated.owner}}</p>
+			</div>
 		</div>
 		</div>
 	</div>

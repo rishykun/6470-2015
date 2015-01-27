@@ -51,8 +51,7 @@
 		//attempts authentication on the server with the credentials from the form
 		$scope.createBox = function () {
 			if ($scope.userProfile.isLoggedIn()) {
-				user = $scope.userProfile.getProfile().local.email;
-				$scope.formData.username = user;
+				$scope.formData.username = $scope.userProfile.getProfile().username || '';
 				if ($scope.formData.hasOwnProperty("boxname")) {
 					if ($scope.formData.boxname !== undefined && $scope.formData.boxname !== null
 						&& $scope.formData.boxname !== "") {

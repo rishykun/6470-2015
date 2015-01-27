@@ -128,14 +128,12 @@ var getType = function(s) {
 						console.log($scope.boxCollabs);
 						console.log((($scope.boxComplete === "true") || (($scope.boxComplete === "false") && ((data.author === $scope.UserProfile.getProfile().local.email) || 
 							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 ))));
-						debugger;
 						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.author === $scope.UserProfile.getProfile().local.email) /*|| 
 							$.inArray($scope.UserProfile.getProfile().local.email, $scope.boxCollabs) !== -1 */))) {
 
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Description":data.description, "Thumbs":0,"Comments":[]};
-							//console.log($scope.gallerydata[key]);
-							debugger;	
+							//console.log($scope.gallerydata[key]);	
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.jpg'})
 							.success(function(data){
 								data = JSON.parse(data);

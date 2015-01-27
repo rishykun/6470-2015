@@ -2,17 +2,24 @@
 <div class="mobile input-group pull-right" style="margin-right:5px">
 	<i class="custom-bars-btn fa fa-3x fa-bars dropdown-toggle" data-toggle="dropdown" aria-expanded="false"></i>
 	<ul class="dropdown-menu" role="menu">
-	  	<li class="no-text-dec no-text-sel" style="color: #333; text-align:center">Welcome, {{userProfile.getProfile().local.email}}!</li>
+		<li class="no-text-dec no-text-sel" style="color: #333; text-align:center; cursor: default">
+			<div ng-show="userProfile.getProfile().username === ''"> 
+				Welcome, {{userProfile.getProfile().local.email}}!
+			</div>
+			<div ng-show="userProfile.getProfile().username !== ''"> 
+				Welcome, {{userProfile.getProfile().username}}!
+			</div>
+		</li>
 	  	<li class="divider"></li>
 	  	<li><a ui-sref="profileview" href="#/">Profile</a></li>
-	  	<li><a href="#/">Settings</a></li>
+	  	<li><a ui-sref="settings" href="#/">Settings</a></li>
 	  	<li><a href="#/">Help</a></li>
 	  	<li><a href="#" ng-click="logout()">Logout</a></li>
 	</ul>
 </div>
 
 <nav class="desktop pull-right font-white" style="margin-top:5px; margin-right:5px; letter-spacing:1px">
-	<div style="float: left; padding-top:6px; padding-right:12px">
+	<div style="float: left; padding-top:6px; padding-right:12px; cursor: default">
 		<div ng-show="userProfile.getProfile().username === ''"> 
 			Welcome, {{userProfile.getProfile().local.email}}!
 		</div>
@@ -23,7 +30,7 @@
 	<div style="float: right">
 		<div style="float:left; padding-right: 12px; padding-top: 5px">
 			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="profileview" style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px; margin-right:5px" href="#/">Profile</a>
-			<a class="font-white no-text-dec no-text-sel custom-underline-from-center"
+			<a class="font-white no-text-dec no-text-sel custom-underline-from-center" ui-sref="settings"
 			 style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px; margin-right:5px" href="#">Settings</a>
 			 <a class="font-white no-text-dec no-text-sel custom-underline-from-center"
 			 style="background: transparent; display: inline; padding: 0px 0px; padding-bottom: 5px; margin-right:5px" href="#">Help</a>
