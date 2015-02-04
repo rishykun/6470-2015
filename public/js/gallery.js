@@ -103,25 +103,34 @@ var getType = function(s) {
 			.success (function(data) {
 				dlength = data.length;
 				for (i=0; i < data.length; i++){
+					console.log(data.length);
 					$http.post('/getitemconfig', {'key': data[i].Key.substring(data[i].Key.lastIndexOf('/')+1,data[i].Key.length)})
 					.success (function(data) {
+						console.log('here1');
 						if (data.authoremail === $scope.UserProfile.getProfile().local.email) {
 							$scope.UserCount++;
 						};
 						key = data.key;
 						$scope.gallerydata[key] = false;
-
+						if (Object.keys($scope.gallerydata).length === (dlength)) {
+							$scope.thumbComplete = true;
+						}
 						if (($scope.boxComplete === "true") || ($scope.boxComplete === "false" && ((data.authoremail === $scope.UserProfile.getProfile().local.email)))) {
 							$scope.gallerydata[key]={"Type": getType(data.filetype), "Title": data.title, 
 							"Author": data.author, "Email": data.authoremail, "Description":data.description, "showEmail": data.showEmail};
 							$http.post('/getitem', {'uri': '6.470/Boxes/' + boxThumb.boxname, 'key': key.substring(key.indexOf('/')+1,key.length)+'-t.tbl'})
 							.success(function(data){
+								console.log('here2');
 								data = JSON.parse(data);
 								key = data.key.substring(0, data.key.lastIndexOf('-t.tbl'));
 								$scope.gallerydata[key].Thumbnail = data.uri;
+								console.log(dlength);
+								console.log(Object.keys($scope.gallerydata).length);
+								console.log('bleh');
 								if (Object.keys($scope.gallerydata).length === (dlength)) {
 									var c = 0;
-									$scope.thumbComplete = true;
+									//$scope.thumbComplete = true;
+									console.log($scope.thumbComplete);
 									for (var key in $scope.gallerydata) {
 										if ($scope.gallerydata.hasOwnProperty(key) && $scope.gallerydata[key]!== false) {
 											$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));
