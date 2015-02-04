@@ -129,8 +129,6 @@ var getType = function(s) {
 								console.log('bleh');
 								if (Object.keys($scope.gallerydata).length === (dlength)) {
 									var c = 0;
-									//$scope.thumbComplete = true;
-									console.log($scope.thumbComplete);
 									for (var key in $scope.gallerydata) {
 										if ($scope.gallerydata.hasOwnProperty(key) && $scope.gallerydata[key]!== false) {
 											$scope.gallery[c] = ($.extend({'key': key, 'num': c}, $scope.gallerydata[key]));
